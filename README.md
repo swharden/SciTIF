@@ -9,6 +9,8 @@
 ## Project Status
 SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke around the source code, start [here](https://github.com/swharden/SciTIF/tree/master/src/SciTifLib)
 
+!()[doc/graphics/screenshot.png]
+
 ## Resources
 * [TIFF File Format Summary](https://www.fileformat.info/format/tiff/egff.htm#TIFF.FO)
 * [TIFF Tag Descriptions](https://www.awaresystems.be/imaging/tiff/tifftags/baseline.html)

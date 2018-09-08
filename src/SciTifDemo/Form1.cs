@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using TifLib;
+using SciTIFlib;
 
 namespace TifLibDemo
 {
@@ -23,8 +23,12 @@ namespace TifLibDemo
         private void Form1_Load(object sender, EventArgs e)
         {
             splitDirView1.SetFont(8);
+
+            string demoTifFolder = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+            demoTifFolder = System.IO.Path.GetFullPath(demoTifFolder + "/../../../../data/images/");
             splitDirView1.SetFolder(@"D:\demoData\tifs");
-            splitDirView1.SelectFile(4);
+            //splitDirView1.SelectFile(4);
+            splitDirView1.SelectFile(0);
         }
 
         private void button1_Click(object sender, EventArgs e)

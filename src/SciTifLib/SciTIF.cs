@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace TifLib
+namespace SciTIFlib
 {
     public class TifFile
     {
@@ -21,7 +21,7 @@ namespace TifLib
         {
             filePath = Path.GetFullPath(filePath);
             this.filePath = filePath;
-            log = new Logger("TifLib");
+            log = new Logger("SciTIF");
             log.Info($"Loading abf file: {filePath}");
 
             if (!File.Exists(filePath))
@@ -38,20 +38,38 @@ namespace TifLib
                 log.Warn("!!!FILE DID NOT READ SUCCESSFULLY!!!");
         }
 
+        public string Info()
+        {
+            string msg = $"File: {System.IO.Path.GetFileName(filePath)}\n";
+            msg += $"Full Path: {filePath}\n";
+            msg += $"Valid TIF: {validTif}\n";
+            if (littleEndian)
+                msg += $"Byte Order: little endian (LSB last)\n";
+            else
+                msg += $"Byte Order: big endian (LSB first)\n";
+            return msg;
+        }
+
+        /* 
+         * 
+         * FILE OPERATIONS
+         * 
+         */
+
         BinaryReader br;
-        public void FileOpen()
+        private void FileOpen()
         {
             log.Debug("opening file");
             br = new BinaryReader(File.Open(filePath, FileMode.Open));
             br.BaseStream.Seek(0, SeekOrigin.Begin);
         }
 
-        public void FileSeek(int byteLocation)
+        private void FileSeek(int byteLocation)
         {
             br.BaseStream.Seek(byteLocation, SeekOrigin.Begin);
         }
 
-        public void FileClose()
+        private void FileClose()
         {
             log.Debug("file closed");
             br.Close();
@@ -104,7 +122,13 @@ namespace TifLib
             return $"[{s}]";
         }
 
-        public void ReadHeader()
+        /* 
+         * 
+         * DATA READING
+         * 
+         */
+
+        private void ReadHeader()
         {
             // create a hex string from the first four bytes
             FileSeek(0);
@@ -140,11 +164,13 @@ namespace TifLib
             return;
         }
 
-        public int ReadIFD(int ifdLocation)
+        private int ReadIFD(int ifdLocation)
         {
             // An Image File Directory (IFD) is a collection of information similar to a header, 
             // and it is used to describe the bitmapped data to which it is attached.
-            // It contains enteries called "tags", each 12 bytes long.
+            // It contains enteries called "tags", each 12 bytes long. Each tif tag describes
+            // a little bit about some data in the file, such as what format its in (SHORT, LONG, etc),
+            // how many values it has, and where the first byte is.
 
             // ensure this byte position is valid
             if (ifdLocation > fileSize)
@@ -158,55 +184,132 @@ namespace TifLib
             int entryCount = FileReadUInt16();
             log.Debug($"IFD at byte {ifdLocation} has {entryCount} tags");
 
-            // each entry contains 12 bytes
+            // read each tig tag and add it to the list
+            List<TifTag> tifTags = new List<TifTag>();
             for (int i = 0; i < entryCount; i++)
-                ReadTag();
+            {
+                TifTag tag = ReadTifTag();
+                log.Debug("  " + tag.Info());
+                tifTags.Add(tag);
+            }
 
-            // determine if another IFD exists and where
+            // return the position of the next IFD
             int nextIfdLocation = FileReadUInt32();
-            if (nextIfdLocation == 0)
-                log.Debug($"  this was the last IFD.");
-            else
-                log.Debug($"  next IFD location: {nextIfdLocation}");
 
-            // sanity check
-            if (nextIfdLocation == ifdLocation)
-                throw new Exception("next IFD location same as this one!");
+            // now you're free to load the data
+            log.Debug("Reading TIF tag data...");
+            foreach (TifTag tag in tifTags)
+            {
+                byte[] bytes = FileReadBytes(tag.dataCount, tag.dataFirstByte);
 
+                string vals;
+                if (tag.dataType == 2)
+                {
+                    //vals = System.Text.Encoding.Default.GetString(bytes);
+                    vals = $"string of length {bytes.Length}";
+                }
+                else if (bytes.Length==1)
+                {
+                    vals = bytes[0].ToString();
+                }
+                else
+                {
+                    vals = BytesToPretty(bytes);
+                }
+
+                log.Debug($"  {tag.idName} = {vals}");
+            }
             return nextIfdLocation;
         }
 
-        public void ReadTag()
+        private TifTag ReadTifTag()
         {
-            string[] typeNames = { "?", "BYTE", "ASCII", "SHORT", "LONG", "RATIONAL",
-                "SBYTE", "UNDEFINE", "SSHORT", "SLONG", "SRATIONAL", "FLOAT", "DOUBLE" };
-
-            int[] supportedTypes = { 1, 2, 3, 4, 5 };
-
-            //string tagString = BytesToPretty(bytes);
-            //log.Debug($"  tag: {tagString}");
-            int ID = FileReadUInt16();
+            int id = FileReadUInt16();
             int dataType = FileReadUInt16();
-            string typeName = typeNames[dataType];
-            int count = FileReadUInt32();
-            int location = FileReadUInt32();
-            log.Debug($"  {ID} {typeName} (type {dataType}) {count} @ byte {location}");
-
-            if (!supportedTypes.Contains(dataType))
-                throw new Exception($"unsupported tag type {dataType} ({typeNames[dataType]})");
-
+            int dataCount = FileReadUInt32();
+            int dataFirstByte = FileReadUInt32();
+            return new TifTag(id, dataType, dataCount, dataFirstByte);
         }
 
-        public string Info()
+        public class TifTag
         {
-            string msg = $"File: {System.IO.Path.GetFileName(filePath)}\n";
-            msg += $"Full Path: {filePath}\n";
-            msg += $"Valid TIF: {validTif}\n";
-            if (littleEndian)
-                msg += $"Byte Order: little endian (LSB last)\n";
-            else
-                msg += $"Byte Order: big endian (LSB first)\n";
-            return msg;
+            private int id;
+            public string idName;
+            public int dataType;
+            public bool dataTypeKnown = true;
+            public int dataCount;
+            public int dataFirstByte;
+            public bool dataIsText = false;
+            public int dataByteSize;
+
+            public TifTag(int id, int dataType, int dataCount, int dataFirstByte)
+            {
+                this.id = id;
+                this.dataType = dataType;
+                this.dataCount = dataCount;
+                this.dataFirstByte = dataFirstByte;
+                idName = NameFromID(id);
+
+                // determine how many bytes the tag data is
+                if (dataType == 1) dataByteSize = 1;
+                else if (dataType == 2) dataByteSize = 1;
+                else if (dataType == 3) dataByteSize = 2;
+                else if (dataType == 4) dataByteSize = 4;
+                else if (dataType == 8) dataByteSize = 8;
+                else dataTypeKnown = false;
+                if (dataType == 2) dataIsText = true;
+            }
+
+            public string Info()
+            {
+                string msg = $"{idName} ({dataCount}x) dataType {dataType} at {dataFirstByte}";
+                msg = msg.Replace(" (1x)", "");
+                return msg;
+            }
+
+            private string NameFromID(int tagID)
+            {
+                if (tagID == 254) return "NewSubfileType";
+                if (tagID == 255) return "SubfileType";
+                if (tagID == 256) return "ImageWidth";
+                if (tagID == 257) return "ImageLength";
+                if (tagID == 258) return "BitsPerSample";
+                if (tagID == 259) return "Compression";
+                if (tagID == 262) return "PhotometricInterpretation";
+                if (tagID == 263) return "Threshholding";
+                if (tagID == 264) return "CellWidth";
+                if (tagID == 265) return "CellLength";
+                if (tagID == 266) return "FillOrder";
+                if (tagID == 270) return "ImageDescription";
+                if (tagID == 271) return "Make";
+                if (tagID == 272) return "Model";
+                if (tagID == 273) return "StripOffsets";
+                if (tagID == 274) return "Orientation";
+                if (tagID == 277) return "SamplesPerPixel";
+                if (tagID == 278) return "RowsPerStrip";
+                if (tagID == 279) return "StripByteCounts";
+                if (tagID == 280) return "MinSampleValue";
+                if (tagID == 281) return "MaxSampleValue";
+                if (tagID == 282) return "XResolution";
+                if (tagID == 283) return "YResolution";
+                if (tagID == 284) return "PlanarConfiguration";
+                if (tagID == 288) return "FreeOffsets";
+                if (tagID == 289) return "FreeByteCounts";
+                if (tagID == 290) return "GrayResponseUnit";
+                if (tagID == 291) return "GrayResponseCurve";
+                if (tagID == 296) return "ResolutionUnit";
+                if (tagID == 305) return "Software";
+                if (tagID == 306) return "DateTime";
+                if (tagID == 315) return "Artist";
+                if (tagID == 316) return "HostComputer";
+                if (tagID == 320) return "ColorMap";
+                if (tagID == 338) return "ExtraSamples";
+                if (tagID == 33432) return "Copyright";
+                return $"unknown tagID ({tagID})";
+            }
         }
+
+
+
     }
 }
