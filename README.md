@@ -6,5 +6,12 @@ An extremely common limitation of existing libraries is the lack of ability to s
 
 <img src="/data/images/video1.gif" align="right">A secondary purpose of this library is to demonstrate how to write a scientific-grade analysis routine which reads fluorescence intensity directly out of a TIF (which should be regarded scientifically as the source data). This is highly useful for fluorescennt microscopy (e.g., immunohistochemistry, colocalization assessment, image enhancement) and fluorescennt videomicroscopy (time-series calcium-sensitive fluorophore analysis such as Fluo-4 or GCaMP), especially when quantitative ratiometeric analyses are required. TifLib is specifically written with scientific analysis in mind, and was created to be easily ported to other programming languages.
 
+## Project Status
+SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke around the source code, start [here](https://github.com/swharden/SciTIF/tree/master/src/SciTifLib)
 
+## Contact
 
+**Scott W Harden, DMD, PhD**\
+[Harden Technologies, LLC](http://tech.SWHarden.com)\
+[www.SWHarden.com](http://www.SWHarden.com)\
+[SWHarden@gmail.com](mailto:swharden@gmail.com)
