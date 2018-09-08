@@ -10,7 +10,7 @@
 SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke around the source code, start [here](https://github.com/swharden/SciTIF/tree/master/src/SciTifLib)
 
 ## Resources
-* [TIF File Format Info](https://www.fileformat.info/format/tiff/egff.htm#TIFF.FO)
+* [TIFF File Format Summary](https://www.fileformat.info/format/tiff/egff.htm#TIFF.FO)
 
 ## Contact
 **Scott W Harden, DMD, PhD**\
