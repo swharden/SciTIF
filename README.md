@@ -36,8 +36,8 @@ SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke ar
 
 ## Features
 * Scientific-level (not photo-level) attention to preservation of pixel intensity values
-* Supports arbitrary bit depth data in 16-bit, 24-bit, and 32-bit TIFs
-* TIF stacks are analyzed on disk (not in memory) so your 200 GB TIFs are supported
+* Supports arbitrary bit depth (e.g., 10-bit, 12-bit, and 14-bit) data in TIFs of all bit depths
+* Images from stacks are pulled from disk (not memory) so your 200 GB TIFs are supported
 * Open source and readable code so you can inspect what is being done to your data
 * Intuitive API does not require documentation if you use a predictive IDE
 * not JAVA
