@@ -6,6 +6,9 @@
 
 <img src="/data/images/video1.gif" align="right">**A secondary purpose of this library is to demonstrate how to write scientific-grade analysis routines which read fluorescence intensity directly out of the binary structure of TIF files** (which should be regarded scientifically as experimental data and handled with thoughtful consideration). This is highly useful for fluorescennt microscopy (e.g., immunohistochemistry, colocalization assessment, image enhancement) and fluorescennt videomicroscopy (time-series calcium-sensitive fluorophore analysis such as Fluo-4 or GCaMP), especially when quantitative ratiometeric analyses are required. SciTIF is specifically written with scientific analysis in mind, and was created to be easily ported to other programming languages.
 
+## SciTIF Supports Arbitrary Bit Depths
+Many existing .NET libraries to load TIF files don't operate well when 16-bit TIFs contain 10-bit, 12-bit, or 14-bit data. In this situation, the upper bytes are partially filled. For example, when a 12-bit camera saves its data in a 16-bit TIF, the resulting image often appears "too dark" because the imaging library assumes the source data always spans the full range (16-bits). To complicate things, source data bit-depth is not a standard TIF file tag, so it cannot always be detected automatically. This is why 16-bit TIF micrographs don't render properly in the Windows photo viewer and often appear as black images.
+
 ## Project Status
 SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke around the source code, start [here](https://github.com/swharden/SciTIF/tree/master/src/SciTifLib)
 
