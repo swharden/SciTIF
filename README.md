@@ -13,7 +13,7 @@ SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke ar
 
 ## Features
 * Scientific-level (not photo-level) attention to preservation of pixel intensity values
-* Designed for partially-filled pixel data (e.g., 14-bit data in a 16-bit TIF)
+* Designed for partially-filled pixel byte data (e.g., 12-bit image data saved as a 16-bit TIF)
 * TIFs are never fully-loaded into memory (analyzing 100GB TIF stacks is no problem)
 * Open source and easy to read, so you can track every operation done to your data
 * Intuitive API does not require documentation if you use a predctive API
