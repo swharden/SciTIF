@@ -86,14 +86,19 @@ namespace SciTIFlib
             return msg;
         }
 
-        public Bitmap GetBitmap(int frameNumber = 0)
+        /// <summary>
+        /// Generate an 8-bit grayscale image suitable for display.
+        /// Returned data may be degraded due to quantization error.
+        /// </summary>
+        public Bitmap GetBitmapForDisplay(int frameNumber = 0)
         {
-            if (decoder == null)
-                return null;
-            if (frameNumber >= decoder.Frames.Count)
-                return null;
+            // ensure a TIF is loaded
+            if (decoder == null) return null;
 
-            // prepare an array to hold pixel values
+            // select the frame (channel or slice) we want
+            if (frameNumber >= decoder.Frames.Count) return null;
+
+            // prepare variables which will be useful later
             int sourceImageDepth = bitmapSource.Format.BitsPerPixel;
             int bytesPerPixel = sourceImageDepth / 8;
             int width = bitmapSource.PixelWidth;
@@ -102,14 +107,11 @@ namespace SciTIFlib
             int imageByteCount = height * width * bytesPerPixel;
             int pixelCount = width * height;
 
-            log.Debug($"image pixels: {width * height}");
-            log.Debug($"image bytes: {imageByteCount}");
-
-            // copy the source data into a byte array
+            // fill our byte array with source data
             byte[] bytesSource = new byte[imageByteCount];
             bitmapSource.CopyPixels(bytesSource, stride, 0);
 
-            // convert the byte array to an int array based on depth (bytes per pixel)
+            // Fill an int array with data from the byte array according to bytesPerPixel
             int[] valuesSource = new int[pixelCount];
             for (int i = 0; i < valuesSource.Length; i++)
             {
@@ -120,50 +122,55 @@ namespace SciTIFlib
                 }
             }
 
-            // sanity check the values we get
+            // determine the range of intensity data
             int pixelValueMax = valuesSource.Max();
             int pixelValueMin = valuesSource.Min();
             log.Debug($"pixel value max: {pixelValueMax}");
             log.Debug($"pixel value min: {pixelValueMin}");
 
-            // if we have a nonstandard bit-depth, try to figure that out
+            // predict what bit depth we have based upon pixelValueMax
             int dataDepth = 1;
             while (Math.Pow(2, dataDepth) < pixelValueMax)
                 dataDepth++;                
-            log.Debug($"data value depth: {dataDepth}-bit");
+            log.Debug($"detected data depth: {dataDepth}-bit");
 
             // determine if we will use the original bit depth or our guessed bit depth
-            bool use_detected_camera_depth = true;
+            bool use_detected_camera_depth = true; // should this be an argument?
             if (!use_detected_camera_depth)
                 dataDepth = sourceImageDepth;
 
-            // create the 8-bit pixel array (indexed color) to hold the final output image
+            // create and fill a pixel array for the 8-bit final image
             byte[] pixelsOutput = new byte[height * width];
             for (int i = 0; i < pixelsOutput.Length; i++)
             {
+                // start by loading the pixel value of the source
                 int pixelValue = valuesSource[i];
 
-                // upshift it if using a nonstandard depth
+                // upshift it to the nearest byte (if using a nonstandard depth)
                 pixelValue = pixelValue << (sourceImageDepth - dataDepth);
 
-                // downshift it if needed to ensure it ends up 8-bit
+                // downshift it as needed to ensure the MSB is in the lowest 8 bytes
                 pixelValue = pixelValue >> (sourceImageDepth-8);
 
+                // conversion to 8-bit should be now nondestructive
                 pixelsOutput[i] = (byte)(pixelValue);
             }
 
-            // create the output bitmap (8-bit indexed color with a grayscale pallette)
-            Bitmap bmp = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-            ColorPalette paletteGrayscale = bmp.Palette;
-            for (int i = 0; i < 256; i++)
-                paletteGrayscale.Entries[i] = System.Drawing.Color.FromArgb(255, i, i, i);
-            bmp.Palette = paletteGrayscale;
+            // create the output bitmap (8-bit indexed color)
+            var format = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
+            Bitmap bmp = new Bitmap(width, height, format);
 
-            // copy our pixels byte array into the new image
+            // Create a grayscale palette, although other colors and LUTs could go here
+            ColorPalette pal = bmp.Palette;
+            for (int i = 0; i < 256; i++)
+                pal.Entries[i] = System.Drawing.Color.FromArgb(255, i, i, i);
+            bmp.Palette = pal;
+
+            // copy the new pixel data into the data of our output bitmap
             var rect = new Rectangle(0, 0, width, height);
-            BitmapData bitmapData = bmp.LockBits(rect, ImageLockMode.ReadOnly, bmp.PixelFormat);
-            Marshal.Copy(pixelsOutput, 0, bitmapData.Scan0, pixelsOutput.Length);
-            bmp.UnlockBits(bitmapData);
+            BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadOnly, format);
+            Marshal.Copy(pixelsOutput, 0, bmpData.Scan0, pixelsOutput.Length);
+            bmp.UnlockBits(bmpData);
 
             return bmp;
         }

@@ -44,11 +44,11 @@ namespace TifLibDemo
             lblFileName.Text = System.IO.Path.GetFileName(tifFilePath);
             tif = new TifFile(tifFilePath);
 
-            pbZoom.Image = tif.GetBitmap(0);
-            pbRed.Image = tif.GetBitmap(0);
-            pbGreen.Image = tif.GetBitmap(1);
-            pbBlue.Image = tif.GetBitmap(2);
-            pbMerge.Image = tif.GetBitmap(3);
+            pbZoom.Image = tif.GetBitmapForDisplay(0);
+            pbRed.Image = tif.GetBitmapForDisplay(0);
+            pbGreen.Image = tif.GetBitmapForDisplay(1);
+            pbBlue.Image = tif.GetBitmapForDisplay(2);
+            pbMerge.Image = tif.GetBitmapForDisplay(3);
 
             rtbLog.Text = tif.log.logText;
             rtbLog.SelectionStart = rtbLog.Text.Length;
