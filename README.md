@@ -14,7 +14,7 @@ SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke ar
 ## Resources
 * [TIFF File Format Summary](https://www.fileformat.info/format/tiff/egff.htm#TIFF.FO)
 * [TIFF Tag Descriptions](https://www.awaresystems.be/imaging/tiff/tifftags/baseline.html)
-
+* [Pillow TIFF decoder source code](https://github.com/imagej/ImageJA/blob/master/src/main/java/ij/io/TiffDecoder.java) (Java)
 ## Contact
 **Scott W Harden, DMD, PhD**\
 [Harden Technologies, LLC](http://tech.SWHarden.com)\
