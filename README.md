@@ -17,6 +17,7 @@ SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke ar
 * TIFs are never fully-loaded into memory (analyzing 100GB TIF stacks is no problem)
 * Open source and easy to read, so you can track every operation done to your data
 * Intuitive API does not require documentation if you use a predctive API
+* not JAVA
 
 ## Resources
 * [TIFF File Format Summary](https://www.fileformat.info/format/tiff/egff.htm#TIFF.FO)
