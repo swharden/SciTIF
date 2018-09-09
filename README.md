@@ -31,9 +31,8 @@ Consider a situation where you have a 12-bit camera. The maximum intensity value
 ## Project Status
 SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke around the source code, start [here](https://github.com/swharden/SciTIF/tree/master/src/SciTifLib)
 
-![](doc/graphics/screenshot.png)
-
 ## Screenshots
+<img src="doc/graphics/screenshot01.png" width="500">
 
 ## Features
 * Scientific-level (not photo-level) attention to preservation of pixel intensity values
