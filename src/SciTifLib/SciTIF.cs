@@ -5,17 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Drawing;
+using System.Windows;
+using System.Runtime.InteropServices; // for Marshal
+using System.Drawing.Imaging;
+
 namespace SciTIFlib
 {
     public class TifFile
     {
         public string filePath;
         public long fileSize;
-        public bool validTif;
 
         public Logger log;
-
-        private bool littleEndian = true;
+        private Stream stream;
+        public TiffBitmapDecoder decoder;
+        private BitmapSource bitmapSource;
 
         public TifFile(string filePath)
         {
@@ -26,290 +33,140 @@ namespace SciTIFlib
 
             if (!File.Exists(filePath))
                 throw new Exception($"file does not exist: {filePath}");
-
-            fileSize = new System.IO.FileInfo(filePath).Length;
-            validTif = true;
-            FileOpen();
-            ReadHeader();
-            FileClose();
-            if (validTif)
-                log.Debug("TIF read successfully");
             else
-                log.Warn("!!!FILE DID NOT READ SUCCESSFULLY!!!");
+                fileSize = new System.IO.FileInfo(filePath).Length;
+
+            LoadImage();
+            if (decoder != null)
+            {
+                LoadImageProperties();
+                log.Debug("TIF read successfully");
+            }
+            else
+            {
+                log.Debug("Could not decode TIF");
+            }
+        }
+
+        public void LoadImage()
+        {
+            log.Debug("starting file stream");
+            stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            try
+            {
+                decoder = new TiffBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                log.Debug("TIF file successfully decoded");
+            }
+            catch
+            {
+                decoder = null;
+                log.Debug("TiffBitmapDecoder crashed on load");
+            }
+
+        }
+
+        public void LoadImageProperties()
+        {
+            bitmapSource = decoder.Frames[0];
+            log.Debug($"Image depth: {bitmapSource.Format.BitsPerPixel}-bit");
+            log.Debug($"image width: {bitmapSource.PixelWidth}");
+            log.Debug($"image height: {bitmapSource.PixelHeight}");
+            log.Debug($"number of frames: {decoder.Frames.Count}");
+
+            if (decoder.Frames.Count > 1)
+            {
+                log.Warn($"multi-frame image detected - assuming RGB for now");
+            }
         }
 
         public string Info()
         {
             string msg = $"File: {System.IO.Path.GetFileName(filePath)}\n";
             msg += $"Full Path: {filePath}\n";
-            msg += $"Valid TIF: {validTif}\n";
-            if (littleEndian)
-                msg += $"Byte Order: little endian (LSB last)\n";
-            else
-                msg += $"Byte Order: big endian (LSB first)\n";
             return msg;
         }
 
-        /* 
-         * 
-         * FILE OPERATIONS
-         * 
-         */
-
-        BinaryReader br;
-        private void FileOpen()
+        public Bitmap GetBitmap(int frameNumber = 0)
         {
-            log.Debug("opening file");
-            br = new BinaryReader(File.Open(filePath, FileMode.Open));
-            br.BaseStream.Seek(0, SeekOrigin.Begin);
-        }
+            if (decoder == null)
+                return null;
+            if (frameNumber >= decoder.Frames.Count)
+                return null;
 
-        private void FileSeek(int byteLocation)
-        {
-            br.BaseStream.Seek(byteLocation, SeekOrigin.Begin);
-        }
+            // prepare an array to hold pixel values
+            int sourceImageDepth = bitmapSource.Format.BitsPerPixel;
+            int bytesPerPixel = sourceImageDepth / 8;
+            int width = bitmapSource.PixelWidth;
+            int height = bitmapSource.PixelHeight;
+            int stride = width * bytesPerPixel;
+            int imageByteCount = height * width * bytesPerPixel;
+            int pixelCount = width * height;
 
-        private void FileClose()
-        {
-            log.Debug("file closed");
-            br.Close();
-        }
+            log.Debug($"image pixels: {width * height}");
+            log.Debug($"image bytes: {imageByteCount}");
 
-        private byte[] FileReadBytes(int charCount, int bytePosition = -1)
-        {
-            if (bytePosition >= 0)
-                br.BaseStream.Seek(bytePosition, SeekOrigin.Begin);
-            byte[] bytes = br.ReadBytes(charCount);
-            if (!littleEndian)
-                Array.Reverse(bytes);
-            return bytes;
-        }
+            // copy the source data into a byte array
+            byte[] bytesSource = new byte[imageByteCount];
+            bitmapSource.CopyPixels(bytesSource, stride, 0);
 
-        private int FileReadUInt16(int bytePosition = -1)
-        {
-            byte[] bytes = FileReadBytes(2, bytePosition);
-            return (int)BitConverter.ToUInt16(bytes, 0);
-        }
-
-        private int FileReadUInt32(int bytePosition = -1)
-        {
-            byte[] bytes = FileReadBytes(4, bytePosition);
-            return (int)BitConverter.ToUInt32(bytes, 0);
-        }
-
-        private string BytesToString(byte[] bytes)
-        {
-            string s = System.Text.Encoding.Default.GetString(bytes);
-            return s;
-        }
-
-        private string BytesToHexstring(byte[] bytes)
-        {
-            string hexString = "";
-            foreach (byte b in bytes)
-                hexString += String.Format("{0:X2}", Convert.ToInt32(b));
-            return hexString;
-        }
-
-        private string BytesToPretty(byte[] bytes)
-        {
-            string[] strBytes = new string[bytes.Length];
-            for (int i = 0; i < bytes.Length; i++)
+            // convert the byte array to an int array based on depth (bytes per pixel)
+            int[] valuesSource = new int[pixelCount];
+            for (int i = 0; i < valuesSource.Length; i++)
             {
-                strBytes[i] = string.Format("{0}", bytes[i]);
-            }
-            string s = string.Join(", ", strBytes);
-            return $"[{s}]";
-        }
-
-        /* 
-         * 
-         * DATA READING
-         * 
-         */
-
-        private void ReadHeader()
-        {
-            // create a hex string from the first four bytes
-            FileSeek(0);
-            string firstFour = BytesToHexstring(FileReadBytes(4));
-            log.Debug($"First four bytes (hex): {firstFour}");
-
-            // the first four bytes confirm TIF is valid and indicate endianness
-            if (firstFour == "49492A00")
-            {
-                littleEndian = true;
-            }
-            else if (firstFour == "4D4D002A")
-            {
-                littleEndian = false;
-            }
-            else
-            {
-                validTif = false;
-                log.Critical($"Invalid TIF identifier and/or version");
-                return;
-            }
-
-            // the next 4 bytes are a Uint32 indicating where the first IDF is
-            int nextIfdLocation = FileReadUInt32();
-            log.Debug($"first IFD location: {nextIfdLocation}");
-
-            // read IFDs until the last one is reached
-            while (nextIfdLocation > 0)
-            {
-                nextIfdLocation = ReadIFD(nextIfdLocation);
-            }
-
-            return;
-        }
-
-        private int ReadIFD(int ifdLocation)
-        {
-            // An Image File Directory (IFD) is a collection of information similar to a header, 
-            // and it is used to describe the bitmapped data to which it is attached.
-            // It contains enteries called "tags", each 12 bytes long. Each tif tag describes
-            // a little bit about some data in the file, such as what format its in (SHORT, LONG, etc),
-            // how many values it has, and where the first byte is.
-
-            // ensure this byte position is valid
-            if (ifdLocation > fileSize)
-            {
-                validTif = false;
-                log.Critical($"ReadIFD() called on invalid byte: {ifdLocation}");
-                return 0;
-            }
-
-            FileSeek(ifdLocation);
-            int entryCount = FileReadUInt16();
-            log.Debug($"IFD at byte {ifdLocation} has {entryCount} tags");
-
-            // read each tig tag and add it to the list
-            List<TifTag> tifTags = new List<TifTag>();
-            for (int i = 0; i < entryCount; i++)
-            {
-                TifTag tag = ReadTifTag();
-                log.Debug("  " + tag.Info());
-                tifTags.Add(tag);
-            }
-
-            // return the position of the next IFD
-            int nextIfdLocation = FileReadUInt32();
-
-            // now you're free to load the data
-            log.Debug("Reading TIF tag data...");
-            foreach (TifTag tag in tifTags)
-            {
-                byte[] bytes = FileReadBytes(tag.dataCount, tag.dataFirstByte);
-
-                string vals;
-                if (tag.dataType == 2)
+                int bytePosition = i * bytesPerPixel;
+                for (int byteNumber = 0; byteNumber < bytesPerPixel; byteNumber++)
                 {
-                    //vals = System.Text.Encoding.Default.GetString(bytes);
-                    vals = $"string of length {bytes.Length}";
+                    valuesSource[i] += bytesSource[bytePosition + byteNumber] << (byteNumber * 8);
                 }
-                else if (bytes.Length==1)
-                {
-                    vals = bytes[0].ToString();
-                }
-                else
-                {
-                    vals = BytesToPretty(bytes);
-                }
-
-                log.Debug($"  {tag.idName} = {vals}");
             }
-            return nextIfdLocation;
-        }
 
-        private TifTag ReadTifTag()
-        {
-            int id = FileReadUInt16();
-            int dataType = FileReadUInt16();
-            int dataCount = FileReadUInt32();
-            int dataFirstByte = FileReadUInt32();
-            return new TifTag(id, dataType, dataCount, dataFirstByte);
-        }
+            // sanity check the values we get
+            int pixelValueMax = valuesSource.Max();
+            int pixelValueMin = valuesSource.Min();
+            log.Debug($"pixel value max: {pixelValueMax}");
+            log.Debug($"pixel value min: {pixelValueMin}");
 
-        public class TifTag
-        {
-            private int id;
-            public string idName;
-            public int dataType;
-            public bool dataTypeKnown = true;
-            public int dataCount;
-            public int dataFirstByte;
-            public bool dataIsText = false;
-            public int dataByteSize;
+            // if we have a nonstandard bit-depth, try to figure that out
+            int dataDepth = 1;
+            while (Math.Pow(2, dataDepth) < pixelValueMax)
+                dataDepth++;                
+            log.Debug($"data value depth: {dataDepth}-bit");
 
-            public TifTag(int id, int dataType, int dataCount, int dataFirstByte)
+            // determine if we will use the original bit depth or our guessed bit depth
+            bool use_detected_camera_depth = true;
+            if (!use_detected_camera_depth)
+                dataDepth = sourceImageDepth;
+
+            // create the 8-bit pixel array (indexed color) to hold the final output image
+            byte[] pixelsOutput = new byte[height * width];
+            for (int i = 0; i < pixelsOutput.Length; i++)
             {
-                this.id = id;
-                this.dataType = dataType;
-                this.dataCount = dataCount;
-                this.dataFirstByte = dataFirstByte;
-                idName = NameFromID(id);
+                int pixelValue = valuesSource[i];
 
-                // determine how many bytes the tag data is
-                if (dataType == 1) dataByteSize = 1;
-                else if (dataType == 2) dataByteSize = 1;
-                else if (dataType == 3) dataByteSize = 2;
-                else if (dataType == 4) dataByteSize = 4;
-                else if (dataType == 8) dataByteSize = 8;
-                else dataTypeKnown = false;
-                if (dataType == 2) dataIsText = true;
+                // upshift it if using a nonstandard depth
+                pixelValue = pixelValue << (sourceImageDepth - dataDepth);
+
+                // downshift it if needed to ensure it ends up 8-bit
+                pixelValue = pixelValue >> (sourceImageDepth-8);
+
+                pixelsOutput[i] = (byte)(pixelValue);
             }
 
-            public string Info()
-            {
-                string msg = $"{idName} ({dataCount}x) dataType {dataType} at {dataFirstByte}";
-                msg = msg.Replace(" (1x)", "");
-                return msg;
-            }
+            // create the output bitmap (8-bit indexed color with a grayscale pallette)
+            Bitmap bmp = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+            ColorPalette paletteGrayscale = bmp.Palette;
+            for (int i = 0; i < 256; i++)
+                paletteGrayscale.Entries[i] = System.Drawing.Color.FromArgb(255, i, i, i);
+            bmp.Palette = paletteGrayscale;
 
-            private string NameFromID(int tagID)
-            {
-                if (tagID == 254) return "NewSubfileType";
-                if (tagID == 255) return "SubfileType";
-                if (tagID == 256) return "ImageWidth";
-                if (tagID == 257) return "ImageLength";
-                if (tagID == 258) return "BitsPerSample";
-                if (tagID == 259) return "Compression";
-                if (tagID == 262) return "PhotometricInterpretation";
-                if (tagID == 263) return "Threshholding";
-                if (tagID == 264) return "CellWidth";
-                if (tagID == 265) return "CellLength";
-                if (tagID == 266) return "FillOrder";
-                if (tagID == 270) return "ImageDescription";
-                if (tagID == 271) return "Make";
-                if (tagID == 272) return "Model";
-                if (tagID == 273) return "StripOffsets";
-                if (tagID == 274) return "Orientation";
-                if (tagID == 277) return "SamplesPerPixel";
-                if (tagID == 278) return "RowsPerStrip";
-                if (tagID == 279) return "StripByteCounts";
-                if (tagID == 280) return "MinSampleValue";
-                if (tagID == 281) return "MaxSampleValue";
-                if (tagID == 282) return "XResolution";
-                if (tagID == 283) return "YResolution";
-                if (tagID == 284) return "PlanarConfiguration";
-                if (tagID == 288) return "FreeOffsets";
-                if (tagID == 289) return "FreeByteCounts";
-                if (tagID == 290) return "GrayResponseUnit";
-                if (tagID == 291) return "GrayResponseCurve";
-                if (tagID == 296) return "ResolutionUnit";
-                if (tagID == 305) return "Software";
-                if (tagID == 306) return "DateTime";
-                if (tagID == 315) return "Artist";
-                if (tagID == 316) return "HostComputer";
-                if (tagID == 320) return "ColorMap";
-                if (tagID == 338) return "ExtraSamples";
-                if (tagID == 33432) return "Copyright";
-                return $"unknown tagID ({tagID})";
-            }
+            // copy our pixels byte array into the new image
+            var rect = new Rectangle(0, 0, width, height);
+            BitmapData bitmapData = bmp.LockBits(rect, ImageLockMode.ReadOnly, bmp.PixelFormat);
+            Marshal.Copy(pixelsOutput, 0, bitmapData.Scan0, pixelsOutput.Length);
+            bmp.UnlockBits(bitmapData);
+
+            return bmp;
         }
-
-
 
     }
 }

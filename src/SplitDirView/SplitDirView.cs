@@ -97,6 +97,57 @@ namespace SplitDirView
             lvFiles.Font = font;
         }
 
+        public void SetMatchingForeColor(string match, Color color, bool selectInverse = false, bool capSensitive = false)
+        {
+            SetMatchingColor(match, color, selectInverse, capSensitive, false);
+        }
+
+        public void SetMatchingBackColor(string match, Color color, bool selectInverse = false, bool capSensitive = false)
+        {
+            SetMatchingColor(match, color, selectInverse, capSensitive, true);
+        }
+
+        private void SetMatchingColor(string match, Color color, bool selectInverse = false, bool capSensitive = false, bool backColor = false)
+        {
+            for (int i=0; i<lvFiles.Items.Count; i++)
+            {
+                ListViewItem item = lvFiles.Items[i];
+                string itemText = item.Text;
+                if (!capSensitive)
+                {
+                    itemText = item.Text.ToUpper();
+                    match = match.ToUpper();
+                }
+
+                if (itemText.Contains(match))
+                {
+                    if (!selectInverse)
+                    {
+                        if (backColor)
+                        {
+                            item.BackColor = color;
+                        } else
+                        {
+                            item.ForeColor = color;
+                        }
+                    }
+                } else
+                {
+                    if (selectInverse)
+                    {
+                        if (backColor)
+                        {
+                            item.BackColor = color;
+                        }
+                        else
+                        {
+                            item.ForeColor = color;
+                        }
+                    }
+                }
+            }
+        }
+
         private void btnSetFolder_Click(object sender, EventArgs e)
         {
             var diag = new FolderBrowserDialog();

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6C4E4319-9F0D-409A-9611-77A6153DB9DF}</ProjectGuid>
+    <ProjectGuid>{C988A101-A0C8-41EC-8170-57B2353027CD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TifLibDemo</RootNamespace>
-    <AssemblyName>TifLibDemo</AssemblyName>
+    <RootNamespace>ExternalDemo</RootNamespace>
+    <AssemblyName>ExternalDemo</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -45,6 +45,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Form1.cs">
@@ -84,10 +85,6 @@
     <ProjectReference Include="..\SplitDirView\SplitDirView.csproj">
       <Project>{f561ce42-c563-4ad3-ab55-b08e29557693}</Project>
       <Name>SplitDirView</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SciTifLib\SciTIFlib.csproj">
-      <Project>{8094cd1e-0b0e-45a7-80f5-277850067d9a}</Project>
-      <Name>SciTIFlib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

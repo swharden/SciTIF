@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
-            this.rtbMeta = new System.Windows.Forms.RichTextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblFileName = new System.Windows.Forms.Label();
@@ -44,23 +43,23 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pbMerge = new System.Windows.Forms.PictureBox();
+            this.pbBlue = new System.Windows.Forms.PictureBox();
+            this.pbGreen = new System.Windows.Forms.PictureBox();
+            this.pbRed = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.rtbLog = new System.Windows.Forms.RichTextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.pbZoom = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMerge)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbBlue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbGreen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbRed)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbZoom)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -73,23 +72,10 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // rtbMeta
-            // 
-            this.rtbMeta.BackColor = System.Drawing.SystemColors.Control;
-            this.rtbMeta.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rtbMeta.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbMeta.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtbMeta.Location = new System.Drawing.Point(3, 16);
-            this.rtbMeta.Name = "rtbMeta";
-            this.rtbMeta.Size = new System.Drawing.Size(810, 85);
-            this.rtbMeta.TabIndex = 1;
-            this.rtbMeta.Text = "";
-            this.rtbMeta.WordWrap = false;
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 965F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 1037F));
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -147,6 +133,7 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.pbZoom);
             this.panel2.Controls.Add(this.checkBox4);
             this.panel2.Controls.Add(this.checkBox3);
             this.panel2.Controls.Add(this.checkBox2);
@@ -155,12 +142,11 @@
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.pictureBox4);
-            this.panel2.Controls.Add(this.pictureBox3);
-            this.panel2.Controls.Add(this.pictureBox2);
-            this.panel2.Controls.Add(this.pictureBox1);
+            this.panel2.Controls.Add(this.pbMerge);
+            this.panel2.Controls.Add(this.pbBlue);
+            this.panel2.Controls.Add(this.pbGreen);
+            this.panel2.Controls.Add(this.pbRed);
             this.panel2.Controls.Add(this.groupBox2);
-            this.panel2.Controls.Add(this.groupBox1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(203, 3);
             this.panel2.Name = "panel2";
@@ -243,48 +229,53 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Red Channel";
             // 
-            // pictureBox4
+            // pbMerge
             // 
-            this.pictureBox4.BackColor = System.Drawing.Color.Silver;
-            this.pictureBox4.Location = new System.Drawing.Point(327, 388);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(100, 100);
-            this.pictureBox4.TabIndex = 5;
-            this.pictureBox4.TabStop = false;
+            this.pbMerge.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbMerge.Location = new System.Drawing.Point(327, 388);
+            this.pbMerge.Name = "pbMerge";
+            this.pbMerge.Size = new System.Drawing.Size(100, 100);
+            this.pbMerge.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbMerge.TabIndex = 5;
+            this.pbMerge.TabStop = false;
             // 
-            // pictureBox3
+            // pbBlue
             // 
-            this.pictureBox3.BackColor = System.Drawing.Color.SkyBlue;
-            this.pictureBox3.Location = new System.Drawing.Point(221, 388);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(100, 100);
-            this.pictureBox3.TabIndex = 4;
-            this.pictureBox3.TabStop = false;
+            this.pbBlue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbBlue.Location = new System.Drawing.Point(221, 388);
+            this.pbBlue.Name = "pbBlue";
+            this.pbBlue.Size = new System.Drawing.Size(100, 100);
+            this.pbBlue.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbBlue.TabIndex = 4;
+            this.pbBlue.TabStop = false;
             // 
-            // pictureBox2
+            // pbGreen
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.pictureBox2.Location = new System.Drawing.Point(115, 388);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(100, 100);
-            this.pictureBox2.TabIndex = 3;
-            this.pictureBox2.TabStop = false;
+            this.pbGreen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbGreen.Location = new System.Drawing.Point(115, 388);
+            this.pbGreen.Name = "pbGreen";
+            this.pbGreen.Size = new System.Drawing.Size(100, 100);
+            this.pbGreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbGreen.TabIndex = 3;
+            this.pbGreen.TabStop = false;
             // 
-            // pictureBox1
+            // pbRed
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.LightCoral;
-            this.pictureBox1.Location = new System.Drawing.Point(9, 388);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 100);
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
+            this.pbRed.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pbRed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbRed.Location = new System.Drawing.Point(9, 388);
+            this.pbRed.Name = "pbRed";
+            this.pbRed.Size = new System.Drawing.Size(100, 100);
+            this.pbRed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbRed.TabIndex = 2;
+            this.pbRed.TabStop = false;
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.rtbLog);
-            this.groupBox2.Location = new System.Drawing.Point(6, 113);
+            this.groupBox2.Location = new System.Drawing.Point(6, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(813, 254);
+            this.groupBox2.Size = new System.Drawing.Size(810, 197);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Debug Log";
@@ -297,20 +288,21 @@
             this.rtbLog.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtbLog.Location = new System.Drawing.Point(3, 16);
             this.rtbLog.Name = "rtbLog";
-            this.rtbLog.Size = new System.Drawing.Size(807, 235);
+            this.rtbLog.Size = new System.Drawing.Size(804, 178);
             this.rtbLog.TabIndex = 0;
             this.rtbLog.Text = "";
             this.rtbLog.WordWrap = false;
             // 
-            // groupBox1
+            // pbZoom
             // 
-            this.groupBox1.Controls.Add(this.rtbMeta);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(816, 104);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Metadata";
+            this.pbZoom.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pbZoom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbZoom.Location = new System.Drawing.Point(466, 206);
+            this.pbZoom.Name = "pbZoom";
+            this.pbZoom.Size = new System.Drawing.Size(350, 350);
+            this.pbZoom.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbZoom.TabIndex = 14;
+            this.pbZoom.TabStop = false;
             // 
             // Form1
             // 
@@ -327,12 +319,12 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMerge)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbBlue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbGreen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbRed)).EndInit();
             this.groupBox2.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbZoom)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -340,13 +332,11 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.RichTextBox rtbMeta;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private SplitDirView.SplitDirView splitDirView1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.CheckBox checkBox2;
@@ -355,13 +345,14 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pbMerge;
+        private System.Windows.Forms.PictureBox pbBlue;
+        private System.Windows.Forms.PictureBox pbGreen;
+        private System.Windows.Forms.PictureBox pbRed;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RichTextBox rtbLog;
         private System.Windows.Forms.Label lblFileName;
+        private System.Windows.Forms.PictureBox pbZoom;
     }
 }
 
