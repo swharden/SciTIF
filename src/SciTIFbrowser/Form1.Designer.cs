@@ -31,6 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,6 +45,12 @@
             this.saveAsDefaultConfigurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.pasteImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pastePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderContentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,6 +65,7 @@
             this.grayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.greenToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.magentaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessAndContrstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.automaticToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,22 +87,35 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sciTIFDocumentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutSciTIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.editToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pbImage = new System.Windows.Forms.PictureBox();
+            this.tableLayoutMain = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblInfoDepthTif = new System.Windows.Forms.Label();
+            this.lblInfoDepthData = new System.Windows.Forms.Label();
+            this.lblInfoFileDimension = new System.Windows.Forms.Label();
+            this.lblInfoFileSize = new System.Windows.Forms.Label();
+            this.lblInfoFileName = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rtbLog = new System.Windows.Forms.RichTextBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
+            this.tableLayoutMain.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
+            this.lblStatus,
+            this.toolStripStatusLabel1,
+            this.toolStripProgressBar1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 640);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(786, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -102,6 +124,17 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(118, 17);
             this.lblStatus.Text = "toolStripStatusLabel1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(551, 17);
+            this.toolStripStatusLabel1.Spring = true;
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
             // 
             // menuStrip1
             // 
@@ -113,7 +146,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(786, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -194,12 +227,54 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
+            // editToolStripMenuItem1
+            // 
+            this.editToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.toolStripSeparator4,
+            this.pasteImageToolStripMenuItem,
+            this.pastePathToolStripMenuItem});
+            this.editToolStripMenuItem1.Name = "editToolStripMenuItem1";
+            this.editToolStripMenuItem1.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem1.Text = "Edit";
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.copyToolStripMenuItem.Text = "Copy Image";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(138, 22);
+            this.toolStripMenuItem2.Text = "Copy Path";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(135, 6);
+            // 
+            // pasteImageToolStripMenuItem
+            // 
+            this.pasteImageToolStripMenuItem.Name = "pasteImageToolStripMenuItem";
+            this.pasteImageToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.pasteImageToolStripMenuItem.Text = "Paste Image";
+            // 
+            // pastePathToolStripMenuItem
+            // 
+            this.pastePathToolStripMenuItem.Name = "pastePathToolStripMenuItem";
+            this.pastePathToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.pastePathToolStripMenuItem.Text = "Paste Path";
+            // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.folderContentsToolStripMenuItem,
             this.backgroundColorToolStripMenuItem,
-            this.imageOutlineToolStripMenuItem});
+            this.imageOutlineToolStripMenuItem,
+            this.debugLogToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -224,9 +299,7 @@
             // 
             // blackToolStripMenuItem
             // 
-            this.blackToolStripMenuItem.Checked = true;
             this.blackToolStripMenuItem.CheckOnClick = true;
-            this.blackToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.blackToolStripMenuItem.Name = "blackToolStripMenuItem";
             this.blackToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.blackToolStripMenuItem.Text = "Black";
@@ -240,7 +313,9 @@
             // 
             // grayToolStripMenuItem1
             // 
+            this.grayToolStripMenuItem1.Checked = true;
             this.grayToolStripMenuItem1.CheckOnClick = true;
+            this.grayToolStripMenuItem1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.grayToolStripMenuItem1.Name = "grayToolStripMenuItem1";
             this.grayToolStripMenuItem1.Size = new System.Drawing.Size(121, 22);
             this.grayToolStripMenuItem1.Text = "Gray";
@@ -307,6 +382,13 @@
             this.magentaToolStripMenuItem1.Name = "magentaToolStripMenuItem1";
             this.magentaToolStripMenuItem1.Size = new System.Drawing.Size(121, 22);
             this.magentaToolStripMenuItem1.Text = "Magenta";
+            // 
+            // debugLogToolStripMenuItem
+            // 
+            this.debugLogToolStripMenuItem.Name = "debugLogToolStripMenuItem";
+            this.debugLogToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.debugLogToolStripMenuItem.Text = "Debug Log";
+            this.debugLogToolStripMenuItem.Click += new System.EventHandler(this.debugLogToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -456,58 +538,158 @@
             this.aboutSciTIFToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.aboutSciTIFToolStripMenuItem.Text = "About SciTIF";
             // 
-            // pictureBox1
+            // pbImage
             // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(0, 24);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(800, 404);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
+            this.pbImage.BackColor = System.Drawing.SystemColors.Control;
+            this.pbImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbImage.Image = ((System.Drawing.Image)(resources.GetObject("pbImage.Image")));
+            this.pbImage.Location = new System.Drawing.Point(3, 18);
+            this.pbImage.Name = "pbImage";
+            this.pbImage.Size = new System.Drawing.Size(780, 395);
+            this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbImage.TabIndex = 2;
+            this.pbImage.TabStop = false;
+            this.pbImage.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
             // 
-            // editToolStripMenuItem1
+            // tableLayoutMain
             // 
-            this.editToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyToolStripMenuItem,
-            this.toolStripMenuItem2});
-            this.editToolStripMenuItem1.Name = "editToolStripMenuItem1";
-            this.editToolStripMenuItem1.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem1.Text = "Edit";
+            this.tableLayoutMain.ColumnCount = 1;
+            this.tableLayoutMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutMain.Controls.Add(this.pbImage, 0, 1);
+            this.tableLayoutMain.Controls.Add(this.flowLayoutPanel1, 0, 0);
+            this.tableLayoutMain.Controls.Add(this.panel1, 0, 2);
+            this.tableLayoutMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutMain.Location = new System.Drawing.Point(0, 24);
+            this.tableLayoutMain.Name = "tableLayoutMain";
+            this.tableLayoutMain.RowCount = 3;
+            this.tableLayoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+            this.tableLayoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tableLayoutMain.Size = new System.Drawing.Size(786, 616);
+            this.tableLayoutMain.TabIndex = 3;
             // 
-            // copyToolStripMenuItem
+            // flowLayoutPanel1
             // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.copyToolStripMenuItem.Text = "Copy Image";
+            this.flowLayoutPanel1.Controls.Add(this.lblInfoDepthTif);
+            this.flowLayoutPanel1.Controls.Add(this.lblInfoDepthData);
+            this.flowLayoutPanel1.Controls.Add(this.lblInfoFileDimension);
+            this.flowLayoutPanel1.Controls.Add(this.lblInfoFileSize);
+            this.flowLayoutPanel1.Controls.Add(this.lblInfoFileName);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(786, 15);
+            this.flowLayoutPanel1.TabIndex = 5;
             // 
-            // toolStripMenuItem2
+            // lblInfoDepthTif
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem2.Text = "Copy Path";
+            this.lblInfoDepthTif.AutoSize = true;
+            this.lblInfoDepthTif.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblInfoDepthTif.Location = new System.Drawing.Point(717, 0);
+            this.lblInfoDepthTif.Name = "lblInfoDepthTif";
+            this.lblInfoDepthTif.Size = new System.Drawing.Size(66, 15);
+            this.lblInfoDepthTif.TabIndex = 4;
+            this.lblInfoDepthTif.Text = "16-bit image";
+            // 
+            // lblInfoDepthData
+            // 
+            this.lblInfoDepthData.AutoSize = true;
+            this.lblInfoDepthData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblInfoDepthData.Location = new System.Drawing.Point(652, 0);
+            this.lblInfoDepthData.Name = "lblInfoDepthData";
+            this.lblInfoDepthData.Size = new System.Drawing.Size(59, 15);
+            this.lblInfoDepthData.TabIndex = 3;
+            this.lblInfoDepthData.Text = "12-bit data";
+            // 
+            // lblInfoFileDimension
+            // 
+            this.lblInfoFileDimension.AutoSize = true;
+            this.lblInfoFileDimension.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblInfoFileDimension.Location = new System.Drawing.Point(590, 0);
+            this.lblInfoFileDimension.Name = "lblInfoFileDimension";
+            this.lblInfoFileDimension.Size = new System.Drawing.Size(56, 15);
+            this.lblInfoFileDimension.TabIndex = 2;
+            this.lblInfoFileDimension.Text = "1024x768";
+            // 
+            // lblInfoFileSize
+            // 
+            this.lblInfoFileSize.AutoSize = true;
+            this.lblInfoFileSize.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblInfoFileSize.Location = new System.Drawing.Point(527, 0);
+            this.lblInfoFileSize.Name = "lblInfoFileSize";
+            this.lblInfoFileSize.Size = new System.Drawing.Size(57, 15);
+            this.lblInfoFileSize.TabIndex = 1;
+            this.lblInfoFileSize.Text = "123.45 kb";
+            // 
+            // lblInfoFileName
+            // 
+            this.lblInfoFileName.AutoSize = true;
+            this.lblInfoFileName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblInfoFileName.Location = new System.Drawing.Point(449, 0);
+            this.lblInfoFileName.Name = "lblInfoFileName";
+            this.lblInfoFileName.Size = new System.Drawing.Size(72, 15);
+            this.lblInfoFileName.TabIndex = 0;
+            this.lblInfoFileName.Text = "FileName.TIF";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.groupBox1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 419);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(780, 194);
+            this.panel1.TabIndex = 6;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.rtbLog);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(780, 194);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Debug Log";
+            // 
+            // rtbLog
+            // 
+            this.rtbLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtbLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbLog.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rtbLog.Location = new System.Drawing.Point(3, 16);
+            this.rtbLog.Name = "rtbLog";
+            this.rtbLog.ReadOnly = true;
+            this.rtbLog.Size = new System.Drawing.Size(774, 175);
+            this.rtbLog.TabIndex = 0;
+            this.rtbLog.Text = "SciTIF Browser Developer Log";
+            this.rtbLog.WordWrap = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.pictureBox1);
+            this.ClientSize = new System.Drawing.Size(786, 662);
+            this.Controls.Add(this.tableLayoutMain);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "SciTIF Image Browser";
+            this.Text = "SciTIF Browser";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
+            this.tableLayoutMain.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -544,7 +726,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sciTIFDocumentationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutSciTIFToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pbImage;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem folderContentsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem backgroundColorToolStripMenuItem;
@@ -568,6 +750,22 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem pasteImageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pastePathToolStripMenuItem;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutMain;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.Label lblInfoFileName;
+        private System.Windows.Forms.Label lblInfoFileSize;
+        private System.Windows.Forms.Label lblInfoFileDimension;
+        private System.Windows.Forms.Label lblInfoDepthData;
+        private System.Windows.Forms.Label lblInfoDepthTif;
+        private System.Windows.Forms.RichTextBox rtbLog;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.ToolStripMenuItem debugLogToolStripMenuItem;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 
