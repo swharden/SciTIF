@@ -26,7 +26,7 @@ namespace SciTIFlib
 
         public TifFile(string filePath)
         {
-            filePath = Path.GetFullPath(filePath);
+            filePath = System.IO.Path.GetFullPath(filePath);
             this.filePath = filePath;
             log = new Logger("SciTIF");
             log.Info($"Loading abf file: {filePath}");

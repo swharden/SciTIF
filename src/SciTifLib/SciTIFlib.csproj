@@ -7,8 +7,8 @@
     <ProjectGuid>{8094CD1E-0B0E-45A7-80F5-277850067D9A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TifLib</RootNamespace>
-    <AssemblyName>TifLib</AssemblyName>
+    <RootNamespace>SciTIFlib</RootNamespace>
+    <AssemblyName>SciTIFlib</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logger.cs" />
+    <Compile Include="Path.cs" />
     <Compile Include="SciTIF.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

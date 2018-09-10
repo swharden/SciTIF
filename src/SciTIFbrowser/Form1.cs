@@ -12,9 +12,11 @@ namespace SciTIFbrowser
 {
     public partial class Form1 : Form
     {
+        SciTIFlib.Path SciTifPath;
         public Form1()
         {
             InitializeComponent();
+            SciTifPath = new SciTIFlib.Path();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -44,73 +46,38 @@ namespace SciTIFbrowser
         SciTIFlib.TifFile tif;
         public void LoadImage(string filePath)
         {
-            lblStatus.Text = $"Loading {filePath}";
+            lblStatus.Text = $"Loading image...";
             tif = new SciTIFlib.TifFile(filePath);
             pictureBox1.Image = tif.GetBitmapForDisplay();
-        }
-
-        public void LoadAdjacentImage(bool reverse = false)
-        {
-            string currentBasename = System.IO.Path.GetFileName(tif.filePath);
-            string imageFolder = System.IO.Path.GetDirectoryName(tif.filePath);
-            string[] imageFiles = System.IO.Directory.GetFiles(imageFolder);
-            Array.Sort(imageFiles);
-
-            // not multiple files in this folder so dont do anything
-            if (imageFiles.Length < 2)
-                return;
-
-            // step through all the rest
-            string imageFirst = imageFiles[0];
-            string imageLast = imageFiles[imageFiles.Length - 1];
-
-            string imageNext;
-            string imagePrevious;
-
-            for (int i = 0; i < imageFiles.Length; i++)
-            {
-                string maybeBasename = System.IO.Path.GetFileName(imageFiles[i]);
-                System.Console.WriteLine($"{currentBasename.ToUpper()} {maybeBasename.ToUpper()}");
-                if (currentBasename.ToUpper() != maybeBasename.ToUpper())
-                    continue;
-
-                if (i == 0)
-                   imagePrevious = imageLast;
-                else
-                    imagePrevious = imageFiles[i - 1];
-
-                if (i == imageFiles.Length - 1)
-                    imageNext = imageFirst;
-                else
-                    imageNext = imageFiles[i + 1];
-
-                if (reverse)
-                    LoadImage(imagePrevious);
-                else
-                    LoadImage(imageNext);
-            }
-
+            lblStatus.Text = $"{filePath}";
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             System.Console.WriteLine("KEYPRESS");
+
+            string ImageToLoad = null;
             switch (e.KeyCode)
             {
                 case Keys.Down:
                 case Keys.Right:
-                    LoadAdjacentImage();
+                    ImageToLoad = SciTifPath.AdjacentFilename(tif.filePath, ".tif", false);
                     break;
                 case Keys.Up:
                 case Keys.Left:
-                    LoadAdjacentImage(true);
+                    ImageToLoad = SciTifPath.AdjacentFilename(tif.filePath, ".tif", true);
                     break;
             }
-        }
 
-        private void blackToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            pictureBox1.BackColor = Color.Black;
+            if (ImageToLoad != null)
+            {
+                LoadImage(ImageToLoad);
+            }
+            else
+            {
+                lblStatus.Text = ("no adjacent images");
+            }
+
         }
     }
 }
