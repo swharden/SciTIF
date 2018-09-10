@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplitDirView", "SplitDirVie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExternalDemo", "ExternalDemo\ExternalDemo.csproj", "{C988A101-A0C8-41EC-8170-57B2353027CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SciTIFbrowser", "SciTIFbrowser\SciTIFbrowser.csproj", "{F404E4E5-220F-4365-B830-2594E0136516}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C988A101-A0C8-41EC-8170-57B2353027CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C988A101-A0C8-41EC-8170-57B2353027CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C988A101-A0C8-41EC-8170-57B2353027CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F404E4E5-220F-4365-B830-2594E0136516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F404E4E5-220F-4365-B830-2594E0136516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F404E4E5-220F-4365-B830-2594E0136516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F404E4E5-220F-4365-B830-2594E0136516}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
