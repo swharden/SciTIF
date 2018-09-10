@@ -1,7 +1,5 @@
 # SciTIF
-<img src="data/images/video1.gif" align="right">**SciTIF provides a .NET interface to microscopy data stored in TIF files.** Many TIF libraries already exist, but they often do a bad job handling TIF files used for scientific microscopy. This is especially true when 16-bit TIF files are used to store non-16-bit data (such as from a 12-bit camera) resulting in images falsely appearing black. If you've ever tried to open a microscope TIF in Windows Photo Viewer and been presented with a black square, you've experienced this problem too! 
-
-
+**SciTIF provides a .NET interface to microscopy data stored in TIF files.** Many TIF libraries already exist, but they often do a bad job handling TIF files used for scientific microscopy. This is especially true when 16-bit TIF files are used to store non-16-bit data (such as from a 12-bit camera) resulting in images falsely appearing black. If you've ever tried to open a microscope TIF in Windows Photo Viewer and been presented with a black square, you've experienced this problem too! 
 
 ***SciTIF provides a simple API to access to raw pixel intensity values from TIF files, as well as methods to generate brightness-adjusted bitmaps for displaying or saving in other image formats.***
 
