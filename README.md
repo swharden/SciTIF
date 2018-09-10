@@ -1,5 +1,5 @@
 # SciTIF
-**SciTIF provides a .NET interface to microscopy data stored in TIF files.** Many TIF libraries already exist, but they often do a bad job handling TIF files used for scientific microscopy. This is especially true when 16-bit TIF files are used to store non-16-bit data (such as from a 12-bit camera) resulting in images falsely appearing black. If you've ever tried to open a microscope TIF in Windows Photo Viewer and been presented with a black square, you've experienced this problem too! 
+<img src="doc/graphics/screenshotBrowser.png" align="right" width="500">**SciTIF provides a .NET interface to microscopy data stored in TIF files.** Many TIF libraries already exist, but they often do a bad job handling TIF files used for scientific microscopy. This is especially true when 16-bit TIF files are used to store non-16-bit data (such as from a 12-bit camera) resulting in images falsely appearing black. If you've ever tried to open a microscope TIF in Windows Photo Viewer and been presented with a black square, you've experienced this problem too! 
 
 ***SciTIF provides a simple API to access to raw pixel intensity values from TIF files, as well as methods to generate brightness-adjusted bitmaps for displaying or saving in other image formats.***
 
@@ -33,8 +33,6 @@ Consider a situation where you have a 12-bit camera. The maximum intensity value
 The [Windows Photo Viewer](https://en.wikipedia.org/wiki/Windows_Photo_Viewer) cannot properly display 16-bit TIFs containing pixel intensity data of a different bit depth (10-bit, 12-bit, or 14-bit), resulting in TIFs appearing as near-black images. The Windows Photo Viewer can not even modify brightness and contrast to compensate. Further, an accidental click (such as the rotate button) will modify the original image (considered experimental data in scientific settings) which can be a source of error for the scientist seeking to perform quantitative pixel intensity measurements in the future.
 
 [NIH ImageJ](https://imagej.nih.gov/ij/) and its descendant [FIJI](http://fiji.sc/) can display these images, but they have a steep learning curve, can only open images one at a time (left/right arrow keys do not navigate to other images in the same folder), are extremely large (75 MB and 293 MB zipped), and require the JAVA runtime environment on the client computer.
-
-![](doc/graphics/screenshotBrowser.png)
 
 ## Project Status
 SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke around the source code, start [here](https://github.com/swharden/SciTIF/tree/master/src/SciTifLib)
