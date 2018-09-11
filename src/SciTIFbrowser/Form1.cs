@@ -72,7 +72,7 @@ namespace SciTIFbrowser
             maxPercentImage = Math.Round(maxPercentImage, 1);
             statusMax.Text = $"Max: {tif.max} ({maxPercentData}%, {maxPercentImage}%)";
             statusFname.Text = System.IO.Path.GetFileName(tif.filePath);
-            this.Text = $"SciTIF Browser - {imageFileName}";
+            UpdateTitleWithZoom();
         }
 
         private void pictureBox1_DoubleClick(object sender, EventArgs e)
@@ -141,5 +141,25 @@ namespace SciTIFbrowser
         {
         }
 
+        private void pbImage_SizeChanged(object sender, EventArgs e)
+        {
+            UpdateTitleWithZoom();
+        }
+
+        public void UpdateTitleWithZoom()
+        {
+            double zoom;
+            if (pbImage.Dock == DockStyle.Fill)
+            {
+                double zoomX = 100 * (double)pbImage.Width / tif.width;
+                double zoomY = 100 * (double)pbImage.Height / tif.height;
+                zoom = Math.Min(zoomX, zoomY);
+            }
+            else
+            {
+                zoom = 100;
+            }
+            this.Text = string.Format("SciTIF Browser - {0} ({1:0.00}%)", tif.fileBasename, zoom);
+        }
     }
 }

@@ -167,7 +167,7 @@
             this.statusFname.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.statusFname.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusFname.Name = "statusFname";
-            this.statusFname.Size = new System.Drawing.Size(365, 18);
+            this.statusFname.Size = new System.Drawing.Size(396, 18);
             this.statusFname.Spring = true;
             this.statusFname.Text = "Substack (1-81-4)0008.tif";
             this.statusFname.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -587,6 +587,7 @@
             this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbImage.TabIndex = 2;
             this.pbImage.TabStop = false;
+            this.pbImage.SizeChanged += new System.EventHandler(this.pbImage_SizeChanged);
             this.pbImage.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
             // 
             // panelImageHolder

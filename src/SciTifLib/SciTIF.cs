@@ -17,6 +17,7 @@ namespace SciTIFlib
     public class TifFile
     {
         public string filePath;
+        public string fileBasename;
         public long fileSize;
         public int depthImage;
         public int depthData;
@@ -34,6 +35,7 @@ namespace SciTIFlib
         {
             filePath = System.IO.Path.GetFullPath(filePath);
             this.filePath = filePath;
+            this.fileBasename = System.IO.Path.GetFileName(filePath);
             log = new Logger("SciTIF");
             log.Info($"Loading abf file: {filePath}");
 
