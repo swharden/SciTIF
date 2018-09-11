@@ -1,0 +1,2 @@
+#Icons
+![](AdjustmentLayer_16x.svg) ![](BoostTest_16x.svg) ![](Brightness_16x.svg) ![](CodeTest_16x.svg) ![](ColorDialog_16x.svg) ![](Contrast_16x.svg) ![](ConvertToCodeWebTest_16x.svg) ![](CSTestProject_16x.svg) ![](DynamicImage_16x.svg) ![](EnableDiagnostics_16x.svg) ![](FSTestProject_16x.svg) ![](HistogramVisualizer_16x.svg) ![](HorizontalScrollViewer_16x.svg) ![](RecommendedTest_16x.svg) ![](TestJob_16x.svg) ![](TestPlan_16x.svg) ![](TestProject_16x.svg) ![](TestSuiteStatic_16x.svg) ![](Test_16x.svg) ![](VBTestProject_16x.svg) 
