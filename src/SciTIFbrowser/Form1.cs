@@ -13,15 +13,24 @@ namespace SciTIFbrowser
     public partial class Form1 : Form
     {
         SciTIFlib.TifFile tif;
-        SciTIFlib.Path SciTifPath;
+        SciTIFlib.Path SciTifPath = new SciTIFlib.Path();
 
         public Form1()
         {
             InitializeComponent();
-            SciTifPath = new SciTIFlib.Path();
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+            DeveloperInit();
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            DeveloperInit();
+        }
+
+        private void DeveloperInit()
         {
             //ToggleDebugLog();
             string demoFile = @"D:\demoData\tifs\proj.tif";
@@ -33,12 +42,12 @@ namespace SciTIFbrowser
             // ensure the path is real
             if (filePath == null || !System.IO.File.Exists(filePath))
             {
-                lblStatus.Text = $"Cannot load {filePath}";
+                //statusDepthImage.Text = $"Cannot load {filePath}";
                 return;
             }
             else
             {
-                lblStatus.Text = $"Loading image...";
+                //statusDepthImage.Text = $"Loading image...";
             }
 
             string imageFileName = System.IO.Path.GetFileName(filePath);
@@ -51,21 +60,36 @@ namespace SciTIFbrowser
             double loadTimeMS = stopwatch.ElapsedTicks * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
 
             // update the text around the program
-            lblStatus.Text = string.Format("Image loaded in {0:0.00} ms", loadTimeMS);
-            lblInfoDepthData.Text = "12-bit";
-            lblInfoDepthTif.Text = "16-bit";
-            lblInfoFileDimension.Text = "2048x2048";
-            lblInfoFileName.Text = imageFileName;
-            lblInfoFileSize.Text = String.Format("{0:0.00} kb", tif.fileSize / 1000.0);
+            //statusDepthImage.Text = string.Format("Image loaded in {0:0.00} ms", loadTimeMS);
+            statusDepthImage.Text = $"{tif.depthImage}-bit file";
+            statusDepthData.Text = $"{tif.depthData}-bit data";
+            statusResolution.Text = $"{tif.width}x{tif.height}";
+            statusSize.Text = $"{Math.Round(tif.fileSize / 1e6, 2)} MB";
+            statusMin.Text = $"Min: {tif.min}";
+            double maxPercentData = tif.max / Math.Pow(2, tif.depthData) * 100;
+            maxPercentData = Math.Round(maxPercentData, 1);
+            double maxPercentImage = tif.max / Math.Pow(2, tif.depthImage) * 100;
+            maxPercentImage = Math.Round(maxPercentImage, 1);
+            statusMax.Text = $"Max: {tif.max} ({maxPercentData}%, {maxPercentImage}%)";
+            statusFname.Text = System.IO.Path.GetFileName(tif.filePath);
             this.Text = $"SciTIF Browser - {imageFileName}";
         }
 
         private void pictureBox1_DoubleClick(object sender, EventArgs e)
         {
-            if (pbImage.SizeMode == PictureBoxSizeMode.Zoom)
-                pbImage.SizeMode = PictureBoxSizeMode.CenterImage;
+            if (pbImage.Dock == DockStyle.Fill)
+            {
+                // it's currently stretching, so make it 1:1
+                pbImage.Size = new Size(tif.width, tif.height);
+                pbImage.Dock = DockStyle.None;
+                pbImage.SizeMode = PictureBoxSizeMode.Normal;
+            }
             else
+            {
+                // it's currently 1:1, so make it stretch
+                pbImage.Dock = DockStyle.Fill;
                 pbImage.SizeMode = PictureBoxSizeMode.Zoom;
+            }
         }
 
         private void openImageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -96,27 +120,26 @@ namespace SciTIFbrowser
 
             if (ImageToLoad != null)
                 LoadImage(ImageToLoad);
-            else
-                lblStatus.Text = ("no adjacent images");
+            //else
+            //statusDepthImage.Text = ("no adjacent images");
         }
 
-        private void ToggleDebugLog()
+        private void LaunchDebugLog()
         {
-            if (tableLayoutMain.RowStyles[2].Height == 0)
-            {
-                lblStatus.Text = "showing debug log";
-                tableLayoutMain.RowStyles[2].Height = 200;
-            }
-            else
-            {
-                lblStatus.Text = "hiding debug log";
-                tableLayoutMain.RowStyles[2].Height = 0;
-            }
+            // the debug log is the history for the current TIF
+            Form formLog = new FormLog();
+            formLog.Show();
+            formLog.Activate();
         }
 
         private void debugLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ToggleDebugLog();
+            LaunchDebugLog();
         }
+
+        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
     }
 }

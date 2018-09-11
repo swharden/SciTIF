@@ -18,6 +18,12 @@ namespace SciTIFlib
     {
         public string filePath;
         public long fileSize;
+        public int depthImage;
+        public int depthData;
+        public int width;
+        public int height;
+        public int min;
+        public int max;
 
         public Logger log;
         private Stream stream;
@@ -123,15 +129,15 @@ namespace SciTIFlib
             }
 
             // determine the range of intensity data
-            int pixelValueMax = valuesSource.Max();
             int pixelValueMin = valuesSource.Min();
-            log.Debug($"pixel value max: {pixelValueMax}");
+            int pixelValueMax = valuesSource.Max();
             log.Debug($"pixel value min: {pixelValueMin}");
+            log.Debug($"pixel value max: {pixelValueMax}");
 
             // predict what bit depth we have based upon pixelValueMax
             int dataDepth = 1;
             while (Math.Pow(2, dataDepth) < pixelValueMax)
-                dataDepth++;                
+                dataDepth++;
             log.Debug($"detected data depth: {dataDepth}-bit");
 
             // determine if we will use the original bit depth or our guessed bit depth
@@ -150,7 +156,7 @@ namespace SciTIFlib
                 pixelValue = pixelValue << (sourceImageDepth - dataDepth);
 
                 // downshift it as needed to ensure the MSB is in the lowest 8 bytes
-                pixelValue = pixelValue >> (sourceImageDepth-8);
+                pixelValue = pixelValue >> (sourceImageDepth - 8);
 
                 // conversion to 8-bit should be now nondestructive
                 pixelsOutput[i] = (byte)(pixelValue);
@@ -172,6 +178,15 @@ namespace SciTIFlib
             Marshal.Copy(pixelsOutput, 0, bmpData.Scan0, pixelsOutput.Length);
             bmp.UnlockBits(bmpData);
 
+            // update class variables with that we discovered
+            this.depthData = dataDepth;
+            this.depthImage = sourceImageDepth;
+            this.width = width;
+            this.height = height;
+            this.min = pixelValueMin;
+            this.max = pixelValueMax;
+
+            // return the 8-bit preview bitmap we created
             return bmp;
         }
 

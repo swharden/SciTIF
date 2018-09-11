@@ -30,9 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.statusDepthImage = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusDepthData = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusResolution = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusSize = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusMin = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusMax = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusFname = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,53 +92,85 @@
             this.sciTIFDocumentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutSciTIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pbImage = new System.Windows.Forms.PictureBox();
-            this.tableLayoutMain = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblInfoDepthTif = new System.Windows.Forms.Label();
-            this.lblInfoDepthData = new System.Windows.Forms.Label();
-            this.lblInfoFileDimension = new System.Windows.Forms.Label();
-            this.lblInfoFileSize = new System.Windows.Forms.Label();
-            this.lblInfoFileName = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rtbLog = new System.Windows.Forms.RichTextBox();
+            this.panelImageHolder = new System.Windows.Forms.Panel();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
-            this.tableLayoutMain.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.panelImageHolder.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblStatus,
-            this.toolStripStatusLabel1,
-            this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 640);
+            this.statusDepthImage,
+            this.statusDepthData,
+            this.statusResolution,
+            this.statusSize,
+            this.statusMin,
+            this.statusMax,
+            this.statusFname});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 669);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(786, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(928, 23);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // lblStatus
+            // statusDepthImage
             // 
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(118, 17);
-            this.lblStatus.Text = "toolStripStatusLabel1";
+            this.statusDepthImage.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.statusDepthImage.Name = "statusDepthImage";
+            this.statusDepthImage.Size = new System.Drawing.Size(91, 18);
+            this.statusDepthImage.Text = "16-bit image";
             // 
-            // toolStripStatusLabel1
+            // statusDepthData
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(551, 17);
-            this.toolStripStatusLabel1.Spring = true;
+            this.statusDepthData.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.statusDepthData.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.statusDepthData.Name = "statusDepthData";
+            this.statusDepthData.Size = new System.Drawing.Size(88, 18);
+            this.statusDepthData.Text = "12-bit data";
             // 
-            // toolStripProgressBar1
+            // statusResolution
             // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            this.statusResolution.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.statusResolution.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.statusResolution.Name = "statusResolution";
+            this.statusResolution.Size = new System.Drawing.Size(74, 18);
+            this.statusResolution.Text = "4096x4096";
+            // 
+            // statusSize
+            // 
+            this.statusSize.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.statusSize.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.statusSize.Name = "statusSize";
+            this.statusSize.Size = new System.Drawing.Size(67, 18);
+            this.statusSize.Text = "31.64 MB";
+            // 
+            // statusMin
+            // 
+            this.statusMin.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.statusMin.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.statusMin.Name = "statusMin";
+            this.statusMin.Size = new System.Drawing.Size(67, 18);
+            this.statusMin.Text = "Min: 132";
+            // 
+            // statusMax
+            // 
+            this.statusMax.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.statusMax.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.statusMax.Name = "statusMax";
+            this.statusMax.Size = new System.Drawing.Size(130, 18);
+            this.statusMax.Text = "Max: 64,312 (98%)";
+            // 
+            // statusFname
+            // 
+            this.statusFname.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.statusFname.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.statusFname.Name = "statusFname";
+            this.statusFname.Size = new System.Drawing.Size(365, 18);
+            this.statusFname.Spring = true;
+            this.statusFname.Text = "Substack (1-81-4)0008.tif";
+            this.statusFname.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // menuStrip1
             // 
@@ -146,7 +182,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(786, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(928, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -516,6 +552,7 @@
             this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
             this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.propertiesToolStripMenuItem.Text = "Properties...";
+            this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -540,156 +577,50 @@
             // 
             // pbImage
             // 
-            this.pbImage.BackColor = System.Drawing.SystemColors.Control;
+            this.pbImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.pbImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbImage.Image = ((System.Drawing.Image)(resources.GetObject("pbImage.Image")));
-            this.pbImage.Location = new System.Drawing.Point(3, 18);
+            this.pbImage.Location = new System.Drawing.Point(0, 0);
+            this.pbImage.Margin = new System.Windows.Forms.Padding(0);
             this.pbImage.Name = "pbImage";
-            this.pbImage.Size = new System.Drawing.Size(780, 395);
+            this.pbImage.Size = new System.Drawing.Size(928, 645);
             this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbImage.TabIndex = 2;
             this.pbImage.TabStop = false;
             this.pbImage.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
             // 
-            // tableLayoutMain
+            // panelImageHolder
             // 
-            this.tableLayoutMain.ColumnCount = 1;
-            this.tableLayoutMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutMain.Controls.Add(this.pbImage, 0, 1);
-            this.tableLayoutMain.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutMain.Controls.Add(this.panel1, 0, 2);
-            this.tableLayoutMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutMain.Location = new System.Drawing.Point(0, 24);
-            this.tableLayoutMain.Name = "tableLayoutMain";
-            this.tableLayoutMain.RowCount = 3;
-            this.tableLayoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
-            this.tableLayoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
-            this.tableLayoutMain.Size = new System.Drawing.Size(786, 616);
-            this.tableLayoutMain.TabIndex = 3;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.lblInfoDepthTif);
-            this.flowLayoutPanel1.Controls.Add(this.lblInfoDepthData);
-            this.flowLayoutPanel1.Controls.Add(this.lblInfoFileDimension);
-            this.flowLayoutPanel1.Controls.Add(this.lblInfoFileSize);
-            this.flowLayoutPanel1.Controls.Add(this.lblInfoFileName);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(786, 15);
-            this.flowLayoutPanel1.TabIndex = 5;
-            // 
-            // lblInfoDepthTif
-            // 
-            this.lblInfoDepthTif.AutoSize = true;
-            this.lblInfoDepthTif.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblInfoDepthTif.Location = new System.Drawing.Point(717, 0);
-            this.lblInfoDepthTif.Name = "lblInfoDepthTif";
-            this.lblInfoDepthTif.Size = new System.Drawing.Size(66, 15);
-            this.lblInfoDepthTif.TabIndex = 4;
-            this.lblInfoDepthTif.Text = "16-bit image";
-            // 
-            // lblInfoDepthData
-            // 
-            this.lblInfoDepthData.AutoSize = true;
-            this.lblInfoDepthData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblInfoDepthData.Location = new System.Drawing.Point(652, 0);
-            this.lblInfoDepthData.Name = "lblInfoDepthData";
-            this.lblInfoDepthData.Size = new System.Drawing.Size(59, 15);
-            this.lblInfoDepthData.TabIndex = 3;
-            this.lblInfoDepthData.Text = "12-bit data";
-            // 
-            // lblInfoFileDimension
-            // 
-            this.lblInfoFileDimension.AutoSize = true;
-            this.lblInfoFileDimension.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblInfoFileDimension.Location = new System.Drawing.Point(590, 0);
-            this.lblInfoFileDimension.Name = "lblInfoFileDimension";
-            this.lblInfoFileDimension.Size = new System.Drawing.Size(56, 15);
-            this.lblInfoFileDimension.TabIndex = 2;
-            this.lblInfoFileDimension.Text = "1024x768";
-            // 
-            // lblInfoFileSize
-            // 
-            this.lblInfoFileSize.AutoSize = true;
-            this.lblInfoFileSize.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblInfoFileSize.Location = new System.Drawing.Point(527, 0);
-            this.lblInfoFileSize.Name = "lblInfoFileSize";
-            this.lblInfoFileSize.Size = new System.Drawing.Size(57, 15);
-            this.lblInfoFileSize.TabIndex = 1;
-            this.lblInfoFileSize.Text = "123.45 kb";
-            // 
-            // lblInfoFileName
-            // 
-            this.lblInfoFileName.AutoSize = true;
-            this.lblInfoFileName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblInfoFileName.Location = new System.Drawing.Point(449, 0);
-            this.lblInfoFileName.Name = "lblInfoFileName";
-            this.lblInfoFileName.Size = new System.Drawing.Size(72, 15);
-            this.lblInfoFileName.TabIndex = 0;
-            this.lblInfoFileName.Text = "FileName.TIF";
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.groupBox1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 419);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(780, 194);
-            this.panel1.TabIndex = 6;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.rtbLog);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(780, 194);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Debug Log";
-            // 
-            // rtbLog
-            // 
-            this.rtbLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rtbLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbLog.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtbLog.Location = new System.Drawing.Point(3, 16);
-            this.rtbLog.Name = "rtbLog";
-            this.rtbLog.ReadOnly = true;
-            this.rtbLog.Size = new System.Drawing.Size(774, 175);
-            this.rtbLog.TabIndex = 0;
-            this.rtbLog.Text = "SciTIF Browser Developer Log";
-            this.rtbLog.WordWrap = false;
+            this.panelImageHolder.AutoScroll = true;
+            this.panelImageHolder.Controls.Add(this.pbImage);
+            this.panelImageHolder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelImageHolder.Location = new System.Drawing.Point(0, 24);
+            this.panelImageHolder.Name = "panelImageHolder";
+            this.panelImageHolder.Size = new System.Drawing.Size(928, 645);
+            this.panelImageHolder.TabIndex = 3;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(786, 662);
-            this.Controls.Add(this.tableLayoutMain);
+            this.ClientSize = new System.Drawing.Size(928, 692);
+            this.Controls.Add(this.panelImageHolder);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "SciTIF Browser";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.Form1_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
-            this.tableLayoutMain.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
+            this.panelImageHolder.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -698,7 +629,7 @@
         #endregion
 
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel lblStatus;
+        private System.Windows.Forms.ToolStripStatusLabel statusDepthImage;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openImageToolStripMenuItem;
@@ -750,22 +681,17 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem pasteImageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pastePathToolStripMenuItem;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutMain;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
-        private System.Windows.Forms.Label lblInfoFileName;
-        private System.Windows.Forms.Label lblInfoFileSize;
-        private System.Windows.Forms.Label lblInfoFileDimension;
-        private System.Windows.Forms.Label lblInfoDepthData;
-        private System.Windows.Forms.Label lblInfoDepthTif;
-        private System.Windows.Forms.RichTextBox rtbLog;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.ToolStripMenuItem debugLogToolStripMenuItem;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.ToolStripStatusLabel statusDepthData;
+        private System.Windows.Forms.ToolStripStatusLabel statusResolution;
+        private System.Windows.Forms.ToolStripStatusLabel statusSize;
+        private System.Windows.Forms.ToolStripStatusLabel statusMin;
+        private System.Windows.Forms.ToolStripStatusLabel statusMax;
+        private System.Windows.Forms.ToolStripStatusLabel statusFname;
+        private System.Windows.Forms.Panel panelImageHolder;
     }
 }
 
