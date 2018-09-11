@@ -577,28 +577,29 @@
             // 
             // pbImage
             // 
-            this.pbImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.pbImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbImage.BackColor = System.Drawing.Color.LawnGreen;
             this.pbImage.Image = ((System.Drawing.Image)(resources.GetObject("pbImage.Image")));
-            this.pbImage.Location = new System.Drawing.Point(0, 0);
+            this.pbImage.Location = new System.Drawing.Point(131, 64);
             this.pbImage.Margin = new System.Windows.Forms.Padding(0);
             this.pbImage.Name = "pbImage";
-            this.pbImage.Size = new System.Drawing.Size(928, 645);
+            this.pbImage.Size = new System.Drawing.Size(507, 467);
             this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbImage.TabIndex = 2;
             this.pbImage.TabStop = false;
             this.pbImage.SizeChanged += new System.EventHandler(this.pbImage_SizeChanged);
+            this.pbImage.Paint += new System.Windows.Forms.PaintEventHandler(this.pbImage_Paint);
             this.pbImage.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
             // 
             // panelImageHolder
             // 
-            this.panelImageHolder.AutoScroll = true;
+            this.panelImageHolder.BackColor = System.Drawing.Color.Black;
             this.panelImageHolder.Controls.Add(this.pbImage);
             this.panelImageHolder.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelImageHolder.Location = new System.Drawing.Point(0, 24);
             this.panelImageHolder.Name = "panelImageHolder";
             this.panelImageHolder.Size = new System.Drawing.Size(928, 645);
             this.panelImageHolder.TabIndex = 3;
+            this.panelImageHolder.Resize += new System.EventHandler(this.panelImageHolder_Resize);
             // 
             // Form1
             // 

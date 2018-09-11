@@ -166,19 +166,19 @@ namespace SciTIFlib
 
             // create the output bitmap (8-bit indexed color)
             var format = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
-            Bitmap bmp = new Bitmap(width, height, format);
+            Bitmap bmp8 = new Bitmap(width, height, format);
 
             // Create a grayscale palette, although other colors and LUTs could go here
-            ColorPalette pal = bmp.Palette;
+            ColorPalette pal = bmp8.Palette;
             for (int i = 0; i < 256; i++)
                 pal.Entries[i] = System.Drawing.Color.FromArgb(255, i, i, i);
-            bmp.Palette = pal;
+            bmp8.Palette = pal;
 
             // copy the new pixel data into the data of our output bitmap
             var rect = new Rectangle(0, 0, width, height);
-            BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadOnly, format);
+            BitmapData bmpData = bmp8.LockBits(rect, ImageLockMode.ReadOnly, format);
             Marshal.Copy(pixelsOutput, 0, bmpData.Scan0, pixelsOutput.Length);
-            bmp.UnlockBits(bmpData);
+            bmp8.UnlockBits(bmpData);
 
             // update class variables with that we discovered
             this.depthData = dataDepth;
@@ -188,9 +188,22 @@ namespace SciTIFlib
             this.min = pixelValueMin;
             this.max = pixelValueMax;
 
+            // now that the mage is done, convert it from index to ARGB
+            //Bitmap bmpRGB = new Bitmap(bmp8);
+            //bmpRGB = OutlineBitmap(bmpRGB, System.Drawing.Color.Magenta);
+
             // return the 8-bit preview bitmap we created
-            return bmp;
+            return bmp8;
         }
 
+        public Bitmap OutlineBitmap(Bitmap bmp, System.Drawing.Color color)
+        {
+            System.Drawing.Pen blackPen = new System.Drawing.Pen(color, 5);
+            Graphics gfx = Graphics.FromImage(bmp);
+            gfx = Graphics.FromImage(bmp);
+            gfx.DrawRectangle(blackPen, 0, 0, bmp.Width-1, bmp.Height-1);
+
+            return bmp;
+        }
     }
 }

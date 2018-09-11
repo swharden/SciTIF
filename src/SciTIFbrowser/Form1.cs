@@ -27,6 +27,7 @@ namespace SciTIFbrowser
 
         private void Form1_Shown(object sender, EventArgs e)
         {
+            SetImageStretch(true);
             DeveloperInit();
         }
 
@@ -50,8 +51,6 @@ namespace SciTIFbrowser
                 //statusDepthImage.Text = $"Loading image...";
             }
 
-            string imageFileName = System.IO.Path.GetFileName(filePath);
-
             // load the image and create the preview
             System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
             tif = new SciTIFlib.TifFile(filePath);
@@ -71,25 +70,45 @@ namespace SciTIFbrowser
             double maxPercentImage = tif.max / Math.Pow(2, tif.depthImage) * 100;
             maxPercentImage = Math.Round(maxPercentImage, 1);
             statusMax.Text = $"Max: {tif.max} ({maxPercentData}%, {maxPercentImage}%)";
-            statusFname.Text = System.IO.Path.GetFileName(tif.filePath);
+            statusFname.Text = tif.fileBasename;
             UpdateTitleWithZoom();
         }
 
+        public bool zoomStretch = true;
         private void pictureBox1_DoubleClick(object sender, EventArgs e)
         {
-            if (pbImage.Dock == DockStyle.Fill)
-            {
-                // it's currently stretching, so make it 1:1
-                pbImage.Size = new Size(tif.width, tif.height);
-                pbImage.Dock = DockStyle.None;
-                pbImage.SizeMode = PictureBoxSizeMode.Normal;
-            }
+            ToggleImageStretch();
+        }
+
+        public void ToggleImageStretch()
+        {
+            if (zoomStretch)
+                SetImageStretchOFF();
             else
-            {
-                // it's currently 1:1, so make it stretch
-                pbImage.Dock = DockStyle.Fill;
-                pbImage.SizeMode = PictureBoxSizeMode.Zoom;
-            }
+                SetImageStretchON();
+        }
+
+        public void SetImageStretch(bool stretch = false)
+        {
+            if (stretch)
+                SetImageStretchON();
+            else
+                SetImageStretchOFF();
+        }
+
+        private void SetImageStretchON()
+        {
+            zoomStretch = true;
+            panelImageHolder.AutoScroll = false;
+            panelImageHolder_Resize(null, null);
+        }
+
+        private void SetImageStretchOFF()
+        {
+            zoomStretch = false;
+            panelImageHolder.AutoScroll = true;
+            panelImageHolder_Resize(null, null);
+            pbImage.Location = new Point(0, 0);
         }
 
         private void openImageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -160,6 +179,66 @@ namespace SciTIFbrowser
                 zoom = 100;
             }
             this.Text = string.Format("SciTIF Browser - {0} ({1:0.00}%)", tif.fileBasename, zoom);
+        }
+
+        private void panelImageHolder_Resize(object sender, EventArgs e)
+        {
+            if (zoomStretch)
+            {
+                int pnlWidth = panelImageHolder.Width;
+                int pnlHeight = panelImageHolder.Height;
+
+                double imageWidthToHeightRatio = (double)tif.width / tif.height;
+                double panelWidthToHeightRatio = (double)pnlWidth / pnlHeight;
+
+                int imageWidth = pnlWidth;
+                int imageHeight = pnlHeight;
+
+                int panelLocX = 0;
+                int panelLocY = 0;
+
+                if (imageWidthToHeightRatio > panelWidthToHeightRatio)
+                {
+                    // width is most constrained, so scale Y as needed
+                    imageHeight = pnlWidth * (tif.height / tif.width);
+                    panelLocY = pnlHeight / 2 - imageHeight / 2;
+                }
+                else
+                {
+                    // height is most constrained, so scale X as needed
+                    imageWidth = pnlHeight * (tif.width / tif.height);
+                    panelLocX = pnlWidth / 2 - imageWidth / 2;
+                }
+
+                // optionally pad the image to make it float a bit in the panel
+                int pxPad = 0;
+                imageWidth -= pxPad * 2;
+                imageHeight -= pxPad * 2;
+                panelLocX += pxPad;
+                panelLocY += pxPad;
+
+                // applt these measurements to the image itself
+                pbImage.Location = new Point(panelLocX, panelLocY);
+                pbImage.Size = new Size(imageWidth, imageHeight);
+            }
+            else
+            {
+                // size is 1:1 and just let the panel viewer handle the location
+                pbImage.Size = new Size(tif.width, tif.height);
+            }
+        }
+
+        private void pbImage_Paint(object sender, PaintEventArgs e)
+        {
+            Console.WriteLine("PAINTING BORDER");
+            int width = 1;
+            Color color = Color.Magenta;
+            base.OnPaint(e);
+            Rectangle rect = new Rectangle(new Point(0,0), pbImage.Size);
+            var bs = ButtonBorderStyle.Solid;
+            ControlPaint.DrawBorder(e.Graphics, rect,
+                color, width, bs, color, width, bs,
+                color, width, bs, color, width, bs);
         }
     }
 }
