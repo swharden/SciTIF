@@ -188,10 +188,6 @@ namespace SciTIFlib
             this.min = pixelValueMin;
             this.max = pixelValueMax;
 
-            // now that the mage is done, convert it from index to ARGB
-            //Bitmap bmpRGB = new Bitmap(bmp8);
-            //bmpRGB = OutlineBitmap(bmpRGB, System.Drawing.Color.Magenta);
-
             // return the 8-bit preview bitmap we created
             return bmp8;
         }

@@ -15,6 +15,10 @@ namespace SciTIFbrowser
         SciTIFlib.TifFile tif;
         SciTIFlib.Path SciTifPath = new SciTIFlib.Path();
 
+        ////////////////////////////////////////////////////////////
+        /// STARTUP SEQUENCE
+        ///
+
         public Form1()
         {
             InitializeComponent();
@@ -31,12 +35,18 @@ namespace SciTIFbrowser
             DeveloperInit();
         }
 
+        ////////////////////////////////////////////////////////////
+        /// DEVELOPER TOOLS
+
         private void DeveloperInit()
         {
             //ToggleDebugLog();
             string demoFile = @"D:\demoData\tifs\proj.tif";
             LoadImage(demoFile);
         }
+
+        ////////////////////////////////////////////////////////////
+        /// CORE FUNCTIONS
 
         public void LoadImage(string filePath)
         {
@@ -71,7 +81,12 @@ namespace SciTIFbrowser
             maxPercentImage = Math.Round(maxPercentImage, 1);
             statusMax.Text = $"Max: {tif.max} ({maxPercentData}%, {maxPercentImage}%)";
             statusFname.Text = tif.fileBasename;
+
+            // the image is done loading. Update the rest of the program.
+            panelImageHolder_Resize(null, null);
             UpdateTitleWithZoom();
+
+
         }
 
         public bool zoomStretch = true;
@@ -183,43 +198,41 @@ namespace SciTIFbrowser
 
         private void panelImageHolder_Resize(object sender, EventArgs e)
         {
+            // this function is called when the window is resized. If zoomStretch is off, the image
+            // is displayed in 1:1 at its full size and the picturebox (with scrollbars) takes total care
+            // of the location. If zoomStretch is on, we have to resize the image however we can so it's
+            // maximally shown in the available image area.
+
             if (zoomStretch)
             {
-                int pnlWidth = panelImageHolder.Width;
-                int pnlHeight = panelImageHolder.Height;
+                int panelSizeX = panelImageHolder.Width;
+                int panelSizeY = panelImageHolder.Height;
 
-                double imageWidthToHeightRatio = (double)tif.width / tif.height;
-                double panelWidthToHeightRatio = (double)pnlWidth / pnlHeight;
+                // determine which way we should scale it
+                double ratioX = (double)panelSizeX / tif.width;
+                double ratioY = (double)panelSizeY / tif.height;
+                bool panelIsWiderThanTall = ratioX > ratioY;
 
-                int imageWidth = pnlWidth;
-                int imageHeight = pnlHeight;
+                Point imagePos;
+                Size imageSize;
 
-                int panelLocX = 0;
-                int panelLocY = 0;
-
-                if (imageWidthToHeightRatio > panelWidthToHeightRatio)
+                if (panelIsWiderThanTall)
                 {
-                    // width is most constrained, so scale Y as needed
-                    imageHeight = pnlWidth * (tif.height / tif.width);
-                    panelLocY = pnlHeight / 2 - imageHeight / 2;
+                    // match the HEIGHTS and center it HORIZONTALLY
+                    int imageSizeX = (int)(panelSizeY * ((double)tif.width / tif.height));
+                    imageSize = new Size(imageSizeX, panelSizeY);
+                    imagePos = new Point((panelSizeX - imageSizeX) / 2, 0);
                 }
                 else
                 {
-                    // height is most constrained, so scale X as needed
-                    imageWidth = pnlHeight * (tif.width / tif.height);
-                    panelLocX = pnlWidth / 2 - imageWidth / 2;
+                    // match the WIDTHS and center it VERTICALLY
+                    int imageSizeY = (int)(panelSizeX * ((double)tif.height / tif.width));
+                    imageSize = new Size(panelSizeX, imageSizeY);
+                    imagePos = new Point(0, (panelSizeY - imageSizeY) / 2);
                 }
 
-                // optionally pad the image to make it float a bit in the panel
-                int pxPad = 0;
-                imageWidth -= pxPad * 2;
-                imageHeight -= pxPad * 2;
-                panelLocX += pxPad;
-                panelLocY += pxPad;
-
-                // applt these measurements to the image itself
-                pbImage.Location = new Point(panelLocX, panelLocY);
-                pbImage.Size = new Size(imageWidth, imageHeight);
+                pbImage.Location = imagePos;
+                pbImage.Size = imageSize;
             }
             else
             {
@@ -230,11 +243,11 @@ namespace SciTIFbrowser
 
         private void pbImage_Paint(object sender, PaintEventArgs e)
         {
-            Console.WriteLine("PAINTING BORDER");
+            // draw a colored box around the edge of the image
             int width = 1;
-            Color color = Color.Magenta;
+            Color color = Color.LightGreen;
             base.OnPaint(e);
-            Rectangle rect = new Rectangle(new Point(0,0), pbImage.Size);
+            Rectangle rect = new Rectangle(new Point(0, 0), pbImage.Size);
             var bs = ButtonBorderStyle.Solid;
             ControlPaint.DrawBorder(e.Graphics, rect,
                 color, width, bs, color, width, bs,
