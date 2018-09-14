@@ -48,6 +48,7 @@ SciTIF is in ALPHA stage. It is not ready for public use. If you want to poke ar
 * not JAVA
 
 ## Resources
+* [TIFF (Rev 6)](https://www.adobe.io/content/udp/en/open/standards/TIFF/_jcr_content/contentbody/download/file.res/TIFF6.pdf) has really good descriptions of blocks and tags
 * [TIFF File Format Summary](https://www.fileformat.info/format/tiff/egff.htm#TIFF.FO)
 * [TIFF Tag Descriptions](https://www.awaresystems.be/imaging/tiff/tifftags/baseline.html)
 * [Pillow TIFF decoder source code](https://github.com/imagej/ImageJA/blob/master/src/main/java/ij/io/TiffDecoder.java)
