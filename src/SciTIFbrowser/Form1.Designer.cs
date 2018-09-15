@@ -109,9 +109,9 @@
             this.statusMin,
             this.statusMax,
             this.statusFname});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 385);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 456);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(512, 23);
+            this.statusStrip1.Size = new System.Drawing.Size(700, 23);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -167,7 +167,7 @@
             this.statusFname.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.statusFname.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusFname.Name = "statusFname";
-            this.statusFname.Size = new System.Drawing.Size(186, 18);
+            this.statusFname.Size = new System.Drawing.Size(168, 18);
             this.statusFname.Spring = true;
             this.statusFname.Text = "Substack (1-81-4)0008.tif";
             this.statusFname.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -182,7 +182,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(512, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(700, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -203,26 +203,26 @@
             // openImageToolStripMenuItem
             // 
             this.openImageToolStripMenuItem.Name = "openImageToolStripMenuItem";
-            this.openImageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openImageToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.openImageToolStripMenuItem.Text = "Open Image...";
             this.openImageToolStripMenuItem.Click += new System.EventHandler(this.openImageToolStripMenuItem_Click);
             // 
             // openFolderToolStripMenuItem
             // 
             this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
-            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.openFolderToolStripMenuItem.Text = "Open Folder...";
             // 
             // saveImageAsToolStripMenuItem
             // 
             this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.saveImageAsToolStripMenuItem.Text = "Save Image As...";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(156, 6);
             // 
             // toolStripMenuItem1
             // 
@@ -231,7 +231,7 @@
             this.saveConfigurationAsToolStripMenuItem,
             this.saveAsDefaultConfigurationToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(159, 22);
             this.toolStripMenuItem1.Text = "Configuration";
             // 
             // loadConfigurationToolStripMenuItem
@@ -255,12 +255,12 @@
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(156, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // editToolStripMenuItem1
@@ -597,7 +597,7 @@
             this.panelImageHolder.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelImageHolder.Location = new System.Drawing.Point(0, 24);
             this.panelImageHolder.Name = "panelImageHolder";
-            this.panelImageHolder.Size = new System.Drawing.Size(512, 361);
+            this.panelImageHolder.Size = new System.Drawing.Size(700, 432);
             this.panelImageHolder.TabIndex = 3;
             this.panelImageHolder.Resize += new System.EventHandler(this.panelImageHolder_Resize);
             // 
@@ -605,7 +605,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(512, 408);
+            this.ClientSize = new System.Drawing.Size(700, 479);
             this.Controls.Add(this.panelImageHolder);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);

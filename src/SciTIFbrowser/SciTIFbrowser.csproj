@@ -60,6 +60,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FormUcDemo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormUcDemo.Designer.cs">
+      <DependentUpon>FormUcDemo.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -75,6 +81,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="FormUcDemo.resx">
+      <DependentUpon>FormUcDemo.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -92,6 +101,10 @@
     <ProjectReference Include="..\SciTifLib\SciTIFlib.csproj">
       <Project>{8094cd1e-0b0e-45a7-80f5-277850067d9a}</Project>
       <Name>SciTIFlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SplitDirView\SplitDirView.csproj">
+      <Project>{F561CE42-C563-4AD3-AB55-B08E29557693}</Project>
+      <Name>SplitDirView</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

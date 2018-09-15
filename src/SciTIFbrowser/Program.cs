@@ -16,7 +16,8 @@ namespace SciTIFbrowser
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new FormUcDemo());
+            //Application.Run(new Form1());
         }
     }
 }

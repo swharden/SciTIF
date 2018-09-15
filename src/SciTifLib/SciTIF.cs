@@ -25,6 +25,7 @@ namespace SciTIFlib
         public int height;
         public int min;
         public int max;
+        public System.Drawing.Size size { get { return new System.Drawing.Size(width, height); } }
 
         public Logger log;
         private Stream stream;
@@ -33,6 +34,8 @@ namespace SciTIFlib
 
         public TifFile(string filePath)
         {
+            if (filePath == null)
+                throw new Exception("filePath cannot be null");
             filePath = System.IO.Path.GetFullPath(filePath);
             this.filePath = filePath;
             this.fileBasename = System.IO.Path.GetFileName(filePath);
@@ -166,19 +169,19 @@ namespace SciTIFlib
 
             // create the output bitmap (8-bit indexed color)
             var format = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
-            Bitmap bmp8 = new Bitmap(width, height, format);
+            Bitmap bmpIndexed8 = new Bitmap(width, height, format);
 
             // Create a grayscale palette, although other colors and LUTs could go here
-            ColorPalette pal = bmp8.Palette;
+            ColorPalette pal = bmpIndexed8.Palette;
             for (int i = 0; i < 256; i++)
                 pal.Entries[i] = System.Drawing.Color.FromArgb(255, i, i, i);
-            bmp8.Palette = pal;
+            bmpIndexed8.Palette = pal;
 
             // copy the new pixel data into the data of our output bitmap
             var rect = new Rectangle(0, 0, width, height);
-            BitmapData bmpData = bmp8.LockBits(rect, ImageLockMode.ReadOnly, format);
+            BitmapData bmpData = bmpIndexed8.LockBits(rect, ImageLockMode.ReadOnly, format);
             Marshal.Copy(pixelsOutput, 0, bmpData.Scan0, pixelsOutput.Length);
-            bmp8.UnlockBits(bmpData);
+            bmpIndexed8.UnlockBits(bmpData);
 
             // update class variables with that we discovered
             this.depthData = dataDepth;
@@ -188,17 +191,23 @@ namespace SciTIFlib
             this.min = pixelValueMin;
             this.max = pixelValueMax;
 
-            // return the 8-bit preview bitmap we created
-            return bmp8;
-        }
+            // create a non-indexed version of this image
+            Bitmap bmpARGB = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Graphics gfxARGB = Graphics.FromImage(bmpARGB);
+            gfxARGB.DrawImage(bmpIndexed8, 0, 0);
+            gfxARGB.Dispose();
 
+            // return the 8-bit preview bitmap we created
+            return bmpARGB;
+        }
+        
         public Bitmap OutlineBitmap(Bitmap bmp, System.Drawing.Color color)
         {
             System.Drawing.Pen blackPen = new System.Drawing.Pen(color, 5);
             Graphics gfx = Graphics.FromImage(bmp);
             gfx = Graphics.FromImage(bmp);
-            gfx.DrawRectangle(blackPen, 0, 0, bmp.Width-1, bmp.Height-1);
-
+            gfx.DrawRectangle(blackPen, 0, 0, bmp.Width - 1, bmp.Height - 1);
+            gfx.Dispose();
             return bmp;
         }
     }

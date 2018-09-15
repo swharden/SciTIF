@@ -4,11 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8094CD1E-0B0E-45A7-80F5-277850067D9A}</ProjectGuid>
+    <ProjectGuid>{56478D2A-590D-4AEF-95F8-0F3E7B21FA3A}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SciTIFlib</RootNamespace>
-    <AssemblyName>SciTIFlib</AssemblyName>
+    <RootNamespace>SciTifUC</RootNamespace>
+    <AssemblyName>SciTifUC</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,35 +30,37 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logger.cs" />
-    <Compile Include="Path.cs" />
-    <Compile Include="SciTIF.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SciTifUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SciTifUC.Designer.cs">
       <DependentUpon>SciTifUC.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SciTifUC.resx">
       <DependentUpon>SciTifUC.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SciTifLib\SciTIFlib.csproj">
+      <Project>{8094cd1e-0b0e-45a7-80f5-277850067d9a}</Project>
+      <Name>SciTIFlib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
