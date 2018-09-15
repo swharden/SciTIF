@@ -37,8 +37,9 @@ namespace SciTIFlib
         public void SetImage(string imageFilePath)
         {
             tif = new TifFile(imageFilePath);
-            picture.BackgroundImage = tif.GetBitmapForDisplay();
+            picture.BackgroundImage = tif.GetBitmapForDisplay2();
             UpdateImageToFitNewPanelSize();
+            BrightnessContrastMouseReset();
         }
 
         public void SetBackgroundColor(Color backgroundColor)
@@ -52,7 +53,6 @@ namespace SciTIFlib
         {
             this.borderColor = borderColor;
             this.borderWidth = borderWidth;
-            OutlineImageOnPanel();
         }
 
         public void SetZoomFit(bool fitImageToFrame = false)
@@ -117,18 +117,7 @@ namespace SciTIFlib
             int centerY = panelFrame.Height / 2 - tif.height / 2;
             picture.Location = new Point(picture.Location.X, centerY);
         }
-
-        private void OutlineImageOnPanel()
-        {
-            if (borderWidth == 0)
-                return;
-            Graphics gfx = panelFrame.CreateGraphics();
-            gfx.Clear(backgroundColor);
-            Pen pen = new Pen(borderColor, borderWidth * 2);
-            Rectangle rect = new Rectangle(picture.Location, picture.Size);
-            gfx.DrawRectangle(pen, rect);
-        }
-
+        
         private void UpdateImageToFitNewPanelSize()
         {
             if (tif == null)
@@ -138,8 +127,6 @@ namespace SciTIFlib
                 ResizeImageToFitPanel();
             else
                 CenterImageInPanel();
-
-            OutlineImageOnPanel();
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -192,25 +179,33 @@ namespace SciTIFlib
                 int dY = -(Cursor.Position.Y - mouseDownR.Y);
                 int dXsum = mouseBC.X + dX;
                 int dYsum = mouseBC.Y + dY;
-                MouseContrast(dYsum, dXsum);
+                //MouseContrast(dYsum, dXsum);
+                MouseContrast(dXsum, dYsum);
             }
         }
 
-        private bool working = false;
-        private void MouseContrast(int deltaBrightness, int deltaContrast)
+        public void BrightnessContrastMouseSet(int brightness=0, int contrast=0)
         {
-            if (working == false)
+            picture.BackgroundImage = tif.GetBitmapForDisplay2(brightness, contrast);
+            Application.DoEvents();
+            this.Update();
+            picture.Update();
+        }
+
+        public void BrightnessContrastMouseReset()
+        {
+            mouseBC = new Point(0, 0);
+            BrightnessContrastMouseSet();
+        }
+
+        private bool mouseContrastWorking = false;
+        private void MouseContrast(int brightness, int contrast)
+        {
+            if (mouseContrastWorking == false)
             {
-                working = true;
-                picture.BackgroundImage = tif.GetBitmapForDisplay(deltaBrightness: deltaBrightness/2, 
-                                                                  deltaContrast: (double)deltaContrast / 100);
-                Application.DoEvents();
-                this.Update();
-                picture.Update();
-                working = false;
-            } else
-            {
-                return;
+                mouseContrastWorking = true;
+                BrightnessContrastMouseSet(brightness, contrast);
+                mouseContrastWorking = false;
             }
         }
         

@@ -23,8 +23,9 @@ namespace SciTIFlib
         public int depthData;
         public int width;
         public int height;
-        public int min;
-        public int max;
+        public int valuesMin;
+        public int valuesMax;
+        public int[] values;
         public System.Drawing.Size size { get { return new System.Drawing.Size(width, height); } }
 
         public Logger log;
@@ -34,32 +35,29 @@ namespace SciTIFlib
 
         public TifFile(string filePath)
         {
+            this.filePath = filePath;
+            log = new Logger("SciTIF");
+            InspectImageFile();
+            LoadImage();
+            LoadImageData();
+        }
+
+        private void InspectImageFile()
+        {
             if (filePath == null)
                 throw new Exception("filePath cannot be null");
+
             filePath = System.IO.Path.GetFullPath(filePath);
-            this.filePath = filePath;
-            this.fileBasename = System.IO.Path.GetFileName(filePath);
-            log = new Logger("SciTIF");
+            fileBasename = System.IO.Path.GetFileName(filePath);
             log.Info($"Loading abf file: {filePath}");
 
             if (!File.Exists(filePath))
                 throw new Exception($"file does not exist: {filePath}");
-            else
-                fileSize = new System.IO.FileInfo(filePath).Length;
 
-            LoadImage();
-            if (decoder != null)
-            {
-                LoadImageProperties();
-                log.Debug("TIF read successfully");
-            }
-            else
-            {
-                log.Debug("Could not decode TIF");
-            }
+            fileSize = new System.IO.FileInfo(filePath).Length;
         }
 
-        public void LoadImage()
+        private void LoadImage()
         {
             log.Debug("starting file stream");
             stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -76,18 +74,51 @@ namespace SciTIFlib
 
         }
 
-        public void LoadImageProperties()
+        private void LoadImageData(int frameNumber = 0)
         {
-            bitmapSource = decoder.Frames[0];
-            log.Debug($"Image depth: {bitmapSource.Format.BitsPerPixel}-bit");
-            log.Debug($"image width: {bitmapSource.PixelWidth}");
-            log.Debug($"image height: {bitmapSource.PixelHeight}");
-            log.Debug($"number of frames: {decoder.Frames.Count}");
-
-            if (decoder.Frames.Count > 1)
+            // sanity checking
+            if (decoder == null || frameNumber >= decoder.Frames.Count)
             {
-                log.Warn($"multi-frame image detected - assuming RGB for now");
+                log.Debug("cannot load image data");
+                return;
             }
+
+            // select the frame (channel or slice) we want
+            bitmapSource = decoder.Frames[frameNumber];
+
+            // prepare variables which will be useful later
+            depthImage = bitmapSource.Format.BitsPerPixel;
+            int bytesPerPixel = depthImage / 8;
+            width = bitmapSource.PixelWidth;
+            height = bitmapSource.PixelHeight;
+            int bytesPerRow = width * bytesPerPixel;
+            int imageByteCount = height * width * bytesPerPixel;
+            int imagePixelCount = width * height;
+
+            // fill a byte array with source data from the frame of interest
+            byte[] bytesSource = new byte[imageByteCount];
+            bitmapSource.CopyPixels(bytesSource, bytesPerRow, 0);
+
+            // Convert the byte array to an array of integers (according to bytesPerPixel)
+            values = new int[imagePixelCount];
+            for (int i = 0; i < values.Length; i++)
+            {
+                int bytePosition = i * bytesPerPixel;
+                for (int byteNumber = 0; byteNumber < bytesPerPixel; byteNumber++)
+                {
+                    values[i] += bytesSource[bytePosition + byteNumber] << (byteNumber * 8);
+                }
+            }
+
+            // populate stats about image
+            valuesMin = values.Min();
+            valuesMax = values.Max();
+
+            // predict what bit depth we have based upon pixelValueMax
+            depthData = 1;
+            while (Math.Pow(2, depthData) < valuesMax)
+                depthData++;
+            log.Debug($"detected data depth: {depthData}-bit");
         }
 
         public string Info()
@@ -97,123 +128,125 @@ namespace SciTIFlib
             return msg;
         }
 
-        /// <summary>
-        /// Generate an 8-bit grayscale image suitable for display.
-        /// Returned data may be degraded due to quantization error.
-        /// </summary>
-        public Bitmap GetBitmapForDisplay(int frameNumber = 0, double deltaBrightness = 1, double deltaContrast = 1)
+        private ColorPalette PaletteGrayscale(Bitmap bmp)
         {
-            // ensure a TIF is loaded
-            if (decoder == null) return null;
+            ColorPalette pal = bmp.Palette;
+            for (int i = 0; i < 256; i++)
+                pal.Entries[i] = System.Drawing.Color.FromArgb(255, i, i, i);
+            return pal;
+        }
 
-            // select the frame (channel or slice) we want
-            if (frameNumber >= decoder.Frames.Count) return null;
+        public Bitmap GetBitmapForDisplay2(double brightness = 0, double contrast = 0)
+        {
+            if (decoder == null)
+                return null;
 
-            // prepare variables which will be useful later
-            int sourceImageDepth = bitmapSource.Format.BitsPerPixel;
-            int bytesPerPixel = sourceImageDepth / 8;
-            int width = bitmapSource.PixelWidth;
-            int height = bitmapSource.PixelHeight;
-            int stride = width * bytesPerPixel;
-            int imageByteCount = height * width * bytesPerPixel;
-            int pixelCount = width * height;
+            // prepare a bitmap to hold the display image
+            var format = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
+            Rectangle rect = new Rectangle(0, 0, width, height);
+            Bitmap bmpDisplay = new Bitmap(width, height, format);
 
-            // fill our byte array with source data
-            byte[] bytesSource = new byte[imageByteCount];
-            bitmapSource.CopyPixels(bytesSource, stride, 0);
+            // create a byte array to hold RGB values for the display image
+            int bytesPerPixel = 3;
+            int byteCount = width * height * bytesPerPixel;
+            byte[] bmpBytes = new byte[byteCount];
 
-            // Fill an int array with data from the byte array according to bytesPerPixel
-            int[] valuesSource = new int[pixelCount];
-            for (int i = 0; i < valuesSource.Length; i++)
+            // prepare numbers now so we don't have to do it in the loop
+            double pixelValueBlack = 0;
+            double pixelValueWhite = Math.Pow(2, depthData);
+            double brightnessSensitivity = 1000;
+            double contrastSensitivity = 0.01;
+
+            // set the display value according to the source image intensity
+            for (int i = 0; i < values.Length; i++)
             {
+                // use floating point numbers to convert data scale from 0 to 1
+                double pixelValue = values[i];
+                pixelValue = pixelValue - pixelValueBlack;
+                pixelValue /= (pixelValueWhite - pixelValueBlack);
+
+                // apply brightness as a percentage
+                pixelValue += (brightness / brightnessSensitivity);
+
+                // apply contrast as a percentage
+                double diffFromCenter = .5 - pixelValue;
+                diffFromCenter *= (1 + contrast * contrastSensitivity);
+                pixelValue = .5 - diffFromCenter;
+
+                // ensure values don't go over our limits before assigning them
+                byte valByte = (byte)(Math.Max(0, Math.Min(255, pixelValue * 255)));
                 int bytePosition = i * bytesPerPixel;
-                for (int byteNumber = 0; byteNumber < bytesPerPixel; byteNumber++)
-                {
-                    valuesSource[i] += bytesSource[bytePosition + byteNumber] << (byteNumber * 8);
-                }
+
+                // TODO: this is where a LUT feature could be added
+                bmpBytes[bytePosition + 2] = valByte; // red
+                bmpBytes[bytePosition + 1] = valByte; // green
+                bmpBytes[bytePosition + 0] = valByte; // blue
             }
 
-            // determine the range of intensity data
-            int pixelValueMin = valuesSource.Min();
-            int pixelValueMax = valuesSource.Max();
-            log.Debug($"pixel value min: {pixelValueMin}");
-            log.Debug($"pixel value max: {pixelValueMax}");
+            // Use marshal copy as a safe (pointer-free) way to get the pixel bytes into the bitmap
+            BitmapData bmpData = bmpDisplay.LockBits(rect, ImageLockMode.ReadWrite, format);
+            Marshal.Copy(bmpBytes, 0, bmpData.Scan0, byteCount);
+            bmpDisplay.UnlockBits(bmpData);
 
-            // predict what bit depth we have based upon pixelValueMax
-            int dataDepth = 1;
-            while (Math.Pow(2, dataDepth) < pixelValueMax)
-                dataDepth++;
-            log.Debug($"detected data depth: {dataDepth}-bit");
+            return bmpDisplay;
+        }
 
-            // determine if we will use the original bit depth or our guessed bit depth
-            bool use_detected_camera_depth = true; // should this be an argument?
-            if (!use_detected_camera_depth)
-                dataDepth = sourceImageDepth;
-            
+        public Bitmap GetBitmapForDisplay()
+        {
+
             // create and fill a pixel array for the 8-bit final image
-            byte[] pixelsOutput = new byte[pixelCount];
-            for (int i = 0; i < pixelsOutput.Length; i++)
+            byte[] pixelsOutput = new byte[values.Length];
+            for (int i = 0; i < values.Length; i++)
             {
                 // start by loading the pixel value of the source
-                int pixelValue = valuesSource[i];
-
-                // apply brightness and contrast
-                pixelValue += (int)deltaBrightness;
-                pixelValue = (int)((double)pixelValue * (1 + deltaContrast));
+                int pixelValue = values[i];
 
                 // upshift it to the nearest byte (if using a nonstandard depth)
-                pixelValue = pixelValue << (sourceImageDepth - dataDepth);
+                pixelValue = pixelValue << (depthImage - depthData);
 
                 // downshift it as needed to ensure the MSB is in the lowest 8 bytes
-                pixelValue = pixelValue >> (sourceImageDepth - 8);
+                pixelValue = pixelValue >> (depthImage - 8);
 
-                // conversion to 8-bit should be now nondestructive
+                // conversion to 8-bit should now be non-destructive
                 pixelsOutput[i] = (byte)(pixelValue);
             }
 
             // create the output bitmap (8-bit indexed color)
             var format = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
-            Bitmap bmpIndexed8 = new Bitmap(width, height, format);
-
-            // Create a grayscale palette, although other colors and LUTs could go here
-            ColorPalette pal = bmpIndexed8.Palette;
-            for (int i = 0; i < 256; i++)
-                pal.Entries[i] = System.Drawing.Color.FromArgb(255, i, i, i);
-            bmpIndexed8.Palette = pal;
+            Bitmap bmpDisplay = new Bitmap(width, height, format);
+            bmpDisplay.Palette = PaletteGrayscale(bmpDisplay);
 
             // copy the new pixel data into the data of our output bitmap
             var rect = new Rectangle(0, 0, width, height);
-            BitmapData bmpData = bmpIndexed8.LockBits(rect, ImageLockMode.ReadOnly, format);
+            BitmapData bmpData = bmpDisplay.LockBits(rect, ImageLockMode.ReadOnly, format);
             Marshal.Copy(pixelsOutput, 0, bmpData.Scan0, pixelsOutput.Length);
-            bmpIndexed8.UnlockBits(bmpData);
+            bmpDisplay.UnlockBits(bmpData);
 
-            // update class variables with that we discovered
-            this.depthData = dataDepth;
-            this.depthImage = sourceImageDepth;
-            this.width = width;
-            this.height = height;
-            this.min = pixelValueMin;
-            this.max = pixelValueMax;
-
-            // create a non-indexed version of this image
-            /*
-            Bitmap bmpARGB = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            Graphics gfxARGB = Graphics.FromImage(bmpARGB);
-            gfxARGB.DrawImage(bmpIndexed8, 0, 0);
-            gfxARGB.Dispose();
-            return bmpARGB;
-            */
+            // for testing add a border
+            bmpDisplay = GetBitmapAsARGB(bmpDisplay);
+            bmpDisplay = OutlineBitmap(bmpDisplay, System.Drawing.Color.Blue);
 
             // return the 8-bit preview bitmap we created
-            return bmpIndexed8;
+            return bmpDisplay;
         }
 
-        public Bitmap OutlineBitmap(Bitmap bmp, System.Drawing.Color color)
+        public Bitmap GetBitmapAsARGB(Bitmap bmpOriginal)
         {
-            System.Drawing.Pen blackPen = new System.Drawing.Pen(color, 5);
+            var newFormat = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
+            Bitmap bmpARGB = new Bitmap(width, height, newFormat);
+            Graphics gfxARGB = Graphics.FromImage(bmpARGB);
+            gfxARGB.DrawImage(bmpOriginal, 0, 0);
+            gfxARGB.Dispose();
+            return bmpARGB;
+        }
+
+        private Bitmap OutlineBitmap(Bitmap bmp, System.Drawing.Color color, int lineWidth = 1)
+        {
+            System.Drawing.Pen pen = new System.Drawing.Pen(color, lineWidth);
             Graphics gfx = Graphics.FromImage(bmp);
             gfx = Graphics.FromImage(bmp);
-            gfx.DrawRectangle(blackPen, 0, 0, bmp.Width - 1, bmp.Height - 1);
+            Rectangle rect = new Rectangle(0, 0, width - 1, height - 1);
+            gfx.DrawRectangle(pen, rect);
             gfx.Dispose();
             return bmp;
         }
