@@ -101,7 +101,7 @@ namespace SciTIFlib
         /// Generate an 8-bit grayscale image suitable for display.
         /// Returned data may be degraded due to quantization error.
         /// </summary>
-        public Bitmap GetBitmapForDisplay(int frameNumber = 0)
+        public Bitmap GetBitmapForDisplay(int frameNumber = 0, double deltaBrightness = 1, double deltaContrast = 1)
         {
             // ensure a TIF is loaded
             if (decoder == null) return null;
@@ -149,13 +149,17 @@ namespace SciTIFlib
             bool use_detected_camera_depth = true; // should this be an argument?
             if (!use_detected_camera_depth)
                 dataDepth = sourceImageDepth;
-
+            
             // create and fill a pixel array for the 8-bit final image
-            byte[] pixelsOutput = new byte[height * width];
+            byte[] pixelsOutput = new byte[pixelCount];
             for (int i = 0; i < pixelsOutput.Length; i++)
             {
                 // start by loading the pixel value of the source
                 int pixelValue = valuesSource[i];
+
+                // apply brightness and contrast
+                pixelValue += (int)deltaBrightness;
+                pixelValue = (int)((double)pixelValue * (1 + deltaContrast));
 
                 // upshift it to the nearest byte (if using a nonstandard depth)
                 pixelValue = pixelValue << (sourceImageDepth - dataDepth);
@@ -192,15 +196,18 @@ namespace SciTIFlib
             this.max = pixelValueMax;
 
             // create a non-indexed version of this image
+            /*
             Bitmap bmpARGB = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Graphics gfxARGB = Graphics.FromImage(bmpARGB);
             gfxARGB.DrawImage(bmpIndexed8, 0, 0);
             gfxARGB.Dispose();
+            return bmpARGB;
+            */
 
             // return the 8-bit preview bitmap we created
-            return bmpARGB;
+            return bmpIndexed8;
         }
-        
+
         public Bitmap OutlineBitmap(Bitmap bmp, System.Drawing.Color color)
         {
             System.Drawing.Pen blackPen = new System.Drawing.Pen(color, 5);

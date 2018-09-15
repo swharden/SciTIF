@@ -145,7 +145,75 @@ namespace SciTIFlib
         ///////////////////////////////////////////////////////////////////////
         // CLICK-AND-DRAG TRACKING
 
+        private Point mouseDownL;
+        private Point mouseDownR;
+        private Point mouseImgPos;
+        private Point mouseBC = new Point(0, 0);
 
+        private void picture_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                mouseDownL = Cursor.Position;
+                mouseImgPos = new Point(panelFrame.HorizontalScroll.Value, panelFrame.VerticalScroll.Value);
+            }
+
+            if (e.Button == MouseButtons.Right)
+            {
+                mouseDownR = Cursor.Position;
+            }
+        }
+
+        private void picture_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                int dX = Cursor.Position.X - mouseDownR.X;
+                int dY = -(Cursor.Position.Y - mouseDownR.Y);
+                mouseBC = new Point(mouseBC.X + dX, mouseBC.Y + dY);
+            }
+        }
+
+        private void picture_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                int dX = Cursor.Position.X - mouseDownL.X;
+                int dY = -(Cursor.Position.Y - mouseDownL.Y);
+                int posY = Math.Max(0, mouseImgPos.Y + dY);
+                int posX = Math.Max(0, mouseImgPos.X - dX);
+                panelFrame.VerticalScroll.Value = posY;
+                panelFrame.HorizontalScroll.Value = posX;
+            }
+
+            if (e.Button == MouseButtons.Right)
+            {
+                int dX = Cursor.Position.X - mouseDownR.X;
+                int dY = -(Cursor.Position.Y - mouseDownR.Y);
+                int dXsum = mouseBC.X + dX;
+                int dYsum = mouseBC.Y + dY;
+                MouseContrast(dYsum, dXsum);
+            }
+        }
+
+        private bool working = false;
+        private void MouseContrast(int deltaBrightness, int deltaContrast)
+        {
+            if (working == false)
+            {
+                working = true;
+                picture.BackgroundImage = tif.GetBitmapForDisplay(deltaBrightness: deltaBrightness/2, 
+                                                                  deltaContrast: (double)deltaContrast / 100);
+                Application.DoEvents();
+                this.Update();
+                picture.Update();
+                working = false;
+            } else
+            {
+                return;
+            }
+        }
+        
         ///////////////////////////////////////////////////////////////////////
         // EVENT BINDINGS
 
@@ -185,46 +253,5 @@ namespace SciTIFlib
 
         }
 
-        private bool mouseDownLeft;
-        private Point mouseDownLeftPoint;
-        private Point mouseDownLeftPicturePosition;
-
-        private void picture_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                mouseDownLeft = true;
-                mouseDownLeftPoint = Cursor.Position;
-                Console.WriteLine($"mouse down: {mouseDownLeftPoint.X}, {mouseDownLeftPoint.Y}");
-                mouseDownLeftPicturePosition = new Point(panelFrame.HorizontalScroll.Value,
-                                                         panelFrame.VerticalScroll.Value);
-            }
-        }
-
-        private void picture_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                mouseDownLeft = false;
-                mouseDownLeftPoint = Cursor.Position;
-                Console.WriteLine($"mouse up: {mouseDownLeftPoint.X}, {mouseDownLeftPoint.Y}");
-            }
-        }
-
-        private void picture_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (mouseDownLeft)
-            {
-                int dX = Cursor.Position.X - mouseDownLeftPoint.X;
-                int dY = -(Cursor.Position.Y - mouseDownLeftPoint.Y);
-                Console.WriteLine($"mouse move: {dX}, {dY}");
-                int posY = Math.Max(0, mouseDownLeftPicturePosition.Y + dY);
-                int posX = Math.Max(0, mouseDownLeftPicturePosition.X - dX);
-                panelFrame.VerticalScroll.Value = posY;
-                panelFrame.HorizontalScroll.Value = posX;
-                Application.DoEvents();
-                this.Update();
-            }
-        }
     }
 }
