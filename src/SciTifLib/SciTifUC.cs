@@ -14,7 +14,11 @@ namespace SciTIFlib
     {
 
         TifFile tif;
+
         private bool stretchImageToFitPanel = true;
+        private Color backgroundColor;
+        private Color borderColor;
+        private int borderWidth;
 
         ///////////////////////////////////////////////////////////////////////
         // LOADING
@@ -22,11 +26,13 @@ namespace SciTIFlib
         public SciTifUC()
         {
             InitializeComponent();
-            SetBackgroundColor(Color.Black);
+            UpdateImageToFitNewPanelSize();
+            SetBackgroundColor(SystemColors.ControlDarkDark);
+            Update();
         }
 
         ///////////////////////////////////////////////////////////////////////
-        // EXTERNAL COMMAND
+        // EXTERNAL COMMANDS
 
         public void SetImage(string imageFilePath)
         {
@@ -35,10 +41,18 @@ namespace SciTIFlib
             UpdateImageToFitNewPanelSize();
         }
 
-        public void SetBackgroundColor(Color bgColor)
+        public void SetBackgroundColor(Color backgroundColor)
         {
-            panelFrame.BackColor = bgColor;
-            picture.BackColor = bgColor;
+            this.backgroundColor = backgroundColor;
+            panelFrame.BackColor = backgroundColor;
+            picture.BackColor = backgroundColor;
+        }
+
+        public void SetBorder(Color borderColor, int borderWidth = 1)
+        {
+            this.borderColor = borderColor;
+            this.borderWidth = borderWidth;
+            OutlineImageOnPanel();
         }
 
         public void SetZoomFit(bool fitImageToFrame = false)
@@ -66,7 +80,7 @@ namespace SciTIFlib
 
         ///////////////////////////////////////////////////////////////////////
         // INTERNAL FUNCTIONS
-        
+
         private void ResizeImageToFitPanel()
         {
             // stretcy display, so scale to the most contrained axis
@@ -104,6 +118,17 @@ namespace SciTIFlib
             picture.Location = new Point(picture.Location.X, centerY);
         }
 
+        private void OutlineImageOnPanel()
+        {
+            if (borderWidth == 0)
+                return;
+            Graphics gfx = panelFrame.CreateGraphics();
+            gfx.Clear(backgroundColor);
+            Pen pen = new Pen(borderColor, borderWidth * 2);
+            Rectangle rect = new Rectangle(picture.Location, picture.Size);
+            gfx.DrawRectangle(pen, rect);
+        }
+
         private void UpdateImageToFitNewPanelSize()
         {
             if (tif == null)
@@ -113,7 +138,12 @@ namespace SciTIFlib
                 ResizeImageToFitPanel();
             else
                 CenterImageInPanel();
+
+            OutlineImageOnPanel();
         }
+
+        ///////////////////////////////////////////////////////////////////////
+        // CLICK-AND-DRAG TRACKING
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -124,9 +154,30 @@ namespace SciTIFlib
             UpdateImageToFitNewPanelSize();
         }
 
+        private void SciTifUC_SizeChanged(object sender, EventArgs e)
+        {
+            UpdateImageToFitNewPanelSize();
+        }
+
         private void picture_DoubleClick(object sender, EventArgs e)
         {
             ToggleZoomFit();
+        }
+
+
+        private bool needsToBePaintedForTheFirstTime = true;
+        private void SciTifUC_Paint(object sender, PaintEventArgs e)
+        {
+            if (needsToBePaintedForTheFirstTime)
+            {
+                UpdateImageToFitNewPanelSize();
+                needsToBePaintedForTheFirstTime = false;
+            }
+        }
+
+        private void SciTifUC_Load(object sender, EventArgs e)
+        {
+
         }
 
         private void picture_Click(object sender, EventArgs e)
@@ -134,5 +185,46 @@ namespace SciTIFlib
 
         }
 
+        private bool mouseDownLeft;
+        private Point mouseDownLeftPoint;
+        private Point mouseDownLeftPicturePosition;
+
+        private void picture_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                mouseDownLeft = true;
+                mouseDownLeftPoint = Cursor.Position;
+                Console.WriteLine($"mouse down: {mouseDownLeftPoint.X}, {mouseDownLeftPoint.Y}");
+                mouseDownLeftPicturePosition = new Point(panelFrame.HorizontalScroll.Value,
+                                                         panelFrame.VerticalScroll.Value);
+            }
+        }
+
+        private void picture_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                mouseDownLeft = false;
+                mouseDownLeftPoint = Cursor.Position;
+                Console.WriteLine($"mouse up: {mouseDownLeftPoint.X}, {mouseDownLeftPoint.Y}");
+            }
+        }
+
+        private void picture_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (mouseDownLeft)
+            {
+                int dX = Cursor.Position.X - mouseDownLeftPoint.X;
+                int dY = -(Cursor.Position.Y - mouseDownLeftPoint.Y);
+                Console.WriteLine($"mouse move: {dX}, {dY}");
+                int posY = Math.Max(0, mouseDownLeftPicturePosition.Y + dY);
+                int posX = Math.Max(0, mouseDownLeftPicturePosition.X - dX);
+                panelFrame.VerticalScroll.Value = posY;
+                panelFrame.HorizontalScroll.Value = posX;
+                Application.DoEvents();
+                this.Update();
+            }
+        }
     }
 }

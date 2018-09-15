@@ -37,7 +37,7 @@
             // panelFrame
             // 
             this.panelFrame.AutoScroll = true;
-            this.panelFrame.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.panelFrame.BackColor = System.Drawing.Color.Red;
             this.panelFrame.Controls.Add(this.picture);
             this.panelFrame.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelFrame.Location = new System.Drawing.Point(0, 0);
@@ -56,6 +56,9 @@
             this.picture.TabStop = false;
             this.picture.Click += new System.EventHandler(this.picture_Click);
             this.picture.DoubleClick += new System.EventHandler(this.picture_DoubleClick);
+            this.picture.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picture_MouseDown);
+            this.picture.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picture_MouseMove);
+            this.picture.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picture_MouseUp);
             // 
             // SciTifUC
             // 
@@ -65,6 +68,9 @@
             this.Controls.Add(this.panelFrame);
             this.Name = "SciTifUC";
             this.Size = new System.Drawing.Size(245, 201);
+            this.Load += new System.EventHandler(this.SciTifUC_Load);
+            this.SizeChanged += new System.EventHandler(this.SciTifUC_SizeChanged);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.SciTifUC_Paint);
             this.Resize += new System.EventHandler(this.SciTifUC_Resize);
             this.panelFrame.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picture)).EndInit();

@@ -91,12 +91,8 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sciTIFDocumentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutSciTIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pbImage = new System.Windows.Forms.PictureBox();
-            this.panelImageHolder = new System.Windows.Forms.Panel();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
-            this.panelImageHolder.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -167,7 +163,7 @@
             this.statusFname.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.statusFname.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusFname.Name = "statusFname";
-            this.statusFname.Size = new System.Drawing.Size(168, 18);
+            this.statusFname.Size = new System.Drawing.Size(186, 18);
             this.statusFname.Spring = true;
             this.statusFname.Text = "Substack (1-81-4)0008.tif";
             this.statusFname.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -205,7 +201,6 @@
             this.openImageToolStripMenuItem.Name = "openImageToolStripMenuItem";
             this.openImageToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.openImageToolStripMenuItem.Text = "Open Image...";
-            this.openImageToolStripMenuItem.Click += new System.EventHandler(this.openImageToolStripMenuItem_Click);
             // 
             // openFolderToolStripMenuItem
             // 
@@ -424,7 +419,6 @@
             this.debugLogToolStripMenuItem.Name = "debugLogToolStripMenuItem";
             this.debugLogToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.debugLogToolStripMenuItem.Text = "Debug Log";
-            this.debugLogToolStripMenuItem.Click += new System.EventHandler(this.debugLogToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -552,7 +546,6 @@
             this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
             this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.propertiesToolStripMenuItem.Text = "Properties...";
-            this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -575,38 +568,11 @@
             this.aboutSciTIFToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.aboutSciTIFToolStripMenuItem.Text = "About SciTIF";
             // 
-            // pbImage
-            // 
-            this.pbImage.BackColor = System.Drawing.Color.LawnGreen;
-            this.pbImage.Image = ((System.Drawing.Image)(resources.GetObject("pbImage.Image")));
-            this.pbImage.Location = new System.Drawing.Point(5, 5);
-            this.pbImage.Margin = new System.Windows.Forms.Padding(0);
-            this.pbImage.Name = "pbImage";
-            this.pbImage.Size = new System.Drawing.Size(214, 191);
-            this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbImage.TabIndex = 2;
-            this.pbImage.TabStop = false;
-            this.pbImage.SizeChanged += new System.EventHandler(this.pbImage_SizeChanged);
-            this.pbImage.Paint += new System.Windows.Forms.PaintEventHandler(this.pbImage_Paint);
-            this.pbImage.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
-            // 
-            // panelImageHolder
-            // 
-            this.panelImageHolder.BackColor = System.Drawing.Color.Black;
-            this.panelImageHolder.Controls.Add(this.pbImage);
-            this.panelImageHolder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelImageHolder.Location = new System.Drawing.Point(0, 24);
-            this.panelImageHolder.Name = "panelImageHolder";
-            this.panelImageHolder.Size = new System.Drawing.Size(700, 432);
-            this.panelImageHolder.TabIndex = 3;
-            this.panelImageHolder.Resize += new System.EventHandler(this.panelImageHolder_Resize);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(700, 479);
-            this.Controls.Add(this.panelImageHolder);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -614,15 +580,10 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "SciTIF Browser";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.Shown += new System.EventHandler(this.Form1_Shown);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
-            this.panelImageHolder.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -659,7 +620,6 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sciTIFDocumentationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutSciTIFToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pbImage;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem folderContentsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem backgroundColorToolStripMenuItem;
@@ -693,7 +653,6 @@
         private System.Windows.Forms.ToolStripStatusLabel statusMin;
         private System.Windows.Forms.ToolStripStatusLabel statusMax;
         private System.Windows.Forms.ToolStripStatusLabel statusFname;
-        private System.Windows.Forms.Panel panelImageHolder;
     }
 }
 

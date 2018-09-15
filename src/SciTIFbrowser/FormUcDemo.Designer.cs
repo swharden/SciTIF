@@ -50,8 +50,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.sciTifUC1);
-            this.splitContainer1.Size = new System.Drawing.Size(711, 525);
-            this.splitContainer1.SplitterDistance = 235;
+            this.splitContainer1.Size = new System.Drawing.Size(1089, 653);
+            this.splitContainer1.SplitterDistance = 359;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitDirView1
@@ -59,7 +59,7 @@
             this.splitDirView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitDirView1.Location = new System.Drawing.Point(0, 0);
             this.splitDirView1.Name = "splitDirView1";
-            this.splitDirView1.Size = new System.Drawing.Size(235, 525);
+            this.splitDirView1.Size = new System.Drawing.Size(359, 653);
             this.splitDirView1.TabIndex = 0;
             this.splitDirView1.FileHighlighted += new System.EventHandler(this.splitDirView1_FileHighlighted);
             // 
@@ -69,14 +69,14 @@
             this.sciTifUC1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sciTifUC1.Location = new System.Drawing.Point(0, 0);
             this.sciTifUC1.Name = "sciTifUC1";
-            this.sciTifUC1.Size = new System.Drawing.Size(472, 525);
+            this.sciTifUC1.Size = new System.Drawing.Size(726, 653);
             this.sciTifUC1.TabIndex = 0;
             // 
             // FormUcDemo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(711, 525);
+            this.ClientSize = new System.Drawing.Size(1089, 653);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormUcDemo";
             this.Text = "SciTifUC Demo";
