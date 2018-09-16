@@ -36,10 +36,19 @@ namespace SciTIFlib
 
         public void SetImage(string imageFilePath)
         {
-            tif = new TifFile(imageFilePath);
-            picture.BackgroundImage = tif.GetBitmap();
-            ResizeImageToFitPanel();
-            MouseBCreset();
+            try
+            {
+                tif = new TifFile(imageFilePath);
+                picture.BackgroundImage = tif.GetBitmap();
+                ResizeImageToFitPanel();
+                MouseBCreset();
+                richTextBox1.Text = tif.Info();
+            }
+            catch
+            {
+                richTextBox1.Text = $"could not display: {imageFilePath}";
+                picture.BackgroundImage = null;
+            }
         }
 
         ///////////////////////////////////////////////////////////////////////

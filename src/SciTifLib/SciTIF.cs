@@ -10,7 +10,7 @@ namespace SciTIFlib
 {
     public class TifFile
     {
-        public string filePath;
+        public readonly string filePath;
         public string fileBasename;
         public long fileSize;
         public int imageDepth;
@@ -22,7 +22,7 @@ namespace SciTIFlib
         public int valuesMax;
         public int[] valuesRaw;
         public double[] values;
-        
+
 
         private Logger log;
         private Stream stream;
@@ -30,68 +30,45 @@ namespace SciTIFlib
         private BitmapSource bitmapSource;
         public ImageDisplay imageDisplay;
 
+        //////////////////////////////////////////////////////////////////
+        // IMAGE LOADING 
+
         public TifFile(string filePath)
         {
-            this.filePath = filePath;
+            this.filePath = System.IO.Path.GetFullPath(filePath);
+            if (!File.Exists(this.filePath))
+                throw new Exception("invalid file path: {this.filePath}");
             log = new Logger("SciTIF");
-            InspectImageFile();
-            LoadImage();
-            LoadImageData();
+            LoadFrame(0);
         }
 
-        private void InspectImageFile()
+        private void LoadFrame(int frameNumber = 0)
         {
-            if (filePath == null)
-                throw new Exception("filePath cannot be null");
 
-            filePath = System.IO.Path.GetFullPath(filePath);
-            fileBasename = System.IO.Path.GetFileName(filePath);
-            log.Info($"Loading abf file: {filePath}");
-
-            if (!File.Exists(filePath))
-                throw new Exception($"file does not exist: {filePath}");
-
-            fileSize = new System.IO.FileInfo(filePath).Length;
-        }
-
-        private void LoadImage()
-        {
+            // decode the image with TiffBitmapDecoder
             log.Debug("starting file stream");
             stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            try
-            {
-                decoder = new TiffBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                log.Debug("TIF file successfully decoded");
-            }
-            catch
-            {
-                decoder = null;
-                log.Debug("TiffBitmapDecoder crashed on load");
-            }
-
-        }
-
-        private void LoadImageData(int frameNumber = 0)
-        {
-            // sanity checking
-            if (decoder == null)
-            {
-                log.Debug("LoadImageData aborting early - no decoder");
-                return;
-            }
+            try { decoder = new TiffBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default); }
+            catch { throw new Exception($"TiffBitmapDecoder crashed while loading: {filePath}"); }
+            log.Debug("TiffBitmapDecoder is being used for this image");
+            fileSize = new System.IO.FileInfo(filePath).Length;
+            log.Debug($"File size: {fileSize + 1} bytes ({Math.Round(fileSize / 1e6, 2)} MB)");
 
             // select the frame (channel or slice) we want
+            log.Debug($"Decoding frame: {frameNumber + 1} of {decoder.Frames.Count}");
             bitmapSource = decoder.Frames[frameNumber];
 
             // prepare variables which will be useful later
             imageDepth = bitmapSource.Format.BitsPerPixel;
             int bytesPerPixel = imageDepth / 8;
+            log.Debug($"bytes per pixel: {bytesPerPixel}");
             imageWidth = bitmapSource.PixelWidth;
             imageHeight = bitmapSource.PixelHeight;
             imageSize = new Size(imageWidth, imageHeight);
             int bytesPerRow = imageWidth * bytesPerPixel;
             int imageByteCount = imageHeight * imageWidth * bytesPerPixel;
             int imagePixelCount = imageWidth * imageHeight;
+            log.Debug($"Image dimensions: {imageWidth} x {imageHeight}");
 
             // fill a byte array with source data from the frame of interest
             byte[] bytesSource = new byte[imageByteCount];
@@ -108,7 +85,12 @@ namespace SciTIFlib
                 }
             }
 
-            // predict what bit depth we have based upon pixelValueMax
+            // determine data value extremes
+            valuesMin = valuesRaw.Min();
+            valuesMax = valuesRaw.Max();
+            log.Debug($"extreme data values (min, max): ({valuesMin}, {valuesMax})");
+
+            // predict what bit depth we have based upon maximum pixel value
             valuesDepth = 1;
             while (Math.Pow(2, valuesDepth) < valuesMax)
                 valuesDepth++;
@@ -117,31 +99,30 @@ namespace SciTIFlib
             // load data into the display object
             imageDisplay = new ImageDisplay(valuesRaw, imageWidth, imageHeight, imageDepth);
 
-            log.Debug("data loaded successfully");
+            log.Debug("data values loaded successfully");
         }
+
+        //////////////////////////////////////////////////////////////////
+        // EXTERNAL 
 
         public string Info()
         {
-            string msg = $"File: {System.IO.Path.GetFileName(filePath)}\n";
-            msg += $"Full Path: {filePath}\n";
-            return msg;
+            return log.logText;
         }
 
-        private ColorPalette PaletteGrayscale(Bitmap bmp)
-        {
-            ColorPalette pal = bmp.Palette;
-            for (int i = 0; i < 256; i++)
-                pal.Entries[i] = Color.FromArgb(255, i, i, i);
-            return pal;
-        }
-        
+
+        //////////////////////////////////////////////////////////////////
+        // INTERNAL
+
         public Bitmap GetBitmap()
         {
+            /*
             if (decoder == null || imageWidth == 0 || imageHeight == 0)
                 return null;
+                */
             return imageDisplay.ValuesToBitmap();
         }
-        
+
         public Bitmap GetBitmapAsARGB(Bitmap bmpOriginal)
         {
             var newFormat = PixelFormat.Format32bppArgb;
