@@ -67,7 +67,6 @@
             this.setBorderColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setBorderWidthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.loadSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSettingsAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.advancedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,7 +79,25 @@
             this.keyboardShortcutsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reportAnIssueToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.useSpecificBitDepthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bitToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bitToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bitToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bitToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.automaticUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutSciTIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openClipboardPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.filePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.panelFrame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picture)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -117,15 +134,16 @@
             this.toolStripMenuItem4,
             this.toolStripMenuItem2,
             this.filterToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
+            this.copyToolStripMenuItem,
             this.toolStripSeparator2,
             this.toolStripMenuItem3,
             this.settingsToolStripMenuItem,
             this.advancedToolStripMenuItem,
-            this.helpToolStripMenuItem,
             this.toolStripSeparator1,
-            this.toolStripMenuItem1});
+            this.helpToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(201, 192);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(201, 236);
             // 
             // toolStripMenuItem4
             // 
@@ -185,7 +203,8 @@
             this.resetfullDataRangeToolStripMenuItem,
             this.resetfullImageRangeToolStripMenuItem,
             this.automaticIgnoreToolStripMenuItem,
-            this.setMinAndMaxToolStripMenuItem});
+            this.setMinAndMaxToolStripMenuItem,
+            this.useSpecificBitDepthToolStripMenuItem});
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(200, 22);
             this.toolStripMenuItem2.Text = "Brightness and Contrast";
@@ -313,7 +332,9 @@
             this.nextrightArrowToolStripMenuItem,
             this.previousleftArrowToolStripMenuItem,
             this.reloadF5ToolStripMenuItem,
-            this.openToolStripMenuItem});
+            this.toolStripSeparator7,
+            this.openToolStripMenuItem,
+            this.openClipboardPathToolStripMenuItem});
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.Size = new System.Drawing.Size(200, 22);
             this.toolStripMenuItem3.Text = "Navigate";
@@ -349,9 +370,10 @@
             this.setBorderColorToolStripMenuItem,
             this.setBorderWidthToolStripMenuItem,
             this.toolStripSeparator3,
-            this.loadSettingsToolStripMenuItem,
             this.saveSettingsAsToolStripMenuItem,
-            this.setAsDefaultToolStripMenuItem});
+            this.setAsDefaultToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.automaticUpdatesToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -379,17 +401,11 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(195, 6);
             // 
-            // loadSettingsToolStripMenuItem
-            // 
-            this.loadSettingsToolStripMenuItem.Name = "loadSettingsToolStripMenuItem";
-            this.loadSettingsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.loadSettingsToolStripMenuItem.Text = "Load Settings...";
-            // 
             // saveSettingsAsToolStripMenuItem
             // 
             this.saveSettingsAsToolStripMenuItem.Name = "saveSettingsAsToolStripMenuItem";
             this.saveSettingsAsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.saveSettingsAsToolStripMenuItem.Text = "Save Settings As...";
+            this.saveSettingsAsToolStripMenuItem.Text = "Reset Settings";
             // 
             // setAsDefaultToolStripMenuItem
             // 
@@ -402,6 +418,8 @@
             this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.imageMetadataToolStripMenuItem,
             this.developerConsoleToolStripMenuItem,
+            this.checkForUpdateToolStripMenuItem,
+            this.toolStripSeparator6,
             this.reportAnIssueToolStripMenuItem,
             this.suggestAFeatureToolStripMenuItem});
             this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
@@ -437,7 +455,9 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.documentationToolStripMenuItem,
             this.keyboardShortcutsToolStripMenuItem,
-            this.reportAnIssueToolStripMenuItem1});
+            this.reportAnIssueToolStripMenuItem1,
+            this.toolStripSeparator5,
+            this.aboutSciTIFToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.helpToolStripMenuItem.Text = "Help";
@@ -465,11 +485,127 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(197, 6);
             // 
-            // toolStripMenuItem1
+            // useSpecificBitDepthToolStripMenuItem
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(200, 22);
-            this.toolStripMenuItem1.Text = "About SciTIF";
+            this.useSpecificBitDepthToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bitToolStripMenuItem,
+            this.bitToolStripMenuItem1,
+            this.bitToolStripMenuItem2,
+            this.bitToolStripMenuItem3,
+            this.bitToolStripMenuItem4,
+            this.bitToolStripMenuItem5});
+            this.useSpecificBitDepthToolStripMenuItem.Name = "useSpecificBitDepthToolStripMenuItem";
+            this.useSpecificBitDepthToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.useSpecificBitDepthToolStripMenuItem.Text = "Use Specific Bit Depth";
+            // 
+            // bitToolStripMenuItem
+            // 
+            this.bitToolStripMenuItem.Name = "bitToolStripMenuItem";
+            this.bitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bitToolStripMenuItem.Text = "8-Bit";
+            // 
+            // bitToolStripMenuItem1
+            // 
+            this.bitToolStripMenuItem1.Name = "bitToolStripMenuItem1";
+            this.bitToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.bitToolStripMenuItem1.Text = "16-Bit";
+            // 
+            // bitToolStripMenuItem2
+            // 
+            this.bitToolStripMenuItem2.Name = "bitToolStripMenuItem2";
+            this.bitToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.bitToolStripMenuItem2.Text = "24-Bit";
+            // 
+            // bitToolStripMenuItem3
+            // 
+            this.bitToolStripMenuItem3.Name = "bitToolStripMenuItem3";
+            this.bitToolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.bitToolStripMenuItem3.Text = "32-Bit";
+            // 
+            // bitToolStripMenuItem4
+            // 
+            this.bitToolStripMenuItem4.Name = "bitToolStripMenuItem4";
+            this.bitToolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.bitToolStripMenuItem4.Text = "64-Bit";
+            // 
+            // bitToolStripMenuItem5
+            // 
+            this.bitToolStripMenuItem5.Name = "bitToolStripMenuItem5";
+            this.bitToolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
+            this.bitToolStripMenuItem5.Text = "128-Bit";
+            // 
+            // checkForUpdateToolStripMenuItem
+            // 
+            this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdateToolStripMenuItem.Text = "Check for Update...";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(195, 6);
+            // 
+            // automaticUpdatesToolStripMenuItem
+            // 
+            this.automaticUpdatesToolStripMenuItem.Checked = true;
+            this.automaticUpdatesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.automaticUpdatesToolStripMenuItem.Name = "automaticUpdatesToolStripMenuItem";
+            this.automaticUpdatesToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.automaticUpdatesToolStripMenuItem.Text = "Automatic Updates";
+            // 
+            // aboutSciTIFToolStripMenuItem
+            // 
+            this.aboutSciTIFToolStripMenuItem.Name = "aboutSciTIFToolStripMenuItem";
+            this.aboutSciTIFToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutSciTIFToolStripMenuItem.Text = "About SciTIF";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(177, 6);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.saveAsToolStripMenuItem.Text = "Save As...";
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.filePathToolStripMenuItem,
+            this.imageToolStripMenuItem});
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            // 
+            // openClipboardPathToolStripMenuItem
+            // 
+            this.openClipboardPathToolStripMenuItem.Name = "openClipboardPathToolStripMenuItem";
+            this.openClipboardPathToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.openClipboardPathToolStripMenuItem.Text = "Open Clipboard Path";
+            // 
+            // filePathToolStripMenuItem
+            // 
+            this.filePathToolStripMenuItem.Name = "filePathToolStripMenuItem";
+            this.filePathToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.filePathToolStripMenuItem.Text = "File Path";
+            // 
+            // imageToolStripMenuItem
+            // 
+            this.imageToolStripMenuItem.Name = "imageToolStripMenuItem";
+            this.imageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.imageToolStripMenuItem.Text = "Image";
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(182, 6);
             // 
             // SciTifUC
             // 
@@ -502,7 +638,6 @@
         private System.Windows.Forms.ToolStripMenuItem zoomOutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setZoomToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem automaticToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rightclickdragControlToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nextrightArrowToolStripMenuItem;
@@ -540,8 +675,26 @@
         private System.Windows.Forms.ToolStripMenuItem setBorderColorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setBorderWidthToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem loadSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSettingsAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setAsDefaultToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem useSpecificBitDepthToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bitToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem bitToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem bitToolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem bitToolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem bitToolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem automaticUpdatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem filePathToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem imageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripMenuItem openClipboardPathToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem aboutSciTIFToolStripMenuItem;
     }
 }
