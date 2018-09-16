@@ -22,8 +22,8 @@ namespace SciTIFbrowser
             splitDirView1.SetFolder(@"D:\demoData\tifs");
             SetImage(@"D:\demoData\tifs\leaning.tif");
             //SetImage(@"D:\demoData\tifs\16923029b-after.tif");
-            sciTifUC1.SetZoomFit(false);
-            sciTifUC1.SetBorder(Color.Yellow);
+            //sciTifUC1.SetZoomFit(false);
+            //sciTifUC1.SetBorder(Color.Yellow);
         }
 
         private void splitDirView1_FileHighlighted(object sender, EventArgs e)

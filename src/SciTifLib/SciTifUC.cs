@@ -13,7 +13,7 @@ namespace SciTIFlib
     public partial class SciTifUC : UserControl
     {
 
-        TifFile tif;
+        private TifFile tif;
 
         private bool stretchImageToFitPanel = true;
         private Color backgroundColor;
@@ -26,30 +26,33 @@ namespace SciTIFlib
         public SciTifUC()
         {
             InitializeComponent();
-            UpdateImageToFitNewPanelSize();
+            ResizeImageToFitPanel();
             SetBackgroundColor(SystemColors.ControlDarkDark);
             Update();
         }
 
         ///////////////////////////////////////////////////////////////////////
-        // EXTERNAL COMMANDS
+        // EXTERNAL SETTINGS
 
         public void SetImage(string imageFilePath)
         {
             tif = new TifFile(imageFilePath);
             picture.BackgroundImage = tif.GetBitmap();
-            UpdateImageToFitNewPanelSize();
-            BrightnessContrastMouseReset();
+            ResizeImageToFitPanel();
+            MouseBCreset();
         }
 
-        public void SetBackgroundColor(Color backgroundColor)
+        ///////////////////////////////////////////////////////////////////////
+        // INTERNAL SETTINGS
+
+        private void SetBackgroundColor(Color backgroundColor)
         {
             this.backgroundColor = backgroundColor;
             panelFrame.BackColor = backgroundColor;
             picture.BackColor = backgroundColor;
         }
 
-        public void SetBorder(Color borderColor, int borderWidth = 1)
+        private void SetBorder(Color borderColor, int borderWidth = 1)
         {
             this.borderColor = borderColor;
             this.borderWidth = borderWidth;
@@ -70,7 +73,7 @@ namespace SciTIFlib
                 stretchImageToFitPanel = false;
                 picture.Location = new Point(0, 0);
             }
-            UpdateImageToFitNewPanelSize();
+            ResizeImageToFitPanel();
         }
 
         public void ToggleZoomFit()
@@ -79,10 +82,10 @@ namespace SciTIFlib
                 SetZoomFit(false);
             else
                 SetZoomFit(true);
-            UpdateImageToFitNewPanelSize();
+            ResizeImageToFitPanel();
         }
 
-        private void ResizeImageToFitPanel()
+        private void ZoomToFit()
         {
             // stretcy display, so scale to the most contrained axis
             picture.BackgroundImageLayout = ImageLayout.Stretch;
@@ -104,7 +107,7 @@ namespace SciTIFlib
             }
         }
 
-        private void CenterImageInPanel()
+        private void CenterImage()
         {
             // 1:1 image display
             picture.BackgroundImageLayout = ImageLayout.None;
@@ -119,27 +122,29 @@ namespace SciTIFlib
             picture.Location = new Point(picture.Location.X, centerY);
         }
 
-        private void UpdateImageToFitNewPanelSize()
+        private void ResizeImageToFitPanel()
         {
             if (tif == null)
                 return;
 
             if (stretchImageToFitPanel)
-                ResizeImageToFitPanel();
+                ZoomToFit();
             else
-                CenterImageInPanel();
+                CenterImage();
         }
 
         ///////////////////////////////////////////////////////////////////////
-        // CLICK-AND-DRAG TRACKING
+        // CLICK-AND-DRAG TRACKING FOR PAN AND BRIGHTNESS/CONTRAST
 
         private Point mouseDownL;
         private Point mouseDownR;
         private Point mouseImgPos;
         private Point mouseBC = new Point(0, 0);
+        private double mouseDownTime;
 
         private void picture_MouseDown(object sender, MouseEventArgs e)
         {
+            mouseDownTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             if (e.Button == MouseButtons.Left)
             {
                 mouseDownL = Cursor.Position;
@@ -154,11 +159,16 @@ namespace SciTIFlib
 
         private void picture_MouseUp(object sender, MouseEventArgs e)
         {
+            mouseDownTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - mouseDownTime;
             if (e.Button == MouseButtons.Right)
             {
                 int dX = Cursor.Position.X - mouseDownR.X;
                 int dY = Cursor.Position.Y - mouseDownR.Y;
                 mouseBC = new Point(mouseBC.X + dX, mouseBC.Y + dY);
+                if (mouseDownTime < 200 || (dX==0 && dY==0))
+                {
+                    contextMenuStrip1.Show(picture, new Point(e.X, e.Y));
+                }
             }
         }
 
@@ -181,28 +191,26 @@ namespace SciTIFlib
                 int dXsum = mouseBC.X + dX;
                 int dYsum = mouseBC.Y + dY;
                 tif.imageDisplay.SetMinMaxMouse(dXsum, dYsum);
-                UpdateContrastAfterMouseMoved();
+                MouseBCupdate();
             }
         }
 
-        public void BrightnessContrastMouseReset()
+        public void MouseBCreset()
         {
             mouseBC = new Point(0, 0);
             if (tif != null && tif.imageDisplay != null)
                 tif.imageDisplay.SetMinMaxMouse(0, 0);
         }
 
-        private bool mouseContrastWorking = false;
-        private void UpdateContrastAfterMouseMoved(bool skipIfBusy = true)
+        private bool mouseBCisWorking = false;
+        private void MouseBCupdate(bool skipIfBusy = true)
         {
-            if (skipIfBusy && mouseContrastWorking)
+            if (skipIfBusy && mouseBCisWorking)
                 return;
-            mouseContrastWorking = true;
+            mouseBCisWorking = true;
             picture.BackgroundImage = tif.GetBitmap();
             Application.DoEvents();
-            this.Update();
-            picture.Update();
-            mouseContrastWorking = false;
+            mouseBCisWorking = false;
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -210,12 +218,12 @@ namespace SciTIFlib
 
         private void SciTifUC_Resize(object sender, EventArgs e)
         {
-            UpdateImageToFitNewPanelSize();
+            ResizeImageToFitPanel();
         }
 
         private void SciTifUC_SizeChanged(object sender, EventArgs e)
         {
-            UpdateImageToFitNewPanelSize();
+            ResizeImageToFitPanel();
         }
 
         private void picture_DoubleClick(object sender, EventArgs e)
@@ -229,19 +237,9 @@ namespace SciTIFlib
         {
             if (needsToBePaintedForTheFirstTime)
             {
-                UpdateImageToFitNewPanelSize();
+                ResizeImageToFitPanel();
                 needsToBePaintedForTheFirstTime = false;
             }
-        }
-
-        private void SciTifUC_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void picture_Click(object sender, EventArgs e)
-        {
-
         }
 
     }
