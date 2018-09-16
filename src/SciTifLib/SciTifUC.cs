@@ -37,7 +37,7 @@ namespace SciTIFlib
         public void SetImage(string imageFilePath)
         {
             tif = new TifFile(imageFilePath);
-            picture.BackgroundImage = tif.GetBitmapForDisplay2();
+            picture.BackgroundImage = tif.GetBitmap();
             UpdateImageToFitNewPanelSize();
             BrightnessContrastMouseReset();
         }
@@ -54,6 +54,10 @@ namespace SciTIFlib
             this.borderColor = borderColor;
             this.borderWidth = borderWidth;
         }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        // PICTURE POSITION AND ZOOMING
 
         public void SetZoomFit(bool fitImageToFrame = false)
         {
@@ -78,26 +82,23 @@ namespace SciTIFlib
             UpdateImageToFitNewPanelSize();
         }
 
-        ///////////////////////////////////////////////////////////////////////
-        // INTERNAL FUNCTIONS
-
         private void ResizeImageToFitPanel()
         {
             // stretcy display, so scale to the most contrained axis
             picture.BackgroundImageLayout = ImageLayout.Stretch;
-            double ratioX = (double)panelFrame.Width / tif.width;
-            double ratioY = (double)panelFrame.Height / tif.height;
+            double ratioX = (double)panelFrame.Width / tif.imageWidth;
+            double ratioY = (double)panelFrame.Height / tif.imageHeight;
             if (ratioX > ratioY)
             {
                 // match the HEIGHTS and center it HORIZONTALLY
-                int imageWidth = (int)(panelFrame.Height * ((double)tif.width / tif.height));
+                int imageWidth = (int)(panelFrame.Height * ((double)tif.imageWidth / tif.imageHeight));
                 picture.Size = new Size(imageWidth, panelFrame.Height);
                 picture.Location = new Point((panelFrame.Width - imageWidth) / 2, 0);
             }
             else
             {
                 // match the WIDTHS and center it VERTICALLY
-                int imageHeight = (int)(panelFrame.Width * ((double)tif.height / tif.width));
+                int imageHeight = (int)(panelFrame.Width * ((double)tif.imageHeight / tif.imageWidth));
                 picture.Size = new Size(panelFrame.Width, imageHeight);
                 picture.Location = new Point(0, (panelFrame.Height - imageHeight) / 2);
             }
@@ -107,17 +108,17 @@ namespace SciTIFlib
         {
             // 1:1 image display
             picture.BackgroundImageLayout = ImageLayout.None;
-            picture.Size = tif.size;
+            picture.Size = tif.imageSize;
 
             // center as needed horizontally
-            int centerX = panelFrame.Width / 2 - tif.width / 2;
+            int centerX = panelFrame.Width / 2 - tif.imageWidth / 2;
             picture.Location = new Point(centerX, picture.Location.Y);
 
             // center as needed vertically
-            int centerY = panelFrame.Height / 2 - tif.height / 2;
+            int centerY = panelFrame.Height / 2 - tif.imageHeight / 2;
             picture.Location = new Point(picture.Location.X, centerY);
         }
-        
+
         private void UpdateImageToFitNewPanelSize()
         {
             if (tif == null)
@@ -156,7 +157,7 @@ namespace SciTIFlib
             if (e.Button == MouseButtons.Right)
             {
                 int dX = Cursor.Position.X - mouseDownR.X;
-                int dY = -(Cursor.Position.Y - mouseDownR.Y);
+                int dY = Cursor.Position.Y - mouseDownR.Y;
                 mouseBC = new Point(mouseBC.X + dX, mouseBC.Y + dY);
             }
         }
@@ -176,39 +177,34 @@ namespace SciTIFlib
             if (e.Button == MouseButtons.Right)
             {
                 int dX = Cursor.Position.X - mouseDownR.X;
-                int dY = -(Cursor.Position.Y - mouseDownR.Y);
+                int dY = Cursor.Position.Y - mouseDownR.Y;
                 int dXsum = mouseBC.X + dX;
                 int dYsum = mouseBC.Y + dY;
-                //MouseContrast(dYsum, dXsum);
-                MouseContrast(dXsum, dYsum);
+                tif.imageDisplay.SetMinMaxMouse(dXsum, dYsum);
+                UpdateContrastAfterMouseMoved();
             }
-        }
-
-        public void BrightnessContrastMouseSet(int brightness=0, int contrast=0)
-        {
-            picture.BackgroundImage = tif.GetBitmapForDisplay2(brightness, contrast);
-            Application.DoEvents();
-            this.Update();
-            picture.Update();
         }
 
         public void BrightnessContrastMouseReset()
         {
             mouseBC = new Point(0, 0);
-            BrightnessContrastMouseSet();
+            if (tif != null && tif.imageDisplay != null)
+                tif.imageDisplay.SetMinMaxMouse(0, 0);
         }
 
         private bool mouseContrastWorking = false;
-        private void MouseContrast(int brightness, int contrast)
+        private void UpdateContrastAfterMouseMoved(bool skipIfBusy = true)
         {
-            if (mouseContrastWorking == false)
-            {
-                mouseContrastWorking = true;
-                BrightnessContrastMouseSet(brightness, contrast);
-                mouseContrastWorking = false;
-            }
+            if (skipIfBusy && mouseContrastWorking)
+                return;
+            mouseContrastWorking = true;
+            picture.BackgroundImage = tif.GetBitmap();
+            Application.DoEvents();
+            this.Update();
+            picture.Update();
+            mouseContrastWorking = false;
         }
-        
+
         ///////////////////////////////////////////////////////////////////////
         // EVENT BINDINGS
 
