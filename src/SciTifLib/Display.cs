@@ -12,7 +12,7 @@ namespace SciTIFlib
     /// <summary>
     /// Code here handles brightness & contrast adjustments and LUTs.
     /// </summary>
-    public class ImageDisplay
+    public class ImageData
     {
         private int sourceDepth;
 
@@ -33,7 +33,7 @@ namespace SciTIFlib
         ////////////////////////////////////////////////////////////////////////////////////////
         // DATA LOADING
 
-        public ImageDisplay(int[] valuesRaw, int imageWidth, int imageHeight, int sourceDepth)
+        public ImageData(int[] valuesRaw, int imageWidth, int imageHeight, int sourceDepth)
         {
             // load our original values in memory
             this.valuesRaw = valuesRaw;

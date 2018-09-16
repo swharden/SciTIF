@@ -13,7 +13,7 @@ namespace SciTIFlib
     public partial class SciTifUC : UserControl
     {
 
-        private TifFile tif;
+        private ImageFile sciTifImage;
 
         private bool stretchImageToFitPanel = true;
         private Color backgroundColor;
@@ -36,19 +36,22 @@ namespace SciTIFlib
 
         public void SetImage(string imageFilePath)
         {
-            try
-            {
-                tif = new TifFile(imageFilePath);
-                picture.BackgroundImage = tif.GetBitmap();
-                ResizeImageToFitPanel();
-                MouseBCreset();
-                richTextBox1.Text = tif.Info();
-            }
-            catch
-            {
-                richTextBox1.Text = $"could not display: {imageFilePath}";
-                picture.BackgroundImage = null;
-            }
+            sciTifImage = new ImageFile(imageFilePath);
+
+            // for testing
+            picture.Dock = DockStyle.Fill;
+            picture.BackColor = Color.Blue;
+
+            picture.BackgroundImage = sciTifImage.GetBitmap();
+
+            //ResizeImageToFitPanel();
+
+            /*
+            ResizeImageToFitPanel();
+            MouseBCreset();
+            */
+
+            richTextBox1.Text = sciTifImage.log.logText;
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -98,19 +101,19 @@ namespace SciTIFlib
         {
             // stretcy display, so scale to the most contrained axis
             picture.BackgroundImageLayout = ImageLayout.Stretch;
-            double ratioX = (double)panelFrame.Width / tif.imageWidth;
-            double ratioY = (double)panelFrame.Height / tif.imageHeight;
+            double ratioX = (double)panelFrame.Width / sciTifImage.imageWidth;
+            double ratioY = (double)panelFrame.Height / sciTifImage.imageHeight;
             if (ratioX > ratioY)
             {
                 // match the HEIGHTS and center it HORIZONTALLY
-                int imageWidth = (int)(panelFrame.Height * ((double)tif.imageWidth / tif.imageHeight));
+                int imageWidth = (int)(panelFrame.Height * ((double)sciTifImage.imageWidth / sciTifImage.imageHeight));
                 picture.Size = new Size(imageWidth, panelFrame.Height);
                 picture.Location = new Point((panelFrame.Width - imageWidth) / 2, 0);
             }
             else
             {
                 // match the WIDTHS and center it VERTICALLY
-                int imageHeight = (int)(panelFrame.Width * ((double)tif.imageHeight / tif.imageWidth));
+                int imageHeight = (int)(panelFrame.Width * ((double)sciTifImage.imageHeight / sciTifImage.imageWidth));
                 picture.Size = new Size(panelFrame.Width, imageHeight);
                 picture.Location = new Point(0, (panelFrame.Height - imageHeight) / 2);
             }
@@ -120,20 +123,20 @@ namespace SciTIFlib
         {
             // 1:1 image display
             picture.BackgroundImageLayout = ImageLayout.None;
-            picture.Size = tif.imageSize;
+            picture.Size = new Size(sciTifImage.imageWidth, sciTifImage.imageHeight);
 
             // center as needed horizontally
-            int centerX = panelFrame.Width / 2 - tif.imageWidth / 2;
+            int centerX = panelFrame.Width / 2 - sciTifImage.imageWidth / 2;
             picture.Location = new Point(centerX, picture.Location.Y);
 
             // center as needed vertically
-            int centerY = panelFrame.Height / 2 - tif.imageHeight / 2;
+            int centerY = panelFrame.Height / 2 - sciTifImage.imageHeight / 2;
             picture.Location = new Point(picture.Location.X, centerY);
         }
 
         private void ResizeImageToFitPanel()
         {
-            if (tif == null)
+            if (sciTifImage == null)
                 return;
 
             if (stretchImageToFitPanel)
@@ -189,6 +192,10 @@ namespace SciTIFlib
                 int dY = -(Cursor.Position.Y - mouseDownL.Y);
                 int posY = Math.Max(0, mouseImgPos.Y + dY);
                 int posX = Math.Max(0, mouseImgPos.X - dX);
+                posY = Math.Max(posY, 0);
+                posY = Math.Min(posY, panelFrame.VerticalScroll.Maximum);
+                posX = Math.Max(posX, 0);
+                posX = Math.Min(posX, panelFrame.HorizontalScroll.Maximum);
                 panelFrame.VerticalScroll.Value = posY;
                 panelFrame.HorizontalScroll.Value = posX;
             }
@@ -199,7 +206,7 @@ namespace SciTIFlib
                 int dY = Cursor.Position.Y - mouseDownR.Y;
                 int dXsum = mouseBC.X + dX;
                 int dYsum = mouseBC.Y + dY;
-                tif.imageDisplay.SetMinMaxMouse(dXsum, dYsum);
+                sciTifImage.imageData.SetMinMaxMouse(dXsum, dYsum);
                 MouseBCupdate();
             }
         }
@@ -207,8 +214,8 @@ namespace SciTIFlib
         public void MouseBCreset()
         {
             mouseBC = new Point(0, 0);
-            if (tif != null && tif.imageDisplay != null)
-                tif.imageDisplay.SetMinMaxMouse(0, 0);
+            if (sciTifImage != null && sciTifImage.imageData != null)
+                sciTifImage.imageData.SetMinMaxMouse(0, 0);
         }
 
         private bool mouseBCisWorking = false;
@@ -217,7 +224,7 @@ namespace SciTIFlib
             if (skipIfBusy && mouseBCisWorking)
                 return;
             mouseBCisWorking = true;
-            picture.BackgroundImage = tif.GetBitmap();
+            picture.BackgroundImage = sciTifImage.GetBitmap();
             Application.DoEvents();
             mouseBCisWorking = false;
         }

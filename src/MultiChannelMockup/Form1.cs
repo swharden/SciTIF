@@ -8,17 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SciTIFbrowser
+namespace MultiChannelMockup
 {
     public partial class Form1 : Form
     {
-        SciTIFlib.ImageFile tif;
-        SciTIFlib.Path SciTifPath = new SciTIFlib.Path();
-
         public Form1()
         {
             InitializeComponent();
         }
 
+        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

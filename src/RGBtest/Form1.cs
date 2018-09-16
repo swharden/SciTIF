@@ -8,17 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SciTIFbrowser
+namespace RGBtest
 {
     public partial class Form1 : Form
     {
-        SciTIFlib.ImageFile tif;
-        SciTIFlib.Path SciTifPath = new SciTIFlib.Path();
-
         public Form1()
         {
             InitializeComponent();
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            sciTifUC1.SetImage(@"D:\demoData\tifs\Lenna_(test_image).png");
+        }
     }
 }
