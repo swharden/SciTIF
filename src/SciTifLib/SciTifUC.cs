@@ -28,7 +28,6 @@ namespace SciTIFlib
             InitializeComponent();
             ResizeImageToFitPanel();
             SetBackgroundColor(SystemColors.ControlDarkDark);
-            Update();
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -39,18 +38,13 @@ namespace SciTIFlib
             sciTifImage = new ImageFile(imageFilePath);
 
             // for testing
-            picture.Dock = DockStyle.Fill;
-            picture.BackColor = Color.Blue;
+            //picture.Dock = DockStyle.Fill;
+            //picture.BackColor = Color.Blue;
 
-            picture.BackgroundImage = sciTifImage.GetBitmap();
-
-            //ResizeImageToFitPanel();
-
-            /*
             ResizeImageToFitPanel();
-            MouseBCreset();
-            */
-
+            MouseBrightnessContrastReset();
+            sciTifImage.imageDisplay.SetMinAndMaxAuto();
+            picture.BackgroundImage = sciTifImage.GetBitmap();
             richTextBox1.Text = sciTifImage.log.logText;
         }
 
@@ -206,16 +200,17 @@ namespace SciTIFlib
                 int dY = Cursor.Position.Y - mouseDownR.Y;
                 int dXsum = mouseBC.X + dX;
                 int dYsum = mouseBC.Y + dY;
-                sciTifImage.imageData.SetMinMaxMouse(dXsum, dYsum);
+                if (sciTifImage != null && sciTifImage.imageDisplay != null)
+                    sciTifImage.imageDisplay.SetMinMaxMouse(dXsum, dYsum);
                 MouseBCupdate();
             }
         }
 
-        public void MouseBCreset()
+        public void MouseBrightnessContrastReset()
         {
             mouseBC = new Point(0, 0);
-            if (sciTifImage != null && sciTifImage.imageData != null)
-                sciTifImage.imageData.SetMinMaxMouse(0, 0);
+            if (sciTifImage != null && sciTifImage.imageDisplay != null)
+                sciTifImage.imageDisplay.SetMinMaxMouse(0, 0);
         }
 
         private bool mouseBCisWorking = false;

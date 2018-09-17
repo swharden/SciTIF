@@ -17,10 +17,10 @@ namespace SciTIFlib
         public int imageFrameCount;
 
         public int[] valuesRaw;
-        public double[] values; // normalized to 1
-        
+        //public double[] values; // normalized to 1
+
         public Logger log;
-        public ImageData imageData;
+        public ImageDisplay imageDisplay;
 
         //////////////////////////////////////////////////////////////////
         // IMAGE LOADING 
@@ -37,33 +37,114 @@ namespace SciTIFlib
             if (!File.Exists(this.filePath))
                 throw new Exception("invalid file path: {this.filePath}");
 
-            LoadImageData(filePath);
-            imageData = new ImageData(valuesRaw, imageWidth, imageHeight, imageDepth);
+            LoadImageData();
         }
 
         /// <summary>
-        /// Read an image and create a double array for pixel values
+        /// Read pixel data of the TIF and populate values (the double array)
         /// </summary>
-        /// <param name="filePath"></param>
-        private void LoadImageData(string filePath)
+        private void LoadValuesTIFF(int frameNumber = 0)
         {
-            log.Debug($"Loading image file: {System.IO.Path.GetFileName(filePath)}");
+            log.Debug("Loading values from image file using the TIFF-specific method");
+            Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            TiffBitmapDecoder decoder;
+            try
+            {
+                decoder = new TiffBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                log.Debug($"TiffBitmapDecoder loaded successfully");
+            }
+            catch
+            {
+                log.Debug($"TiffBitmapDecoder could not load image");
+                LoadValuesNONTIFF();
+                return;
+            }
+
+            // select the frame (channel or slice) we want
+            log.Debug($"Decoding frame: {frameNumber + 1} of {decoder.Frames.Count}");
+            BitmapSource bitmapSource = decoder.Frames[frameNumber];
+
+            // populate class variables
+            imageDepth = bitmapSource.Format.BitsPerPixel;
+            imageWidth = bitmapSource.PixelWidth;
+            imageHeight = bitmapSource.PixelHeight;
+            imageFrameCount = decoder.Frames.Count;
+            log.Debug($"Image depth: {imageDepth}-Bit");
+            log.Debug($"Image shape: {imageWidth} x {imageHeight}");
+            log.Debug($"Image frame count: {imageFrameCount}");
+
+            // get the original image as an array of bytes
+            int bytesPerPixel = imageDepth / 8;
+            byte[] imageBytes = new byte[imageWidth * imageHeight * bytesPerPixel];
+            bitmapSource.CopyPixels(imageBytes, imageWidth * bytesPerPixel, 0);
+            log.Debug($"Converted image into a byte array (size: {imageBytes.Length})");
+
+            // use an int array to hold our original data
+            valuesRaw = new int[imageWidth * imageHeight];
+            for (int i = 0; i < valuesRaw.Length; i++)
+            {
+                // this loop supports any bit depth
+                int bytePosition = i * bytesPerPixel;
+                for (int byteNumber = 0; byteNumber < bytesPerPixel; byteNumber++)
+                {
+                    valuesRaw[i] += imageBytes[bytePosition + byteNumber] << (byteNumber * 8);
+                }
+            }
+            log.Debug($"Converted image into a non-RGB int array (size: {valuesRaw.Length})");
+
+
+            // guess the depth based on the data and use this to predict the value of a white pixel
+            double valuesMax = valuesRaw.Max();
+            int dataDepth = 1;
+            while (Math.Pow(2, dataDepth) < valuesMax)
+                dataDepth++;
+            double whitePixelValue = Math.Pow(2, dataDepth);
+            log.Debug($"Predicted camera depth: {dataDepth}-Bit");
+            log.Debug($"Brightnest pixel: {valuesMax} / {whitePixelValue} ({valuesMax / whitePixelValue * 100}%)");
+
+            /*
+            // create a float array to hold image data, normalized to 1 (by whitest pixel value)
+            int nChannels = 3;
+            int nValues = imageWidth * imageHeight * nChannels;
+            double[] values = new double[nValues];
+            for (int i = 0; i < valuesRaw.Length; i++)
+            {
+                int pos = i * nChannels;
+                double grayValue = (double)imageBytes[i] / whitePixelValue;
+                values[pos + 0] = grayValue;
+                values[pos + 1] = 0;
+                values[pos + 2] = 0;
+            }
+            log.Debug($"Converted image into an RGB double array (size: {values.Length})");
+            */
+        }
+
+        /// <summary>
+        /// Read pixel data of the non-TIF image and populate values (the double array)
+        /// </summary>
+        private void LoadValuesNONTIFF()
+        {
+            log.Debug("Loading values from image file using the generic method");
 
             // pull data from the file into the local space
             Bitmap bmpOrig = new Bitmap(filePath);
-            log.Debug($"Pixel format: {bmpOrig.PixelFormat}");
+            log.Debug($"Input image format: {bmpOrig.PixelFormat}");
 
             // convert it to 24-bit RGB
             Bitmap bmp = new Bitmap(bmpOrig.Width, bmpOrig.Height, PixelFormat.Format24bppRgb);
             Graphics gr = Graphics.FromImage(bmp);
             gr.DrawImage(bmpOrig, new Rectangle(0, 0, bmp.Width, bmp.Height));
             gr.Dispose();
+            log.Debug($"Display image format: {bmp.PixelFormat}");
 
             // populate class variables
             imageDepth = 8;
             imageWidth = bmp.Width;
             imageHeight = bmp.Height;
             imageFrameCount = 1;
+            log.Debug($"Image depth: {imageDepth}-Bit");
+            log.Debug($"Image shape: {imageWidth} x {imageHeight}");
+            log.Debug($"Image frame count: {imageFrameCount}");
 
             // get the original image as an array of bytes
             int bytesPerPixel = 3;
@@ -71,82 +152,59 @@ namespace SciTIFlib
             Rectangle rect = new Rectangle(0, 0, imageWidth, imageHeight);
             BitmapData bitmapData = bmp.LockBits(rect, ImageLockMode.ReadWrite, bmp.PixelFormat);
             Marshal.Copy(bitmapData.Scan0, imageBytes, 0, imageBytes.Length);
+            log.Debug($"Converted image into a byte array (size: {imageBytes.Length})");
 
-            // normalize the values to 1 according to the white pixel value
-            double whitePixelValue = Math.Pow(2, GuessDepth(imageBytes.Max()));
-
-            // convert the byte array to an array of pixel values (raw, and normalized to 1)
+            // convert the byte array to an array of pixel values (original data values)
             int nChannels = 3;
             int nValues = imageWidth * imageHeight * nChannels;
             valuesRaw = new int[nValues];
-            values = new double[nValues];
-            for (int i = 0; i < values.Length; i++)
-            {
+            for (int i = 0; i < nValues; i++)
                 valuesRaw[i] = imageBytes[i];
+            log.Debug($"Converted image into an RGB int array (size: {valuesRaw.Length})");
+
+            // guess the depth based on the data and use this to predict the value of a white pixel
+            double valuesMax = imageBytes.Max();
+            int dataDepth = 1;
+            while (Math.Pow(2, dataDepth) < valuesMax)
+                dataDepth++;
+            double whitePixelValue = Math.Pow(2, dataDepth);
+            log.Debug($"Predicted camera depth: {dataDepth}-Bit");
+            log.Debug($"Brightnest pixel: {valuesMax} / {whitePixelValue} ({valuesMax / whitePixelValue * 100}%)");
+
+            /*
+            // create a float array to hold image data, normalized to 1 (by whitest pixel value)
+            double[] values = new double[nValues];
+            for (int i = 0; i < nValues; i++)
                 values[i] = (double)imageBytes[i] / whitePixelValue;
-            }
-
+            log.Debug($"Converted image into an RGB double array (size: {values.Length})");
+            */
         }
 
         /// <summary>
-        /// Given a maximum intensity, guess the depth
+        /// Read an image and create a double array for pixel values
         /// </summary>
-        public int GuessDepth(double whitestPixelValue)
+        /// <param name="filePath"></param>
+        private void LoadImageData()
         {
-            int depth = 1;
-            while (Math.Pow(2, depth) < whitestPixelValue)
-                depth++;
-            return depth;
+            log.Debug($"Loading image file: {System.IO.Path.GetFileName(filePath)}");
+
+            if (filePath.ToUpper().EndsWith(".TIF") || filePath.ToUpper().EndsWith(".TIFF"))
+                LoadValuesTIFF();
+            else
+                LoadValuesNONTIFF();
+
+            if (valuesRaw.Length == 0)
+                throw new Exception("no pixel data loaded from image!");
+
+            // load these data into the image display class
+            imageDisplay = new ImageDisplay(valuesRaw, imageWidth, imageHeight, imageDepth);
+            log.Debug($"Loaded normalized data into display class");
+
         }
-        
-        /// <summary>
-        /// Return image data as a 24-bit (RGB) bitmap with brightness and contrast adjusted
-        /// </summary>
-        /// <returns></returns>
+
         public Bitmap GetBitmap()
         {
-            // prepare a bitmap to hold the display image
-            var format = PixelFormat.Format24bppRgb;
-            Rectangle rect = new Rectangle(0, 0, imageWidth, imageHeight);
-            Bitmap bmpDisplay = new Bitmap(imageWidth, imageHeight, format);
-
-            // create a byte array to hold RGB values for the display image
-            int bytesPerPixel = 3;
-            int byteCount = imageWidth * imageHeight * bytesPerPixel;
-            byte[] bmpBytes = new byte[byteCount];
-
-            if (values.Length * 3 == bmpBytes.Length)
-            {
-                log.Debug("Assigning grayscale pixel values to output image");
-                for (int i = 0; i < values.Length; i++)
-                {
-                    byte valByte = imageData.ValueAfterContrast(values[i]);
-                    int bytePosition = i * bytesPerPixel;
-                    bmpBytes[bytePosition + 2] = valByte; // red
-                    bmpBytes[bytePosition + 1] = valByte; // green
-                    bmpBytes[bytePosition + 0] = valByte; // blue
-                }
-            }
-            else if (values.Length == bmpBytes.Length)
-            {
-                log.Debug("Assigning RGB pixel values to output image");
-                // values come in as RGB so assign them as RGB
-                for (int i = 0; i < values.Length; i++)
-                {
-                    byte valByte = imageData.ValueAfterContrast(values[i]);
-                    bmpBytes[i] = valByte;
-                }
-            }
-            else
-            {
-                throw new Exception("unknown image pixel value format");
-            }
-
-            // Use marshal copy as a safe (pointer-free) way to get the pixel bytes into the bitmap
-            BitmapData bmpData = bmpDisplay.LockBits(rect, ImageLockMode.ReadWrite, format);
-            Marshal.Copy(bmpBytes, 0, bmpData.Scan0, byteCount);
-            bmpDisplay.UnlockBits(bmpData);
-            return bmpDisplay;
+            return imageDisplay.GetDisplayBitmap();
         }
 
     }

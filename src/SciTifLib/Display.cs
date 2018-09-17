@@ -1,4 +1,11 @@
-﻿using System;
+﻿/* Code here handles all image display operations.
+ * 
+ * Scientific data is loaded into ValuesRaw (an int array).
+ * The upper/lower pixel value limits (displayMin/displayMax) determine how it's rendered.
+ * A function can generate a 24-bit (RGB, 8-bit/channel) image as needed.
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -12,7 +19,7 @@ namespace SciTIFlib
     /// <summary>
     /// Code here handles brightness & contrast adjustments and LUTs.
     /// </summary>
-    public class ImageData
+    public class ImageDisplay
     {
         private int sourceDepth;
 
@@ -21,42 +28,31 @@ namespace SciTIFlib
         private int valuesRawMax;
         private int imageWidth;
         private int imageHeight;
-        private double pixelValueWhite;
-
-        private double[] values;
-        private double valuesMin;
-        private double valuesMax;
+        private int pixelValueWhite;
 
         private double displayMin;
         private double displayMax;
+        private double displayMinDelta;
+        private double displayMaxDelta;
 
         ////////////////////////////////////////////////////////////////////////////////////////
         // DATA LOADING
 
-        public ImageData(int[] valuesRaw, int imageWidth, int imageHeight, int sourceDepth)
+        /// <summary>
+        /// Load with non-normalized values
+        /// </summary>
+        public ImageDisplay(int[] valuesRaw, int imageWidth, int imageHeight, int sourceDepth)
         {
-            // load our original values in memory
             this.valuesRaw = valuesRaw;
-            this.sourceDepth = sourceDepth;
             this.imageWidth = imageWidth;
             this.imageHeight = imageHeight;
+            this.sourceDepth = sourceDepth;
+
+            pixelValueWhite = (int)Math.Pow(2, sourceDepth);
             valuesRawMin = valuesRaw.Min();
             valuesRawMax = valuesRaw.Max();
-            pixelValueWhite = Math.Pow(2, sourceDepth);
-            CreateNormalizedValues();
-        }
+            SetMinAndMaxToLimits();
 
-        private void CreateNormalizedValues()
-        {
-            // create a float array of all values normalized to 1 (based on pixelValueWhite)
-            values = new double[valuesRaw.Length];
-            for (int i = 0; i < valuesRaw.Length; i++)
-            {
-                values[i] = valuesRaw[i] / pixelValueWhite;
-            }
-            valuesMin = values.Min();
-            valuesMax = values.Max();
-            SetMinAndMaxAuto();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -65,10 +61,10 @@ namespace SciTIFlib
         /// <summary>
         /// manually define min and max pixel intensity
         /// </summary>
-        public void SetMinMax(int displayMinValue, int displayMaxValue)
+        public void SetMinMax(int displayMin, int displayMax)
         {
-            this.displayMin = displayMinValue;
-            this.displayMax = displayMaxValue;
+            this.displayMin = displayMin;
+            this.displayMax = displayMax;
         }
 
         /// <summary>
@@ -76,17 +72,17 @@ namespace SciTIFlib
         /// </summary>
         public void SetMinAndMaxToLimits()
         {
-            displayMin = valuesMin * pixelValueWhite;
-            displayMax = valuesMax * pixelValueWhite;
+            displayMin = 0;
+            displayMax = pixelValueWhite;
         }
 
         /// <summary>
-        /// auto-contrast (full bin of data)
+        /// auto-contrast (adjust brightness / contrast to tightly fit the data)
         /// </summary>
         public void SetMinAndMaxAuto()
         {
-            displayMin = valuesMin * pixelValueWhite;
-            displayMax = valuesMax * pixelValueWhite;
+            displayMin = valuesRawMin;
+            displayMax = valuesRawMax;
         }
 
         /// <summary>
@@ -94,33 +90,65 @@ namespace SciTIFlib
         /// </summary>
         public void SetMinMaxMouse(double horizontalDistance = 0, double verticalDistance = 0)
         {
+            // adjust sensitivity to match bit depth
+            double currentDisplayPixelSpan = (displayMax - displayMin);
+            double sensitivity = currentDisplayPixelSpan / 256;
+
+            // prepare variables to hold our new deal min/max
+            double newMin;
+            double newMax;
 
             // shift min and max (brightness) based on horizontal movement
-            displayMin = (valuesMin + -horizontalDistance / 500) * pixelValueWhite;
-            displayMax = (valuesMax + -horizontalDistance / 500) * pixelValueWhite;
+            newMin = displayMin + horizontalDistance * sensitivity;
+            newMax = displayMax + horizontalDistance * sensitivity;
 
             // squeeze min and max (contrast) based on vertical movement
-            double displayCenter = (displayMax + displayMin) / 2;
-            double deviation = displayCenter - displayMin;
-            deviation += verticalDistance/pixelValueWhite*50;
-            if (deviation < 1)
-                deviation = 1;
-            displayMin = displayCenter - deviation;
-            displayMax = displayCenter + deviation;
+            double displayCenter = (newMin + newMax) / 2;
+            double deviation = displayCenter - newMin;
+            deviation -= verticalDistance * sensitivity;
+            newMin = displayCenter - deviation;
+            newMax = displayCenter + deviation;
+
+            // change our deltas to reflect deviation from the new max/min we calculated
+            displayMinDelta = displayMin - newMin;
+            displayMaxDelta = displayMax - newMax;
+
+            double valMin = displayMin + displayMinDelta;
+            double valMax = displayMax + displayMaxDelta;
+            Console.WriteLine($"{valMin} {valMin} {valMin / valMax}");
         }
 
         /// <summary>
-        /// convert a data value (normalized 0-1) to a 0-255 pixel intensity byte based on the display min/max
+        /// convert a data value (raw) to a 0-255 pixel intensity byte based on the display min/max
         /// </summary>
         public byte ValueAfterContrast(double pixelValue)
         {
-            pixelValue -= displayMin / pixelValueWhite;
-            pixelValue /= (displayMax - displayMin) / pixelValueWhite;
-            pixelValue *= 255;
+            // prepare temporary min/max pixel values
+            double valMin = displayMin + displayMinDelta;
+            double valMax = displayMax + displayMaxDelta;
+
+            // ensure contrast doesn't get inverted
+            if (valMin >= valMax)
+                valMin = valMax - 1;
+
+            // subtract down to the minimum pixel value
+            pixelValue -= valMin;
+
+            // determine how to stretch it to the max pixel value
+            double stretch = (valMax - valMin) / pixelValueWhite;
+            pixelValue /= stretch;
+
+            // down-sample to 8-bit if needed
+            if (sourceDepth > 8)
+                pixelValue = pixelValue / pixelValueWhite * 255;
+
+            // ensure pixels stay inside the valid range
             if (pixelValue < 0)
                 pixelValue = 0;
             if (pixelValue > 255)
                 pixelValue = 255;
+
+            // return a byte
             return (byte)pixelValue;
         }
 
@@ -128,9 +156,9 @@ namespace SciTIFlib
         // BITMAP CREATION
 
         /// <summary>
-        /// Return the loaded image data as a bitmap brightness-and-contrast-adjusted to the current settings
+        /// Return image data as a 24-bit (RGB) bitmap with brightness and contrast adjusted
         /// </summary>
-        public Bitmap ValuesToBitmap()
+        public Bitmap GetDisplayBitmap()
         {
             // prepare a bitmap to hold the display image
             var format = PixelFormat.Format24bppRgb;
@@ -142,14 +170,30 @@ namespace SciTIFlib
             int byteCount = imageWidth * imageHeight * bytesPerPixel;
             byte[] bmpBytes = new byte[byteCount];
 
-            // set the display value according to the source image intensity
-            for (int i = 0; i < values.Length; i++)
+            if (valuesRaw.Length * 3 == bmpBytes.Length)
             {
-                byte valByte = ValueAfterContrast(values[i]);
-                int bytePosition = i * bytesPerPixel;
-                bmpBytes[bytePosition + 2] = valByte; // red
-                bmpBytes[bytePosition + 1] = valByte; // green
-                bmpBytes[bytePosition + 0] = valByte; // blue
+                // values come in as grayscale so assign the same value to R, G, and B
+                for (int i = 0; i < valuesRaw.Length; i++)
+                {
+                    byte valByte = ValueAfterContrast(valuesRaw[i]);
+                    int bytePosition = i * bytesPerPixel;
+                    bmpBytes[bytePosition + 2] = valByte; // red
+                    bmpBytes[bytePosition + 1] = valByte; // green
+                    bmpBytes[bytePosition + 0] = valByte; // blue
+                }
+            }
+            else if (valuesRaw.Length == bmpBytes.Length)
+            {
+                // values come in as RGB so assign them as RGB
+                for (int i = 0; i < valuesRaw.Length; i++)
+                {
+                    byte valByte = ValueAfterContrast(valuesRaw[i]);
+                    bmpBytes[i] = valByte;
+                }
+            }
+            else
+            {
+                throw new Exception("unknown image pixel value format");
             }
 
             // Use marshal copy as a safe (pointer-free) way to get the pixel bytes into the bitmap
