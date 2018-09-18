@@ -28,6 +28,7 @@ namespace SciTIFlib
             InitializeComponent();
             ResizeImageToFitPanel();
             SetBackgroundColor(SystemColors.ControlDarkDark);
+            ConsoleOff();
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -46,6 +47,7 @@ namespace SciTIFlib
             sciTifImage.imageDisplay.SetMinAndMaxAuto();
             picture.BackgroundImage = sciTifImage.GetBitmap();
             richTextBox1.Text = sciTifImage.log.logText;
+            picture.Focus();
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -64,6 +66,16 @@ namespace SciTIFlib
             this.borderWidth = borderWidth;
         }
 
+        private double dateTimeTicksAtLaunch = DateTime.Now.Ticks;
+        private void Debug(string msg)
+        {
+            double tickSpan = DateTime.Now.Ticks - dateTimeTicksAtLaunch;
+            double timestamp = tickSpan / TimeSpan.TicksPerSecond;
+            timestamp = Math.Round(timestamp, 3);
+            richTextBox1.Text += String.Format("[{0:0.000}] {1}\n", timestamp, msg);
+            richTextBox1.SelectionStart = richTextBox1.TextLength;
+            richTextBox1.ScrollToCaret();
+        }
 
         ///////////////////////////////////////////////////////////////////////
         // PICTURE POSITION AND ZOOMING
@@ -155,11 +167,13 @@ namespace SciTIFlib
             {
                 mouseDownL = Cursor.Position;
                 mouseImgPos = new Point(panelFrame.HorizontalScroll.Value, panelFrame.VerticalScroll.Value);
+                Debug($"left mouse down at ({mouseImgPos.X}, {mouseImgPos.Y})");
             }
 
             if (e.Button == MouseButtons.Right)
             {
                 mouseDownR = Cursor.Position;
+                Debug($"right mouse down at ({mouseDownR.X}, {mouseDownR.Y})");
             }
         }
 
@@ -171,11 +185,13 @@ namespace SciTIFlib
                 int dX = Cursor.Position.X - mouseDownR.X;
                 int dY = Cursor.Position.Y - mouseDownR.Y;
                 mouseBC = new Point(mouseBC.X + dX, mouseBC.Y + dY);
+                Debug($"right-click-released, remembering last brightness and contrast: ({mouseBC.X}, {mouseBC.X})");
                 if (mouseDownTime < 200 || (dX==0 && dY==0))
                 {
+                    Debug($"right button pressed and released quickly, so showing right-click menu");
                     contextMenuStrip1.Show(picture, new Point(e.X, e.Y));
                 }
-            }
+            }            
         }
 
         private void picture_MouseMove(object sender, MouseEventArgs e)
@@ -208,6 +224,7 @@ namespace SciTIFlib
 
         public void MouseBrightnessContrastReset()
         {
+            Debug($"Resetting previously-remembered mouse-configured brightness and contrast");
             mouseBC = new Point(0, 0);
             if (sciTifImage != null && sciTifImage.imageDisplay != null)
                 sciTifImage.imageDisplay.SetMinMaxMouse(0, 0);
@@ -225,7 +242,34 @@ namespace SciTIFlib
         }
 
         ///////////////////////////////////////////////////////////////////////
-        // EVENT BINDINGS
+        // EVENTS FUNCTIONS
+        private void ConsoleToggle()
+        {
+            Debug("toggling developer console");
+            if (developerConsoleToolStripMenuItem.Checked)
+                ConsoleOff();
+            else
+                ConsoleOn();
+        }
+
+        private void ConsoleOff()
+        {
+            Debug("hiding developer console");
+            developerConsoleToolStripMenuItem.Checked = false;
+            splitContainer.Panel2Collapsed = true;
+            ResizeImageToFitPanel();
+        }
+
+        private void ConsoleOn()
+        {
+            Debug("showing developer console");
+            developerConsoleToolStripMenuItem.Checked = true;
+            splitContainer.Panel2Collapsed = false;
+            ResizeImageToFitPanel();
+        }
+
+        ///////////////////////////////////////////////////////////////////////
+        // EVENTS BINDINGS
 
         private void SciTifUC_Resize(object sender, EventArgs e)
         {
@@ -253,5 +297,40 @@ namespace SciTIFlib
             }
         }
 
+        private void developerConsoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConsoleToggle();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            Debug("Keypress: " + keyData.ToString());
+
+            if (keyData == (Keys.Control | Keys.D))
+            {
+                Debug("Detected: Ctrl+D - toggling debug console");
+                ConsoleToggle();
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void panelFrame_Paint(object sender, PaintEventArgs e)
+        {
+            if (!panelFrame.Focused)
+            {
+                panelFrame.Focus();
+                Debug("Focusing on panel");
+            }
+        }
+
+        private void picture_Click(object sender, EventArgs e)
+        {
+            if (!picture.Focused)
+            {
+                picture.Focus();
+                Debug("Focusing on picture");
+            }
+        }
     }
 }

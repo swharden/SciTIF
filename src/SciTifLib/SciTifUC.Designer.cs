@@ -98,15 +98,15 @@
             this.reportAnIssueToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutSciTIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.panelFrame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picture)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
+            this.splitContainer.Panel1.SuspendLayout();
+            this.splitContainer.Panel2.SuspendLayout();
+            this.splitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelFrame
@@ -119,6 +119,7 @@
             this.panelFrame.Name = "panelFrame";
             this.panelFrame.Size = new System.Drawing.Size(536, 221);
             this.panelFrame.TabIndex = 0;
+            this.panelFrame.Paint += new System.Windows.Forms.PaintEventHandler(this.panelFrame_Paint);
             // 
             // picture
             // 
@@ -129,6 +130,7 @@
             this.picture.Size = new System.Drawing.Size(151, 121);
             this.picture.TabIndex = 0;
             this.picture.TabStop = false;
+            this.picture.Click += new System.EventHandler(this.picture_Click);
             this.picture.DoubleClick += new System.EventHandler(this.picture_DoubleClick);
             this.picture.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picture_MouseDown);
             this.picture.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picture_MouseMove);
@@ -535,36 +537,37 @@
             // imageMetadataToolStripMenuItem
             // 
             this.imageMetadataToolStripMenuItem.Name = "imageMetadataToolStripMenuItem";
-            this.imageMetadataToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.imageMetadataToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.imageMetadataToolStripMenuItem.Text = "Image Metadata";
             // 
             // developerConsoleToolStripMenuItem
             // 
             this.developerConsoleToolStripMenuItem.Name = "developerConsoleToolStripMenuItem";
-            this.developerConsoleToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.developerConsoleToolStripMenuItem.Text = "Developer Console";
+            this.developerConsoleToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.developerConsoleToolStripMenuItem.Text = "Developer Console (Ctrl+D)";
+            this.developerConsoleToolStripMenuItem.Click += new System.EventHandler(this.developerConsoleToolStripMenuItem_Click);
             // 
             // checkForUpdateToolStripMenuItem
             // 
             this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.checkForUpdateToolStripMenuItem.Text = "Check for Update...";
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(172, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(216, 6);
             // 
             // reportAnIssueToolStripMenuItem
             // 
             this.reportAnIssueToolStripMenuItem.Name = "reportAnIssueToolStripMenuItem";
-            this.reportAnIssueToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.reportAnIssueToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.reportAnIssueToolStripMenuItem.Text = "Report an Issue";
             // 
             // suggestAFeatureToolStripMenuItem
             // 
             this.suggestAFeatureToolStripMenuItem.Name = "suggestAFeatureToolStripMenuItem";
-            this.suggestAFeatureToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.suggestAFeatureToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.suggestAFeatureToolStripMenuItem.Text = "Suggest a Feature";
             // 
             // toolStripSeparator1
@@ -613,27 +616,28 @@
             this.aboutSciTIFToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.aboutSciTIFToolStripMenuItem.Text = "About SciTIF";
             // 
-            // splitContainer1
+            // splitContainer
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer.Name = "splitContainer";
+            this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer1.Panel1
+            // splitContainer.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.panelFrame);
+            this.splitContainer.Panel1.Controls.Add(this.panelFrame);
             // 
-            // splitContainer1.Panel2
+            // splitContainer.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.richTextBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(536, 442);
-            this.splitContainer1.SplitterDistance = 221;
-            this.splitContainer1.TabIndex = 1;
+            this.splitContainer.Panel2.Controls.Add(this.richTextBox1);
+            this.splitContainer.Size = new System.Drawing.Size(536, 442);
+            this.splitContainer.SplitterDistance = 221;
+            this.splitContainer.TabIndex = 1;
             // 
             // richTextBox1
             // 
             this.richTextBox1.BackColor = System.Drawing.Color.Black;
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBox1.ForeColor = System.Drawing.Color.Lime;
@@ -649,7 +653,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.splitContainer);
             this.Name = "SciTifUC";
             this.Size = new System.Drawing.Size(536, 442);
             this.SizeChanged += new System.EventHandler(this.SciTifUC_SizeChanged);
@@ -658,10 +662,10 @@
             this.panelFrame.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picture)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.splitContainer.Panel1.ResumeLayout(false);
+            this.splitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
+            this.splitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -737,7 +741,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem aboutSciTIFToolStripMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }

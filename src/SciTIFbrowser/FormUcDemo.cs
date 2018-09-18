@@ -20,10 +20,6 @@ namespace SciTIFbrowser
         private void FormUcDemo_Load(object sender, EventArgs e)
         {
             splitDirView1.SetFolder(@"D:\demoData\tifs\simple");
-            //SetImage(@"D:\demoData\tifs\clean\");
-            //SetImage(@"D:\demoData\tifs\16923029b-after.tif");
-            //sciTifUC1.SetZoomFit(false);
-            //sciTifUC1.SetBorder(Color.Yellow);
         }
 
         private void splitDirView1_FileHighlighted(object sender, EventArgs e)

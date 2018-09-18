@@ -115,7 +115,6 @@ namespace SciTIFlib
 
             double valMin = displayMin + displayMinDelta;
             double valMax = displayMax + displayMaxDelta;
-            Console.WriteLine($"{valMin} {valMin} {valMin / valMax}");
         }
 
         /// <summary>
