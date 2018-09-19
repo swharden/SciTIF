@@ -30,10 +30,10 @@ namespace SciTIFlib
         private int imageHeight;
         private int pixelValueWhite;
 
-        private double displayMin;
-        private double displayMax;
-        private double displayMinDelta;
-        private double displayMaxDelta;
+        public double displayMin;
+        public double displayMax;
+        public double displayMinDelta;
+        public double displayMaxDelta;
 
         ////////////////////////////////////////////////////////////////////////////////////////
         // DATA LOADING

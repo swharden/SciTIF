@@ -332,5 +332,26 @@ namespace SciTIFlib
                 Debug("Focusing on picture");
             }
         }
+
+        private void picture_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics gfx = e.Graphics;
+            //Render rndr = new Render();
+            //Bitmap overlay = rndr.GenerateHistogram(picture.Width, picture.Height);
+            //e.Graphics.DrawImage(overlay, 0, 0);
+
+            if (sciTifImage == null || sciTifImage.imageDisplay == null)
+                return;
+
+            // add contrast text
+            Font font = new Font(FontFamily.GenericMonospace, 8, FontStyle.Regular);
+            SolidBrush brush = new SolidBrush(Color.Yellow);
+            SolidBrush brushShadow = new SolidBrush(Color.Black);
+            int contrastMin = (int)(sciTifImage.imageDisplay.displayMin + sciTifImage.imageDisplay.displayMinDelta);
+            int contrastMax = (int)(sciTifImage.imageDisplay.displayMax + sciTifImage.imageDisplay.displayMaxDelta);
+            gfx.DrawString($"Contrast: {contrastMin} - {contrastMax}", font, brushShadow, new Point(8, 8));
+            gfx.DrawString($"Contrast: {contrastMin} - {contrastMax}", font, brush, new Point(7, 7));
+
+        }
     }
 }

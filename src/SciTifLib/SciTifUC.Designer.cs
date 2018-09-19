@@ -131,6 +131,7 @@
             this.picture.TabIndex = 0;
             this.picture.TabStop = false;
             this.picture.Click += new System.EventHandler(this.picture_Click);
+            this.picture.Paint += new System.Windows.Forms.PaintEventHandler(this.picture_Paint);
             this.picture.DoubleClick += new System.EventHandler(this.picture_DoubleClick);
             this.picture.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picture_MouseDown);
             this.picture.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picture_MouseMove);
