@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace SciTIFlib
 {
@@ -19,6 +20,7 @@ namespace SciTIFlib
         private Color backgroundColor;
         private Color borderColor;
         private int borderWidth;
+        private double imageZoom = 1;
 
         ///////////////////////////////////////////////////////////////////////
         // LOADING
@@ -84,10 +86,12 @@ namespace SciTIFlib
         {
             if (fitImageToFrame)
             {
+                Debug($"Enabling fit-to-window (stretch) zoom");
                 stretchImageToFitPanel = true;
             }
             else
             {
+                Debug($"Disabling fit-to-window (stretch) zoom");
                 stretchImageToFitPanel = false;
                 picture.Location = new Point(0, 0);
             }
@@ -96,11 +100,11 @@ namespace SciTIFlib
 
         public void ToggleZoomFit()
         {
+            Debug($"Toggling zoom fit");
             if (stretchImageToFitPanel)
                 SetZoomFit(false);
             else
                 SetZoomFit(true);
-            ResizeImageToFitPanel();
         }
 
         private void ZoomToFit()
@@ -128,16 +132,28 @@ namespace SciTIFlib
         private void CenterImage()
         {
             // 1:1 image display
-            picture.BackgroundImageLayout = ImageLayout.None;
-            picture.Size = new Size(sciTifImage.imageWidth, sciTifImage.imageHeight);
+            picture.BackgroundImageLayout = ImageLayout.Zoom;
+            picture.Size = new Size((int)(sciTifImage.imageWidth * imageZoom), (int)(sciTifImage.imageHeight * imageZoom));
+            
+            // center small pictures as needed horizontally
+            if (panelFrame.Width > picture.Size.Width)
+            {
+                int centerX = panelFrame.Width / 2 - picture.Size.Width / 2;
+                picture.Location = new Point(centerX, picture.Location.Y);
+            } else
+            {
+                picture.Location = new Point(0, picture.Location.Y);
+            }
 
-            // center as needed horizontally
-            int centerX = panelFrame.Width / 2 - sciTifImage.imageWidth / 2;
-            picture.Location = new Point(centerX, picture.Location.Y);
-
-            // center as needed vertically
-            int centerY = panelFrame.Height / 2 - sciTifImage.imageHeight / 2;
-            picture.Location = new Point(picture.Location.X, centerY);
+            // center small pictures as needed vertically
+            if (panelFrame.Height > picture.Size.Height)
+            {
+                int centerY = panelFrame.Height / 2 - picture.Size.Height / 2;
+                picture.Location = new Point(picture.Location.X, centerY);
+            } else
+            {
+                picture.Location = new Point(picture.Location.X, 0);
+            }
         }
 
         private void ResizeImageToFitPanel()
@@ -167,13 +183,13 @@ namespace SciTIFlib
             {
                 mouseDownL = Cursor.Position;
                 mouseImgPos = new Point(panelFrame.HorizontalScroll.Value, panelFrame.VerticalScroll.Value);
-                Debug($"left mouse down at ({mouseImgPos.X}, {mouseImgPos.Y})");
+                //Debug($"left mouse down at ({mouseImgPos.X}, {mouseImgPos.Y})");
             }
 
             if (e.Button == MouseButtons.Right)
             {
                 mouseDownR = Cursor.Position;
-                Debug($"right mouse down at ({mouseDownR.X}, {mouseDownR.Y})");
+                //Debug($"right mouse down at ({mouseDownR.X}, {mouseDownR.Y})");
             }
         }
 
@@ -241,6 +257,27 @@ namespace SciTIFlib
             mouseBCisWorking = false;
         }
 
+        public void ZoomIn(double multiple = 2)
+        {
+            Debug($"Zooming IN by a multiple of {multiple}");
+            ZoomSet(imageZoom * multiple);
+        }
+        public void ZoomOut(double multiple = 2)
+        {
+            Debug($"Zooming OUT by a multiple of {multiple}");
+            ZoomSet(imageZoom / multiple);
+        }
+        public void ZoomSet(double zoomFraction = 1)
+        {
+            Debug($"Setting zoom to {zoomFraction*100}%");
+            double maxZoom = 16;
+            double minZoom = 1.0/16.0;
+            zoomFraction = Math.Min(zoomFraction, maxZoom);
+            zoomFraction = Math.Max(zoomFraction, minZoom);
+            imageZoom = zoomFraction;
+            SetZoomFit(false);
+        }
+
         ///////////////////////////////////////////////////////////////////////
         // EVENTS FUNCTIONS
         private void ConsoleToggle()
@@ -302,15 +339,28 @@ namespace SciTIFlib
             ConsoleToggle();
         }
 
+        // THIS IS OUR KEY PRESS CAPTURE FUNCTION! ADD FEATURES HERE!
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             Debug("Keypress: " + keyData.ToString());
 
-            if (keyData == (Keys.Control | Keys.D))
-            {
-                Debug("Detected: Ctrl+D - toggling debug console");
+            if (keyData == Keys.D)
                 ConsoleToggle();
-            }
+
+            if (keyData == Keys.Oemplus || keyData == Keys.Add)
+                ZoomIn();
+
+            if (keyData == Keys.OemMinus || keyData == Keys.Subtract)
+                ZoomOut();
+
+            if (keyData == Keys.D0 || keyData == Keys.NumPad0)
+                ZoomSet(1);
+
+            if (keyData == Keys.Right)
+                Debug("Go to next image");
+
+            if (keyData == Keys.Left)
+                Debug("Go to previous image");
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -332,7 +382,7 @@ namespace SciTIFlib
                 Debug("Focusing on picture");
             }
         }
-
+        
         private void picture_Paint(object sender, PaintEventArgs e)
         {
             Graphics gfx = e.Graphics;
@@ -343,15 +393,56 @@ namespace SciTIFlib
             if (sciTifImage == null || sciTifImage.imageDisplay == null)
                 return;
 
-            // add contrast text
+            // create message to display
+            string msg = "";
+
+            msg += $"Zoom: {imageZoom*100}%";
+
+            msg += $"\nDepth: {sciTifImage.imageDepth}-Bit ({Math.Pow(2, sciTifImage.imageDepth)})";
+
+            int contrastMin = (int)(sciTifImage.imageDisplay.displayValueMin);
+            int contrastMax = (int)(sciTifImage.imageDisplay.displayValueMax);
+            msg += $"\nContrast: {contrastMin} - {contrastMax}";
+
+            // draw the message
             Font font = new Font(FontFamily.GenericMonospace, 8, FontStyle.Regular);
             SolidBrush brush = new SolidBrush(Color.Yellow);
             SolidBrush brushShadow = new SolidBrush(Color.Black);
-            int contrastMin = (int)(sciTifImage.imageDisplay.displayMin + sciTifImage.imageDisplay.displayMinDelta);
-            int contrastMax = (int)(sciTifImage.imageDisplay.displayMax + sciTifImage.imageDisplay.displayMaxDelta);
-            gfx.DrawString($"Contrast: {contrastMin} - {contrastMax}", font, brushShadow, new Point(8, 8));
-            gfx.DrawString($"Contrast: {contrastMin} - {contrastMax}", font, brush, new Point(7, 7));
+            int posX = 5;
+            int posY = 5;
+            gfx.DrawString(msg, font, brushShadow, new Point(posX+1, posY+1));
+            gfx.DrawString(msg, font, brush, new Point(posY, posY));
 
+        }
+
+        private void toggledoubleclickToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToggleZoomFit();
+        }
+
+        private void fitstretchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetZoomFit(true);
+        }
+
+        private void originalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetZoomFit(false);
+        }
+
+        private void resetZoomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ZoomSet(1);
+        }
+
+        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ZoomIn();
+        }
+
+        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ZoomOut();
         }
     }
 }

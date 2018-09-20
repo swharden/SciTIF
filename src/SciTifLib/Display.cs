@@ -30,10 +30,20 @@ namespace SciTIFlib
         private int imageHeight;
         private int pixelValueWhite;
 
-        public double displayMin;
-        public double displayMax;
-        public double displayMinDelta;
-        public double displayMaxDelta;
+        public double displayValueMax { get { return contrastMax + contrastMaxDelta; } }
+        public double displayValueMin {
+            get {
+                double val = contrastMin + contrastMinDelta;
+                if (val >= displayValueMax)
+                    val = displayValueMax - 1;
+                return val;
+            }
+        }
+
+        private double contrastMin;
+        private double contrastMax;
+        private double contrastMinDelta;
+        private double contrastMaxDelta;
 
         ////////////////////////////////////////////////////////////////////////////////////////
         // DATA LOADING
@@ -63,8 +73,8 @@ namespace SciTIFlib
         /// </summary>
         public void SetMinMax(int displayMin, int displayMax)
         {
-            this.displayMin = displayMin;
-            this.displayMax = displayMax;
+            this.contrastMin = displayMin;
+            this.contrastMax = displayMax;
         }
 
         /// <summary>
@@ -72,8 +82,8 @@ namespace SciTIFlib
         /// </summary>
         public void SetMinAndMaxToLimits()
         {
-            displayMin = 0;
-            displayMax = pixelValueWhite;
+            contrastMin = 0;
+            contrastMax = pixelValueWhite;
         }
 
         /// <summary>
@@ -81,9 +91,10 @@ namespace SciTIFlib
         /// </summary>
         public void SetMinAndMaxAuto()
         {
-            displayMin = valuesRawMin;
-            displayMax = valuesRawMax;
+            contrastMin = valuesRawMin;
+            contrastMax = valuesRawMax;
         }
+
 
         /// <summary>
         /// a special contrast/brightness adjustment made for tracking mouse position
@@ -91,7 +102,7 @@ namespace SciTIFlib
         public void SetMinMaxMouse(double horizontalDistance = 0, double verticalDistance = 0)
         {
             // adjust sensitivity to match bit depth
-            double currentDisplayPixelSpan = (displayMax - displayMin);
+            double currentDisplayPixelSpan = (contrastMax - contrastMin);
             double sensitivity = currentDisplayPixelSpan / 256;
 
             // prepare variables to hold our new deal min/max
@@ -99,8 +110,8 @@ namespace SciTIFlib
             double newMax;
 
             // shift min and max (brightness) based on horizontal movement
-            newMin = displayMin + horizontalDistance * sensitivity;
-            newMax = displayMax + horizontalDistance * sensitivity;
+            newMin = contrastMin + horizontalDistance * sensitivity;
+            newMax = contrastMax + horizontalDistance * sensitivity;
 
             // squeeze min and max (contrast) based on vertical movement
             double displayCenter = (newMin + newMax) / 2;
@@ -110,11 +121,8 @@ namespace SciTIFlib
             newMax = displayCenter + deviation;
 
             // change our deltas to reflect deviation from the new max/min we calculated
-            displayMinDelta = displayMin - newMin;
-            displayMaxDelta = displayMax - newMax;
-
-            double valMin = displayMin + displayMinDelta;
-            double valMax = displayMax + displayMaxDelta;
+            contrastMinDelta = contrastMin - newMin;
+            contrastMaxDelta = contrastMax - newMax;
         }
 
         /// <summary>
@@ -122,19 +130,12 @@ namespace SciTIFlib
         /// </summary>
         public byte ValueAfterContrast(double pixelValue)
         {
-            // prepare temporary min/max pixel values
-            double valMin = displayMin + displayMinDelta;
-            double valMax = displayMax + displayMaxDelta;
-
-            // ensure contrast doesn't get inverted
-            if (valMin >= valMax)
-                valMin = valMax - 1;
 
             // subtract down to the minimum pixel value
-            pixelValue -= valMin;
+            pixelValue -= displayValueMin;
 
             // determine how to stretch it to the max pixel value
-            double stretch = (valMax - valMin) / pixelValueWhite;
+            double stretch = (displayValueMax - displayValueMin) / pixelValueWhite;
             pixelValue /= stretch;
 
             // down-sample to 8-bit if needed

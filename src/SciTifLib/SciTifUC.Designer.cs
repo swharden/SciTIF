@@ -38,7 +38,7 @@
             this.originalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setZoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetZoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.automaticToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rightclickdragControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -124,6 +124,7 @@
             // picture
             // 
             this.picture.BackColor = System.Drawing.Color.Blue;
+            this.picture.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.picture.Location = new System.Drawing.Point(29, 16);
             this.picture.MinimumSize = new System.Drawing.Size(50, 80);
             this.picture.Name = "picture";
@@ -152,7 +153,7 @@
             this.toolStripSeparator1,
             this.helpToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(201, 214);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(201, 236);
             // 
             // toolStripMenuItem4
             // 
@@ -162,7 +163,7 @@
             this.originalToolStripMenuItem,
             this.zoomInToolStripMenuItem,
             this.zoomOutToolStripMenuItem,
-            this.setZoomToolStripMenuItem});
+            this.resetZoomToolStripMenuItem});
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
             this.toolStripMenuItem4.Size = new System.Drawing.Size(200, 22);
             this.toolStripMenuItem4.Text = "Zoom";
@@ -172,36 +173,42 @@
             this.toggledoubleclickToolStripMenuItem.Name = "toggledoubleclickToolStripMenuItem";
             this.toggledoubleclickToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.toggledoubleclickToolStripMenuItem.Text = "Toggle (double-click)";
+            this.toggledoubleclickToolStripMenuItem.Click += new System.EventHandler(this.toggledoubleclickToolStripMenuItem_Click);
             // 
             // fitstretchToolStripMenuItem
             // 
             this.fitstretchToolStripMenuItem.Name = "fitstretchToolStripMenuItem";
             this.fitstretchToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.fitstretchToolStripMenuItem.Text = "Fit (stretch)";
+            this.fitstretchToolStripMenuItem.Click += new System.EventHandler(this.fitstretchToolStripMenuItem_Click);
             // 
             // originalToolStripMenuItem
             // 
             this.originalToolStripMenuItem.Name = "originalToolStripMenuItem";
             this.originalToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.originalToolStripMenuItem.Text = "1:1 (original)";
+            this.originalToolStripMenuItem.Click += new System.EventHandler(this.originalToolStripMenuItem_Click);
             // 
             // zoomInToolStripMenuItem
             // 
             this.zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
             this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.zoomInToolStripMenuItem.Text = "Zoom In";
+            this.zoomInToolStripMenuItem.Text = "Zoom In (+)";
+            this.zoomInToolStripMenuItem.Click += new System.EventHandler(this.zoomInToolStripMenuItem_Click);
             // 
             // zoomOutToolStripMenuItem
             // 
             this.zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
             this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.zoomOutToolStripMenuItem.Text = "Zoom Out";
+            this.zoomOutToolStripMenuItem.Text = "Zoom Out (-)";
+            this.zoomOutToolStripMenuItem.Click += new System.EventHandler(this.zoomOutToolStripMenuItem_Click);
             // 
-            // setZoomToolStripMenuItem
+            // resetZoomToolStripMenuItem
             // 
-            this.setZoomToolStripMenuItem.Name = "setZoomToolStripMenuItem";
-            this.setZoomToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.setZoomToolStripMenuItem.Text = "Set Zoom";
+            this.resetZoomToolStripMenuItem.Name = "resetZoomToolStripMenuItem";
+            this.resetZoomToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.resetZoomToolStripMenuItem.Text = "Reset Zoom (0)";
+            this.resetZoomToolStripMenuItem.Click += new System.EventHandler(this.resetZoomToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -544,8 +551,8 @@
             // developerConsoleToolStripMenuItem
             // 
             this.developerConsoleToolStripMenuItem.Name = "developerConsoleToolStripMenuItem";
-            this.developerConsoleToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.developerConsoleToolStripMenuItem.Text = "Developer Console (Ctrl+D)";
+            this.developerConsoleToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.developerConsoleToolStripMenuItem.Text = "Developer Console (D)";
             this.developerConsoleToolStripMenuItem.Click += new System.EventHandler(this.developerConsoleToolStripMenuItem_Click);
             // 
             // checkForUpdateToolStripMenuItem
@@ -682,7 +689,7 @@
         private System.Windows.Forms.ToolStripMenuItem originalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zoomInToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zoomOutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setZoomToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetZoomToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem automaticToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rightclickdragControlToolStripMenuItem;
