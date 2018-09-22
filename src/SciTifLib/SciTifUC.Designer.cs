@@ -69,6 +69,7 @@
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.showFileListFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nextrightArrowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.previousleftArrowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadF5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -104,7 +105,6 @@
             this.btnSetFolder = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.showFileListFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelFrame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picture)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -443,6 +443,13 @@
             this.toolStripMenuItem3.Size = new System.Drawing.Size(200, 22);
             this.toolStripMenuItem3.Text = "Navigate";
             // 
+            // showFileListFToolStripMenuItem
+            // 
+            this.showFileListFToolStripMenuItem.Name = "showFileListFToolStripMenuItem";
+            this.showFileListFToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.showFileListFToolStripMenuItem.Text = "Show File List (F)";
+            this.showFileListFToolStripMenuItem.Click += new System.EventHandler(this.showFileListFToolStripMenuItem_Click);
+            // 
             // nextrightArrowToolStripMenuItem
             // 
             this.nextrightArrowToolStripMenuItem.Name = "nextrightArrowToolStripMenuItem";
@@ -721,6 +728,7 @@
             this.listBox1.Size = new System.Drawing.Size(178, 191);
             this.listBox1.TabIndex = 1;
             this.listBox1.TabStop = false;
+            this.listBox1.Click += new System.EventHandler(this.listBox1_Click);
             this.listBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseClick);
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -737,13 +745,6 @@
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "developer console";
             this.richTextBox1.WordWrap = false;
-            // 
-            // showFileListFToolStripMenuItem
-            // 
-            this.showFileListFToolStripMenuItem.Name = "showFileListFToolStripMenuItem";
-            this.showFileListFToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.showFileListFToolStripMenuItem.Text = "Show File List (F)";
-            this.showFileListFToolStripMenuItem.Click += new System.EventHandler(this.showFileListFToolStripMenuItem_Click);
             // 
             // SciTifUC
             // 

@@ -57,6 +57,12 @@ namespace SciTIFlib
         // FILE NAVIGATION
         private string fileNavSelectedFolder;
         private string fileNavSelectedFile;
+        private string[] fileNavSeenFiles;
+        private int fileNavSelectedIndex = 0;
+
+        /// <summary>
+        /// update the list of adjacent images so fwd/back arrow keys work
+        /// </summary>
         private void FileNavUpdate(string folder)
         {
 
@@ -84,55 +90,59 @@ namespace SciTIFlib
                 fileNavSelectedFolder = folder;
             }
 
+            fileNavSeenFiles = System.IO.Directory.GetFiles(folder);
+            Debug($"Found {fileNavSeenFiles.Length} in this folder");
+
             listBox1.Items.Clear();
-            string[] files = System.IO.Directory.GetFiles(folder);
-            foreach (string fname in files)
-            {
+            foreach (string fname in fileNavSeenFiles)
                 listBox1.Items.Add(System.IO.Path.GetFileName(fname));
-            }
         }
 
+        /// <summary>
+        /// manually define an image as selected
+        /// </summary>
         private void FileNavSelect(string filename)
         {
-            for (int i = 0; i < listBox1.Items.Count; i++)
+            for (int i = 0; i < fileNavSeenFiles.Length; i++)
             {
-                if (listBox1.Items[i].ToString() == filename)
+                if (fileNavSeenFiles[i] == filename)
                 {
                     fileNavSelectedFile = filename;
-                    listBox1.SetSelected(i, true);
-                    Debug($"selected listbox item {filename}");
+                    fileNavSelectedIndex = i;
+                    listBox1.SelectedIndex = fileNavSelectedIndex;
+                    Debug($"selected file: {filename}");
                     return;
                 }
             }
-            Debug($"could not find listbox item {filename}");
+            Debug($"could not file in list: {filename}");
             fileNavSelectedFile = null;
         }
 
         private void FileNavNext()
         {
             Debug("Go to next image");
-            Debug($"listBox1.SelectedIndex: {listBox1.SelectedIndex}");
-            if (listBox1.SelectedIndex == listBox1.Items.Count - 1)
-            {
-                listBox1.SetSelected(0, true);
-            }
+            if (fileNavSelectedIndex == fileNavSeenFiles.Length - 1)
+                fileNavSelectedIndex = 0;
             else
-            {
-                listBox1.SetSelected(listBox1.SelectedIndex + 1, true);
-            }
+                fileNavSelectedIndex += 1;
+            listBox1.SelectedIndex = fileNavSelectedIndex;
+            SetImage(fileNavSeenFiles[fileNavSelectedIndex]);
         }
 
         private void FileNavPrevious()
         {
             Debug("Go to previous image");
-            if (listBox1.SelectedIndex == 0)
-            {
-                listBox1.SetSelected(listBox1.Items.Count - 1, true);
-            }
+            if (fileNavSelectedIndex == 0)
+                fileNavSelectedIndex = fileNavSeenFiles.Length - 1;
             else
-            {
-                listBox1.SetSelected(listBox1.SelectedIndex - 1, true);
-            }
+                fileNavSelectedIndex -= 1;
+            listBox1.SelectedIndex = fileNavSelectedIndex;
+            SetImage(fileNavSeenFiles[fileNavSelectedIndex]);
+        }
+
+        private void FileNavUpdateListbox()
+        {
+            
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -607,11 +617,6 @@ namespace SciTIFlib
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex < 0)
-                return;
-            string fname = listBox1.Items[listBox1.SelectedIndex].ToString();
-            if (fileNavSelectedFile != fname)
-                SetImage(System.IO.Path.Combine(fileNavSelectedFolder, fname));
         }
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
@@ -638,6 +643,15 @@ namespace SciTIFlib
         private void showFileListFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FileNavToggle();
+        }
+
+        private void listBox1_Click(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex < 0)
+                return;
+            Debug(">>>>>>> selected index changed");
+            fileNavSelectedIndex = listBox1.SelectedIndex;
+            SetImage(fileNavSeenFiles[fileNavSelectedIndex]);
         }
     }
 }
