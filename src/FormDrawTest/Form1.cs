@@ -15,36 +15,68 @@ namespace FormDrawTest
         public Form1()
         {
             InitializeComponent();
+            button1_Click(null, null);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public double[] RandomGaussianArray(int count)
         {
-            panel1.Invalidate(); // forces repaint
+            double[] data = new double[count];
+            Random rand = new Random();
+            for (int i = 0; i < count; i++)
+            {
+                double u1 = 1.0 - rand.NextDouble();
+                double u2 = 1.0 - rand.NextDouble();
+                double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
+                data[i] = randStdNormal;
+            }
+            return data;
         }
 
-        private Bitmap GenerateHistogram(int width, int height)
+        public Bitmap Histogram(Size size, double[] values)
         {
-            Bitmap bmp = new Bitmap(width, height);
+            Bitmap bmp = new Bitmap(size.Width, size.Height);
+
             Graphics gfx = Graphics.FromImage(bmp);
-            
-            SolidBrush brush = new SolidBrush(Color.Black);
-            Pen pen = new Pen(brush);
+            gfx.Clear(Color.White);
 
-            Point[] points = new Point[4];
-            points[0] = new Point(5, 5);
-            points[1] = new Point(5, height - 5);
-            points[2] = new Point(width - 5, height - 5);
-            points[3] = new Point(width - 5, 5);
-            gfx.DrawPolygon(pen, points);
+            // bin the data into 1px columns
+            double dataMin = values.Min();
+            double dataMax = values.Max();
+            double dataSpan = dataMax - dataMin;
+            int nBins = size.Width;
+            double[] counts = new double[nBins];
+            double binSize = dataSpan / (nBins - 1);
+            for (int i = 0; i < values.Length; i++)
+            {
+                int bin = (int)((values[i] - dataMin) / binSize);
+                if (bin >= counts.Length)
+                    bin = counts.Length - 1;
+                if (bin < 0)
+                    bin = 0;
+                counts[bin] = counts[bin] + 1;
+            }
+
+            // determine what to normalize it to visually
+            double peakVal = counts.Max();
+            double heightMult = size.Height / peakVal;
+
+            // plot the binned data
+            Pen pen = new Pen(new SolidBrush(Color.Black));
+            for (int i = 0; i < nBins; i++)
+            {
+                int heightPx = (int)(counts[i] * heightMult);
+                Point pt1 = new Point(i, size.Height - 0);
+                Point pt2 = new Point(i, size.Height - heightPx);
+                gfx.DrawLine(pen, pt1, pt2);
+            }
 
             return bmp;
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            
-            Graphics gfx = e.Graphics;
-            e.Graphics.DrawImage(GenerateHistogram(panel1.Width, panel1.Height), 0, 0);
+            double[] values = RandomGaussianArray(10000);
+            pictureBox1.Image = Histogram(pictureBox1.Size, values);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace SciTIFlib
             MouseBrightnessContrastReset();
             sciTifImage.imageDisplay?.SetMinAndMaxAuto();
             picture.BackgroundImage = sciTifImage.GetBitmap();
-            richTextBox1.Text = sciTifImage.log.logText;
+            richTextBox1.Text += "\n\n"+sciTifImage.log.logText;
             picture.Focus();
         }
 
@@ -100,15 +100,18 @@ namespace SciTIFlib
                 {
                     fileNavSelectedFile = filename;
                     listBox1.SetSelected(i, true);
+                    Debug($"selected listbox item {filename}");
                     return;
                 }
             }
+            Debug($"could not find listbox item {filename}");
             fileNavSelectedFile = null;
         }
 
         private void FileNavNext()
         {
             Debug("Go to next image");
+            Debug($"listBox1.SelectedIndex: {listBox1.SelectedIndex}");
             if (listBox1.SelectedIndex == listBox1.Items.Count - 1)
             {
                 listBox1.SetSelected(0, true);
@@ -498,12 +501,50 @@ namespace SciTIFlib
             }
         }
 
+        public Bitmap Histogram(Size size, int[] values)
+        {
+            Bitmap bmp = new Bitmap(size.Width, size.Height);
+
+            Graphics gfx = Graphics.FromImage(bmp);
+            gfx.Clear(Color.White);
+
+            // bin the data into 1px columns
+            double dataMin = values.Min();
+            double dataMax = values.Max();
+            double dataSpan = dataMax - dataMin;
+            int nBins = size.Width;
+            double[] counts = new double[nBins];
+            double binSize = dataSpan / (nBins - 1);
+            for (int i = 0; i < values.Length; i++)
+            {
+                int bin = (int)((values[i] - dataMin) / binSize);
+                if (bin >= counts.Length)
+                    bin = counts.Length - 1;
+                if (bin < 0)
+                    bin = 0;
+                counts[bin] = counts[bin] + 1;
+            }
+
+            // determine what to normalize it to visually
+            double peakVal = counts.Max();
+            double heightMult = size.Height / peakVal;
+
+            // plot the binned data
+            Pen pen = new Pen(new SolidBrush(Color.Black));
+            for (int i = 0; i < nBins; i++)
+            {
+                int heightPx = (int)(counts[i] * heightMult);
+                Point pt1 = new Point(i, size.Height - 0);
+                Point pt2 = new Point(i, size.Height - heightPx);
+                gfx.DrawLine(pen, pt1, pt2);
+            }
+
+            return bmp;
+        }
+
         private void picture_Paint(object sender, PaintEventArgs e)
         {
             Graphics gfx = e.Graphics;
-            //Render rndr = new Render();
-            //Bitmap overlay = rndr.GenerateHistogram(picture.Width, picture.Height);
-            //e.Graphics.DrawImage(overlay, 0, 0);
 
             if (sciTifImage == null || sciTifImage.imageDisplay == null)
                 return;
@@ -527,6 +568,10 @@ namespace SciTIFlib
             int posY = 5;
             gfx.DrawString(msg, font, brushShadow, new Point(posX + 1, posY + 1));
             gfx.DrawString(msg, font, brush, new Point(posY, posY));
+
+            // draw a histogram bitmap
+            Bitmap hist = Histogram(new Size(100, 40), sciTifImage.valuesRaw);
+            gfx.DrawImage(hist, new Point(5, 50));
 
         }
 
