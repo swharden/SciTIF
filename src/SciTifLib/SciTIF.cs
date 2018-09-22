@@ -101,22 +101,6 @@ namespace SciTIFlib
             double whitePixelValue = Math.Pow(2, dataDepth);
             log.Debug($"Predicted camera depth: {dataDepth}-Bit");
             log.Debug($"Brightnest pixel: {valuesMax} / {whitePixelValue} ({valuesMax / whitePixelValue * 100}%)");
-
-            /*
-            // create a float array to hold image data, normalized to 1 (by whitest pixel value)
-            int nChannels = 3;
-            int nValues = imageWidth * imageHeight * nChannels;
-            double[] values = new double[nValues];
-            for (int i = 0; i < valuesRaw.Length; i++)
-            {
-                int pos = i * nChannels;
-                double grayValue = (double)imageBytes[i] / whitePixelValue;
-                values[pos + 0] = grayValue;
-                values[pos + 1] = 0;
-                values[pos + 2] = 0;
-            }
-            log.Debug($"Converted image into an RGB double array (size: {values.Length})");
-            */
         }
 
         /// <summary>
@@ -126,10 +110,18 @@ namespace SciTIFlib
         {
             log.Debug("Loading values from image file using the generic method");
 
-            // pull data from the file into the local space
-            Bitmap bmpOrig = new Bitmap(filePath);
-            log.Debug($"Input image format: {bmpOrig.PixelFormat}");
-
+            // try to load data from the file using the generic bitmap class
+            Bitmap bmpOrig;
+            try
+            {
+                bmpOrig = new Bitmap(filePath);
+                log.Debug($"Input image format: {bmpOrig.PixelFormat}");
+            } catch
+            {
+                log.Warn($"Not viewable image: {filePath}");
+                return;
+            }
+            
             // convert it to 24-bit RGB
             Bitmap bmp = new Bitmap(bmpOrig.Width, bmpOrig.Height, PixelFormat.Format24bppRgb);
             Graphics gr = Graphics.FromImage(bmp);
@@ -170,14 +162,6 @@ namespace SciTIFlib
             double whitePixelValue = Math.Pow(2, dataDepth);
             log.Debug($"Predicted camera depth: {dataDepth}-Bit");
             log.Debug($"Brightnest pixel: {valuesMax} / {whitePixelValue} ({valuesMax / whitePixelValue * 100}%)");
-
-            /*
-            // create a float array to hold image data, normalized to 1 (by whitest pixel value)
-            double[] values = new double[nValues];
-            for (int i = 0; i < nValues; i++)
-                values[i] = (double)imageBytes[i] / whitePixelValue;
-            log.Debug($"Converted image into an RGB double array (size: {values.Length})");
-            */
         }
 
         /// <summary>
@@ -193,8 +177,9 @@ namespace SciTIFlib
             else
                 LoadValuesNONTIFF();
 
-            if (valuesRaw.Length == 0)
-                throw new Exception("no pixel data loaded from image!");
+            if (valuesRaw == null || valuesRaw.Length == 0)
+                return;
+                //throw new Exception("no pixel data loaded from image!");
 
             // load these data into the image display class
             imageDisplay = new ImageDisplay(valuesRaw, imageWidth, imageHeight, imageDepth);
@@ -204,7 +189,7 @@ namespace SciTIFlib
 
         public Bitmap GetBitmap()
         {
-            return imageDisplay.GetDisplayBitmap();
+            return imageDisplay?.GetDisplayBitmap();
         }
 
     }

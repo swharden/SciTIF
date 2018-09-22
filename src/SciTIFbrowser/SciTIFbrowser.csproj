@@ -93,10 +93,6 @@
       <Project>{8094cd1e-0b0e-45a7-80f5-277850067d9a}</Project>
       <Name>SciTIFlib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SplitDirView\SplitDirView.csproj">
-      <Project>{F561CE42-C563-4AD3-AB55-B08E29557693}</Project>
-      <Name>SplitDirView</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -18,7 +18,7 @@ namespace SciTIFlib
     public class Logger
     {
         public int logLevel;
-        public bool silent = false;
+        public bool silent = true;
         public string logText;
         public string loggerName;
 

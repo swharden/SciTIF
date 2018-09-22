@@ -98,15 +98,25 @@
             this.reportAnIssueToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutSciTIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitContainer = new System.Windows.Forms.SplitContainer();
+            this.splitContainerTopHoriz = new System.Windows.Forms.SplitContainer();
+            this.splitContainerFilenavPic = new System.Windows.Forms.SplitContainer();
+            this.tableFiles = new System.Windows.Forms.TableLayoutPanel();
+            this.btnSetFolder = new System.Windows.Forms.Button();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.showFileListFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelFrame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picture)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
-            this.splitContainer.Panel1.SuspendLayout();
-            this.splitContainer.Panel2.SuspendLayout();
-            this.splitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopHoriz)).BeginInit();
+            this.splitContainerTopHoriz.Panel1.SuspendLayout();
+            this.splitContainerTopHoriz.Panel2.SuspendLayout();
+            this.splitContainerTopHoriz.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerFilenavPic)).BeginInit();
+            this.splitContainerFilenavPic.Panel1.SuspendLayout();
+            this.splitContainerFilenavPic.Panel2.SuspendLayout();
+            this.splitContainerFilenavPic.SuspendLayout();
+            this.tableFiles.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelFrame
@@ -117,8 +127,9 @@
             this.panelFrame.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelFrame.Location = new System.Drawing.Point(0, 0);
             this.panelFrame.Name = "panelFrame";
-            this.panelFrame.Size = new System.Drawing.Size(536, 221);
+            this.panelFrame.Size = new System.Drawing.Size(356, 221);
             this.panelFrame.TabIndex = 0;
+            this.panelFrame.TabStop = true;
             this.panelFrame.Paint += new System.Windows.Forms.PaintEventHandler(this.panelFrame_Paint);
             // 
             // picture
@@ -153,7 +164,7 @@
             this.toolStripSeparator1,
             this.helpToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(201, 236);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(201, 214);
             // 
             // toolStripMenuItem4
             // 
@@ -421,6 +432,7 @@
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showFileListFToolStripMenuItem,
             this.nextrightArrowToolStripMenuItem,
             this.previousleftArrowToolStripMenuItem,
             this.reloadF5ToolStripMenuItem,
@@ -545,7 +557,7 @@
             // imageMetadataToolStripMenuItem
             // 
             this.imageMetadataToolStripMenuItem.Name = "imageMetadataToolStripMenuItem";
-            this.imageMetadataToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.imageMetadataToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.imageMetadataToolStripMenuItem.Text = "Image Metadata";
             // 
             // developerConsoleToolStripMenuItem
@@ -558,24 +570,24 @@
             // checkForUpdateToolStripMenuItem
             // 
             this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.checkForUpdateToolStripMenuItem.Text = "Check for Update...";
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(216, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(189, 6);
             // 
             // reportAnIssueToolStripMenuItem
             // 
             this.reportAnIssueToolStripMenuItem.Name = "reportAnIssueToolStripMenuItem";
-            this.reportAnIssueToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.reportAnIssueToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.reportAnIssueToolStripMenuItem.Text = "Report an Issue";
             // 
             // suggestAFeatureToolStripMenuItem
             // 
             this.suggestAFeatureToolStripMenuItem.Name = "suggestAFeatureToolStripMenuItem";
-            this.suggestAFeatureToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.suggestAFeatureToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.suggestAFeatureToolStripMenuItem.Text = "Suggest a Feature";
             // 
             // toolStripSeparator1
@@ -624,23 +636,93 @@
             this.aboutSciTIFToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.aboutSciTIFToolStripMenuItem.Text = "About SciTIF";
             // 
-            // splitContainer
+            // splitContainerTopHoriz
             // 
-            this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer.Name = "splitContainer";
-            this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitContainerTopHoriz.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerTopHoriz.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerTopHoriz.Name = "splitContainerTopHoriz";
+            this.splitContainerTopHoriz.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer.Panel1
+            // splitContainerTopHoriz.Panel1
             // 
-            this.splitContainer.Panel1.Controls.Add(this.panelFrame);
+            this.splitContainerTopHoriz.Panel1.Controls.Add(this.splitContainerFilenavPic);
             // 
-            // splitContainer.Panel2
+            // splitContainerTopHoriz.Panel2
             // 
-            this.splitContainer.Panel2.Controls.Add(this.richTextBox1);
-            this.splitContainer.Size = new System.Drawing.Size(536, 442);
-            this.splitContainer.SplitterDistance = 221;
-            this.splitContainer.TabIndex = 1;
+            this.splitContainerTopHoriz.Panel2.Controls.Add(this.richTextBox1);
+            this.splitContainerTopHoriz.Size = new System.Drawing.Size(536, 442);
+            this.splitContainerTopHoriz.SplitterDistance = 221;
+            this.splitContainerTopHoriz.TabIndex = 1;
+            // 
+            // splitContainerFilenavPic
+            // 
+            this.splitContainerFilenavPic.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.splitContainerFilenavPic.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerFilenavPic.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerFilenavPic.Margin = new System.Windows.Forms.Padding(0);
+            this.splitContainerFilenavPic.Name = "splitContainerFilenavPic";
+            // 
+            // splitContainerFilenavPic.Panel1
+            // 
+            this.splitContainerFilenavPic.Panel1.Controls.Add(this.tableFiles);
+            // 
+            // splitContainerFilenavPic.Panel2
+            // 
+            this.splitContainerFilenavPic.Panel2.Controls.Add(this.panelFrame);
+            this.splitContainerFilenavPic.Size = new System.Drawing.Size(536, 221);
+            this.splitContainerFilenavPic.SplitterDistance = 178;
+            this.splitContainerFilenavPic.SplitterWidth = 2;
+            this.splitContainerFilenavPic.TabIndex = 1;
+            this.splitContainerFilenavPic.TabStop = false;
+            this.splitContainerFilenavPic.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
+            // 
+            // tableFiles
+            // 
+            this.tableFiles.BackColor = System.Drawing.Color.Yellow;
+            this.tableFiles.ColumnCount = 1;
+            this.tableFiles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableFiles.Controls.Add(this.btnSetFolder, 0, 0);
+            this.tableFiles.Controls.Add(this.listBox1, 0, 1);
+            this.tableFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableFiles.Location = new System.Drawing.Point(0, 0);
+            this.tableFiles.Margin = new System.Windows.Forms.Padding(0);
+            this.tableFiles.Name = "tableFiles";
+            this.tableFiles.RowCount = 2;
+            this.tableFiles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableFiles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableFiles.Size = new System.Drawing.Size(178, 221);
+            this.tableFiles.TabIndex = 0;
+            // 
+            // btnSetFolder
+            // 
+            this.btnSetFolder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSetFolder.Location = new System.Drawing.Point(0, 0);
+            this.btnSetFolder.Margin = new System.Windows.Forms.Padding(0);
+            this.btnSetFolder.Name = "btnSetFolder";
+            this.btnSetFolder.Size = new System.Drawing.Size(178, 30);
+            this.btnSetFolder.TabIndex = 0;
+            this.btnSetFolder.TabStop = false;
+            this.btnSetFolder.Text = "Change Folder";
+            this.btnSetFolder.UseVisualStyleBackColor = true;
+            this.btnSetFolder.Click += new System.EventHandler(this.btnSetFolder_Click);
+            // 
+            // listBox1
+            // 
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBox1.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Items.AddRange(new object[] {
+            "image1.tif",
+            "image2.png",
+            "image3.jpg"});
+            this.listBox1.Location = new System.Drawing.Point(0, 30);
+            this.listBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(178, 191);
+            this.listBox1.TabIndex = 1;
+            this.listBox1.TabStop = false;
+            this.listBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseClick);
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // richTextBox1
             // 
@@ -656,12 +738,19 @@
             this.richTextBox1.Text = "developer console";
             this.richTextBox1.WordWrap = false;
             // 
+            // showFileListFToolStripMenuItem
+            // 
+            this.showFileListFToolStripMenuItem.Name = "showFileListFToolStripMenuItem";
+            this.showFileListFToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.showFileListFToolStripMenuItem.Text = "Show File List (F)";
+            this.showFileListFToolStripMenuItem.Click += new System.EventHandler(this.showFileListFToolStripMenuItem_Click);
+            // 
             // SciTifUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.Controls.Add(this.splitContainer);
+            this.BackColor = System.Drawing.Color.Fuchsia;
+            this.Controls.Add(this.splitContainerTopHoriz);
             this.Name = "SciTifUC";
             this.Size = new System.Drawing.Size(536, 442);
             this.SizeChanged += new System.EventHandler(this.SciTifUC_SizeChanged);
@@ -670,10 +759,15 @@
             this.panelFrame.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picture)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            this.splitContainer.Panel1.ResumeLayout(false);
-            this.splitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
-            this.splitContainer.ResumeLayout(false);
+            this.splitContainerTopHoriz.Panel1.ResumeLayout(false);
+            this.splitContainerTopHoriz.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopHoriz)).EndInit();
+            this.splitContainerTopHoriz.ResumeLayout(false);
+            this.splitContainerFilenavPic.Panel1.ResumeLayout(false);
+            this.splitContainerFilenavPic.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerFilenavPic)).EndInit();
+            this.splitContainerFilenavPic.ResumeLayout(false);
+            this.tableFiles.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -749,7 +843,12 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem aboutSciTIFToolStripMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer;
+        private System.Windows.Forms.SplitContainer splitContainerTopHoriz;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.SplitContainer splitContainerFilenavPic;
+        private System.Windows.Forms.TableLayoutPanel tableFiles;
+        private System.Windows.Forms.Button btnSetFolder;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ToolStripMenuItem showFileListFToolStripMenuItem;
     }
 }

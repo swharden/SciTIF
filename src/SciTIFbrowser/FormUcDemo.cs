@@ -19,12 +19,13 @@ namespace SciTIFbrowser
 
         private void FormUcDemo_Load(object sender, EventArgs e)
         {
-            splitDirView1.SetFolder(@"D:\demoData\tifs\simple");
+            //splitDirView1.SetFolder(@"D:\demoData\tifs\simple");
+            SetImage(@"D:\demoData\tifs\simple\rgb-test2.jpg");
         }
 
         private void splitDirView1_FileHighlighted(object sender, EventArgs e)
         {
-            SetImage(splitDirView1.highlightedFile);
+            //SetImage(splitDirView1.highlightedFile);
         }
 
         private void SetImage(string imageFilePath)

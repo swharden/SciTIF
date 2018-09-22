@@ -29,7 +29,11 @@ namespace SciTIFlib
         {
             InitializeComponent();
             ResizeImageToFitPanel();
+
+            // set init settings
             SetBackgroundColor(SystemColors.ControlDarkDark);
+            ConsoleOff();
+            FileNavOff();
             ConsoleOff();
         }
 
@@ -38,18 +42,94 @@ namespace SciTIFlib
 
         public void SetImage(string imageFilePath)
         {
+            FileNavUpdate(imageFilePath);
+            FileNavSelect(System.IO.Path.GetFileName(imageFilePath));
             sciTifImage = new ImageFile(imageFilePath);
-
-            // for testing
-            //picture.Dock = DockStyle.Fill;
-            //picture.BackColor = Color.Blue;
-
             ResizeImageToFitPanel();
             MouseBrightnessContrastReset();
-            sciTifImage.imageDisplay.SetMinAndMaxAuto();
+            sciTifImage.imageDisplay?.SetMinAndMaxAuto();
             picture.BackgroundImage = sciTifImage.GetBitmap();
             richTextBox1.Text = sciTifImage.log.logText;
             picture.Focus();
+        }
+
+        ///////////////////////////////////////////////////////////////////////
+        // FILE NAVIGATION
+        private string fileNavSelectedFolder;
+        private string fileNavSelectedFile;
+        private void FileNavUpdate(string folder)
+        {
+
+            if (System.IO.File.Exists(folder))
+            {
+                Debug($"updating folder list for: {folder}");
+                folder = System.IO.Path.GetDirectoryName(folder);
+                Debug($"scanning: {folder}");
+            }
+
+            if (!System.IO.Directory.Exists(folder))
+            {
+                Debug($"folder does not exist: {folder}");
+                return;
+            }
+
+            if (folder == fileNavSelectedFolder)
+            {
+                Debug("folder hasn't changed, not refreshing contents");
+                return;
+            }
+            else
+            {
+                Debug($"scanning {folder}");
+                fileNavSelectedFolder = folder;
+            }
+
+            listBox1.Items.Clear();
+            string[] files = System.IO.Directory.GetFiles(folder);
+            foreach (string fname in files)
+            {
+                listBox1.Items.Add(System.IO.Path.GetFileName(fname));
+            }
+        }
+
+        private void FileNavSelect(string filename)
+        {
+            for (int i = 0; i < listBox1.Items.Count; i++)
+            {
+                if (listBox1.Items[i].ToString() == filename)
+                {
+                    fileNavSelectedFile = filename;
+                    listBox1.SetSelected(i, true);
+                    return;
+                }
+            }
+            fileNavSelectedFile = null;
+        }
+
+        private void FileNavNext()
+        {
+            Debug("Go to next image");
+            if (listBox1.SelectedIndex == listBox1.Items.Count - 1)
+            {
+                listBox1.SetSelected(0, true);
+            }
+            else
+            {
+                listBox1.SetSelected(listBox1.SelectedIndex + 1, true);
+            }
+        }
+
+        private void FileNavPrevious()
+        {
+            Debug("Go to previous image");
+            if (listBox1.SelectedIndex == 0)
+            {
+                listBox1.SetSelected(listBox1.Items.Count - 1, true);
+            }
+            else
+            {
+                listBox1.SetSelected(listBox1.SelectedIndex - 1, true);
+            }
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -60,6 +140,8 @@ namespace SciTIFlib
             this.backgroundColor = backgroundColor;
             panelFrame.BackColor = backgroundColor;
             picture.BackColor = backgroundColor;
+            tableFiles.BackColor = backgroundColor;
+            splitContainerFilenavPic.BackColor = backgroundColor;
         }
 
         private void SetBorder(Color borderColor, int borderWidth = 1)
@@ -74,7 +156,9 @@ namespace SciTIFlib
             double tickSpan = DateTime.Now.Ticks - dateTimeTicksAtLaunch;
             double timestamp = tickSpan / TimeSpan.TicksPerSecond;
             timestamp = Math.Round(timestamp, 3);
-            richTextBox1.Text += String.Format("[{0:0.000}] {1}\n", timestamp, msg);
+            string line = String.Format("[{0:0.000}] {1}\n", timestamp, msg);
+            Console.Write(line);
+            richTextBox1.Text += line;
             richTextBox1.SelectionStart = richTextBox1.TextLength;
             richTextBox1.ScrollToCaret();
         }
@@ -134,13 +218,14 @@ namespace SciTIFlib
             // 1:1 image display
             picture.BackgroundImageLayout = ImageLayout.Zoom;
             picture.Size = new Size((int)(sciTifImage.imageWidth * imageZoom), (int)(sciTifImage.imageHeight * imageZoom));
-            
+
             // center small pictures as needed horizontally
             if (panelFrame.Width > picture.Size.Width)
             {
                 int centerX = panelFrame.Width / 2 - picture.Size.Width / 2;
                 picture.Location = new Point(centerX, picture.Location.Y);
-            } else
+            }
+            else
             {
                 picture.Location = new Point(0, picture.Location.Y);
             }
@@ -150,7 +235,8 @@ namespace SciTIFlib
             {
                 int centerY = panelFrame.Height / 2 - picture.Size.Height / 2;
                 picture.Location = new Point(picture.Location.X, centerY);
-            } else
+            }
+            else
             {
                 picture.Location = new Point(picture.Location.X, 0);
             }
@@ -202,12 +288,12 @@ namespace SciTIFlib
                 int dY = Cursor.Position.Y - mouseDownR.Y;
                 mouseBC = new Point(mouseBC.X + dX, mouseBC.Y + dY);
                 Debug($"right-click-released, remembering last brightness and contrast: ({mouseBC.X}, {mouseBC.X})");
-                if (mouseDownTime < 200 || (dX==0 && dY==0))
+                if (mouseDownTime < 200 || (dX == 0 && dY == 0))
                 {
                     Debug($"right button pressed and released quickly, so showing right-click menu");
                     contextMenuStrip1.Show(picture, new Point(e.X, e.Y));
                 }
-            }            
+            }
         }
 
         private void picture_MouseMove(object sender, MouseEventArgs e)
@@ -269,9 +355,9 @@ namespace SciTIFlib
         }
         public void ZoomSet(double zoomFraction = 1)
         {
-            Debug($"Setting zoom to {zoomFraction*100}%");
+            Debug($"Setting zoom to {zoomFraction * 100}%");
             double maxZoom = 16;
-            double minZoom = 1.0/16.0;
+            double minZoom = 1.0 / 16.0;
             zoomFraction = Math.Min(zoomFraction, maxZoom);
             zoomFraction = Math.Max(zoomFraction, minZoom);
             imageZoom = zoomFraction;
@@ -280,6 +366,7 @@ namespace SciTIFlib
 
         ///////////////////////////////////////////////////////////////////////
         // EVENTS FUNCTIONS
+
         private void ConsoleToggle()
         {
             Debug("toggling developer console");
@@ -293,7 +380,7 @@ namespace SciTIFlib
         {
             Debug("hiding developer console");
             developerConsoleToolStripMenuItem.Checked = false;
-            splitContainer.Panel2Collapsed = true;
+            splitContainerTopHoriz.Panel2Collapsed = true;
             ResizeImageToFitPanel();
         }
 
@@ -301,7 +388,32 @@ namespace SciTIFlib
         {
             Debug("showing developer console");
             developerConsoleToolStripMenuItem.Checked = true;
-            splitContainer.Panel2Collapsed = false;
+            splitContainerTopHoriz.Panel2Collapsed = false;
+            ResizeImageToFitPanel();
+        }
+
+        private void FileNavToggle()
+        {
+            Debug("toggling file navigation panel");
+            if (showFileListFToolStripMenuItem.Checked)
+                FileNavOff();
+            else
+                FileNavOn();
+        }
+
+        private void FileNavOff()
+        {
+            Debug("hiding file navigation panel");
+            showFileListFToolStripMenuItem.Checked = false;
+            splitContainerFilenavPic.Panel1Collapsed = true;
+            ResizeImageToFitPanel();
+        }
+
+        private void FileNavOn()
+        {
+            Debug("showing file navigation panel");
+            showFileListFToolStripMenuItem.Checked = true;
+            splitContainerFilenavPic.Panel1Collapsed = false;
             ResizeImageToFitPanel();
         }
 
@@ -347,6 +459,9 @@ namespace SciTIFlib
             if (keyData == Keys.D)
                 ConsoleToggle();
 
+            if (keyData == Keys.F)
+                FileNavToggle();
+
             if (keyData == Keys.Oemplus || keyData == Keys.Add)
                 ZoomIn();
 
@@ -356,11 +471,11 @@ namespace SciTIFlib
             if (keyData == Keys.D0 || keyData == Keys.NumPad0)
                 ZoomSet(1);
 
-            if (keyData == Keys.Right)
-                Debug("Go to next image");
+            if (keyData == Keys.Right || keyData == Keys.Down)
+                FileNavNext();
 
-            if (keyData == Keys.Left)
-                Debug("Go to previous image");
+            if (keyData == Keys.Left || keyData == Keys.Up)
+                FileNavPrevious();
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -382,7 +497,7 @@ namespace SciTIFlib
                 Debug("Focusing on picture");
             }
         }
-        
+
         private void picture_Paint(object sender, PaintEventArgs e)
         {
             Graphics gfx = e.Graphics;
@@ -396,7 +511,7 @@ namespace SciTIFlib
             // create message to display
             string msg = "";
 
-            msg += $"Zoom: {imageZoom*100}%";
+            msg += $"Zoom: {imageZoom * 100}%";
 
             msg += $"\nDepth: {sciTifImage.imageDepth}-Bit ({Math.Pow(2, sciTifImage.imageDepth)})";
 
@@ -410,7 +525,7 @@ namespace SciTIFlib
             SolidBrush brushShadow = new SolidBrush(Color.Black);
             int posX = 5;
             int posY = 5;
-            gfx.DrawString(msg, font, brushShadow, new Point(posX+1, posY+1));
+            gfx.DrawString(msg, font, brushShadow, new Point(posX + 1, posY + 1));
             gfx.DrawString(msg, font, brush, new Point(posY, posY));
 
         }
@@ -443,6 +558,41 @@ namespace SciTIFlib
         private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ZoomOut();
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex < 0)
+                return;
+            string fname = listBox1.Items[listBox1.SelectedIndex].ToString();
+            if (fileNavSelectedFile != fname)
+                SetImage(System.IO.Path.Combine(fileNavSelectedFolder, fname));
+        }
+
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            ResizeImageToFitPanel();
+        }
+
+        private void btnSetFolder_Click(object sender, EventArgs e)
+        {
+            var diag = new FolderBrowserDialog();
+            if (diag.ShowDialog() == DialogResult.OK)
+            {
+                string selectedPath = diag.SelectedPath;
+                FileNavUpdate(selectedPath);
+            }
+        }
+
+        private void listBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            panelFrame.Focus();
+            Debug("Focusing on panel");
+        }
+
+        private void showFileListFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FileNavToggle();
         }
     }
 }

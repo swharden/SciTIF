@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SciTIFlib", "SciTifLib\SciTIFlib.csproj", "{8094CD1E-0B0E-45A7-80F5-277850067D9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplitDirView", "SplitDirView\SplitDirView.csproj", "{F561CE42-C563-4AD3-AB55-B08E29557693}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SciTIFbrowser", "SciTIFbrowser\SciTIFbrowser.csproj", "{F404E4E5-220F-4365-B830-2594E0136516}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiChannelMockup", "MultiChannelMockup\MultiChannelMockup.csproj", "{C0227CEC-3543-4137-88BB-952EA9A9D3C3}"
@@ -25,10 +23,6 @@ Global
 		{8094CD1E-0B0E-45A7-80F5-277850067D9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8094CD1E-0B0E-45A7-80F5-277850067D9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8094CD1E-0B0E-45A7-80F5-277850067D9A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F561CE42-C563-4AD3-AB55-B08E29557693}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F561CE42-C563-4AD3-AB55-B08E29557693}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F561CE42-C563-4AD3-AB55-B08E29557693}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F561CE42-C563-4AD3-AB55-B08E29557693}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F404E4E5-220F-4365-B830-2594E0136516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F404E4E5-220F-4365-B830-2594E0136516}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F404E4E5-220F-4365-B830-2594E0136516}.Release|Any CPU.ActiveCfg = Release|Any CPU
