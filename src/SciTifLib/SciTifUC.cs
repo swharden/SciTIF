@@ -583,7 +583,14 @@ namespace SciTIFlib
             // draw the linear contrast line
             Point contrastPt1 = new Point(binContrastMin + padLeft, size.Height + padTop);
             Point contrastPt2 = new Point(binContrastMax + padLeft, padTop);
-            gfx.DrawLine(Pens.Yellow, contrastPt1, contrastPt2);
+            try
+            {
+                gfx.DrawLine(Pens.Yellow, contrastPt1, contrastPt2);
+            }
+            catch
+            {
+                /* tried to draw a line off the graph */
+            }
 
             return bmp;
         }
