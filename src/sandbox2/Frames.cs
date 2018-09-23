@@ -85,7 +85,7 @@ namespace sandbox2
             return bmp;
         }
 
-        public Bitmap AddColor(Bitmap bmp, UInt16[] pixels, string color = "gray")
+        public Bitmap AddChannel(Bitmap bmp, UInt16[] pixels, string color = "gray")
         {
             byte[] bytes = BitmapToBytes(bmp);
             for (int i = 0; i < pixels.Length; i++)
@@ -118,12 +118,12 @@ namespace sandbox2
             return bmp;
         }
 
-        public Bitmap CreateMerged()
+        /// <summary>
+        /// return a black image you can add color channels to
+        /// </summary>
+        public Bitmap BlankImage()
         {
             Bitmap bmp = new Bitmap(bmpOriginal.Width, bmpOriginal.Height, PixelFormat.Format24bppRgb);
-            bmp = AddColor(bmp, frames[0].pixels,"red");
-            bmp = AddColor(bmp, frames[1].pixels, "green");
-            bmp = AddColor(bmp, frames[2].pixels, "blue");
             return bmp;
         }
     }

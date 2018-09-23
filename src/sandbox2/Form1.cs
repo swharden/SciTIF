@@ -26,11 +26,19 @@ namespace sandbox2
 
         private void UpdateImageFromCheckboxes()
         {
+            Bitmap bmp = imgFrames.BlankImage();
+            if (checkRed.Checked)
+                bmp = imgFrames.AddChannel(bmp, imgFrames.frames[0].pixels, "red");
+            if (checkGreen.Checked)
+                bmp = imgFrames.AddChannel(bmp, imgFrames.frames[1].pixels, "green");
+            if (checkBlue.Checked)
+                bmp = imgFrames.AddChannel(bmp, imgFrames.frames[2].pixels, "blue");
+            pictureBox1.Image = bmp;
         }
 
         private void checkRed_CheckedChanged(object sender, EventArgs e)
         {
-            pictureBox1.Image = imgFrames.CreateMerged();
+            //pictureBox1.Image = imgFrames.CreateMerged();
             UpdateImageFromCheckboxes();
         }
 
