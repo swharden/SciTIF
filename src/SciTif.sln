@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SciTIFlib", "SciTifLib\SciT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SciTIFbrowser", "SciTIFbrowser\SciTIFbrowser.csproj", "{F404E4E5-220F-4365-B830-2594E0136516}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sandbox", "sandbox\sandbox.csproj", "{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F404E4E5-220F-4365-B830-2594E0136516}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F404E4E5-220F-4365-B830-2594E0136516}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F404E4E5-220F-4365-B830-2594E0136516}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
