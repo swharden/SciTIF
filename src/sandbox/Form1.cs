@@ -17,20 +17,18 @@ namespace sandbox
         public Form1()
         {
             InitializeComponent();
-            SetSliceAndChannelFromScrollBars();
+            cbDisplayMode.SelectedItem = cbDisplayMode.Items[0];
+            cbLUT.SelectedItem = cbLUT.Items[0];
             LoadRGBImage();
-            SetSliceAndChannel(0, 0);
+            SetSliceAndChannelFromScrollBars();
         }
 
-        public Bitmap[] bmpFrames;
+        //public Bitmap[] bmpFrames;
+        Bitmap bmpOriginal;
         public void LoadRGBImage()
         {
             string filePath = @"D:\demoData\tifs\simple\rgb-test2.jpg";
-            Bitmap bmpRGB = new Bitmap(filePath);
-            bmpFrames = new Bitmap[3];
-            bmpFrames[0] = ExtractChannelToGrayscale(bmpRGB, 0);
-            bmpFrames[1] = ExtractChannelToGrayscale(bmpRGB, 1);
-            bmpFrames[2] = ExtractChannelToGrayscale(bmpRGB, 2);
+            bmpOriginal = new Bitmap(filePath);
         }
 
         /// <summary>
@@ -84,7 +82,7 @@ namespace sandbox
             bmp.Palette = pal;
         }
 
-        public Bitmap ExtractChannelToGrayscale(Bitmap bmpSource, int channel = 0)
+        public Bitmap ExtractChannelToGrayscale(Bitmap bmpSource, int channel = 0, bool grayscale = false)
         {
             // copy our source image to a byte array (8-bits/pixel, 3 channel RGB)
             byte[] bytesRGB = BitmapToBytes(bmpSource);
@@ -101,8 +99,10 @@ namespace sandbox
             // make a 16-bit grayscale image the same size as the source
             Bitmap bmpGray = BitmapFromBytes(bytesGray, bmpSource.Width, bmpSource.Height);
 
-            if (channel==0)
-                BitmapApplyPalette(bmpGray,"red");
+            if (grayscale)
+                BitmapApplyPalette(bmpGray, "gray");
+            else if (channel == 0)
+                BitmapApplyPalette(bmpGray, "red");
             else if (channel == 1)
                 BitmapApplyPalette(bmpGray, "green");
             else if (channel == 2)
@@ -113,9 +113,20 @@ namespace sandbox
 
         public void SetSliceAndChannel(int slice, int channel)
         {
-            if (bmpFrames == null)
-                return;
-            pictureBox1.Image = bmpFrames[channel];
+            if (cbDisplayMode.Text == "Merge")
+            {
+                pictureBox1.Image = bmpOriginal;
+            }
+            else if (cbDisplayMode.Text == "Grayscale")
+            {
+                pictureBox1.Image = ExtractChannelToGrayscale(bmpOriginal, hScrollChannel.Value, true);
+            }
+            else if (cbDisplayMode.Text == "Color")
+            {
+                pictureBox1.Image = ExtractChannelToGrayscale(bmpOriginal, hScrollChannel.Value); 
+            }
+            else
+                Console.WriteLine("Unknown display mode");
         }
 
         public void SetSliceAndChannelFromScrollBars()
@@ -141,6 +152,16 @@ namespace sandbox
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbDisplayMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetSliceAndChannelFromScrollBars();
         }
     }
 }
