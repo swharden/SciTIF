@@ -660,6 +660,7 @@
             this.splitContainerTopHoriz.Size = new System.Drawing.Size(536, 442);
             this.splitContainerTopHoriz.SplitterDistance = 221;
             this.splitContainerTopHoriz.TabIndex = 1;
+            this.splitContainerTopHoriz.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerTopHoriz_SplitterMoved);
             // 
             // splitContainerFilenavPic
             // 

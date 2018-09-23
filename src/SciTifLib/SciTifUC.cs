@@ -49,7 +49,7 @@ namespace SciTIFlib
             MouseBrightnessContrastReset();
             sciTifImage.imageDisplay?.SetMinAndMaxAuto();
             picture.BackgroundImage = sciTifImage.GetBitmap();
-            richTextBox1.Text += "\n\n"+sciTifImage.log.logText;
+            richTextBox1.Text += "\n\n" + sciTifImage.log.logText;
             picture.Focus();
         }
 
@@ -142,7 +142,7 @@ namespace SciTIFlib
 
         private void FileNavUpdateListbox()
         {
-            
+
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -155,6 +155,7 @@ namespace SciTIFlib
             picture.BackColor = backgroundColor;
             tableFiles.BackColor = backgroundColor;
             splitContainerFilenavPic.BackColor = backgroundColor;
+            splitContainerTopHoriz.BackColor = backgroundColor;
         }
 
         private void SetBorder(Color borderColor, int borderWidth = 1)
@@ -511,15 +512,22 @@ namespace SciTIFlib
             }
         }
 
-        public Bitmap Histogram(Size size, int[] values)
+        public Bitmap Histogram(Size size, int[] values, int contrastMin, int contrastMax, bool forceDataMinZero=true)
         {
-            Bitmap bmp = new Bitmap(size.Width, size.Height);
+            int padLeft = 15;
+            int padRight = 15;
+            int padTop = 10;
+            int padBottom = 20;
+            Bitmap bmp = new Bitmap(size.Width + padLeft + padRight, size.Height + padBottom + padTop);
 
             Graphics gfx = Graphics.FromImage(bmp);
-            gfx.Clear(Color.White);
+            //gfx.Clear(Color.White);
 
             // bin the data into 1px columns
             double dataMin = values.Min();
+            if (forceDataMinZero)
+                dataMin = 0;
+
             double dataMax = values.Max();
             double dataSpan = dataMax - dataMin;
             int nBins = size.Width;
@@ -535,19 +543,47 @@ namespace SciTIFlib
                 counts[bin] = counts[bin] + 1;
             }
 
+            // determine contrast bins
+            int binContrastMin = (int)((contrastMin - dataMin) / binSize);
+            int binContrastMax = (int)((contrastMax - dataMin) / binSize);
+
             // determine what to normalize it to visually
             double peakVal = counts.Max();
             double heightMult = size.Height / peakVal;
 
+            // plot a frame around the data
+            Rectangle rectBorder = new Rectangle(padLeft - 1, padTop - 1, size.Width + 1, size.Height + 1 + 1);
+            Rectangle rectBorderShadow = new Rectangle(padLeft, padTop, size.Width + 1, size.Height + 1 + 1);
+            gfx.DrawRectangle(Pens.Black, rectBorderShadow);
+            gfx.DrawRectangle(Pens.White, rectBorder);
+
+            Brush brushHistoFill = new SolidBrush(Color.Gray);
+            Rectangle rectData = new Rectangle(padLeft, padTop, size.Width, size.Height + 1);
+            gfx.FillRectangle(brushHistoFill, rectData);
+
+            // add text at extremes
+            StringFormat formatCenter = new StringFormat();
+            formatCenter.LineAlignment = StringAlignment.Near;
+            formatCenter.Alignment = StringAlignment.Center;
+            Font font = new Font(FontFamily.GenericMonospace, 8, FontStyle.Regular);
+            gfx.DrawString($"{dataMin}", font, Brushes.Black, new Point(padLeft + 1, size.Height + padTop + 1), formatCenter);
+            gfx.DrawString($"{dataMin}", font, Brushes.Yellow, new Point(padLeft, size.Height + padTop), formatCenter);
+            gfx.DrawString($"{dataMax}", font, Brushes.Black, new Point(padLeft + 1 + size.Width, size.Height + padTop + 1), formatCenter);
+            gfx.DrawString($"{dataMax}", font, Brushes.Yellow, new Point(padLeft + size.Width, size.Height + padTop), formatCenter);
+
             // plot the binned data
-            Pen pen = new Pen(new SolidBrush(Color.Black));
             for (int i = 0; i < nBins; i++)
             {
                 int heightPx = (int)(counts[i] * heightMult);
-                Point pt1 = new Point(i, size.Height - 0);
-                Point pt2 = new Point(i, size.Height - heightPx);
-                gfx.DrawLine(pen, pt1, pt2);
+                Point pt1 = new Point(i + padLeft, size.Height + padTop);
+                Point pt2 = new Point(i + padLeft, size.Height - heightPx + padTop);
+                gfx.DrawLine(Pens.Black, pt1, pt2);
             }
+
+            // draw the linear contrast line
+            Point contrastPt1 = new Point(binContrastMin + padLeft, size.Height + padTop);
+            Point contrastPt2 = new Point(binContrastMax + padLeft, padTop);
+            gfx.DrawLine(Pens.Yellow, contrastPt1, contrastPt2);
 
             return bmp;
         }
@@ -555,34 +591,10 @@ namespace SciTIFlib
         private void picture_Paint(object sender, PaintEventArgs e)
         {
             Graphics gfx = e.Graphics;
-
-            if (sciTifImage == null || sciTifImage.imageDisplay == null)
-                return;
-
-            // create message to display
-            string msg = "";
-
-            msg += $"Zoom: {imageZoom * 100}%";
-
-            msg += $"\nDepth: {sciTifImage.imageDepth}-Bit ({Math.Pow(2, sciTifImage.imageDepth)})";
-
             int contrastMin = (int)(sciTifImage.imageDisplay.displayValueMin);
             int contrastMax = (int)(sciTifImage.imageDisplay.displayValueMax);
-            msg += $"\nContrast: {contrastMin} - {contrastMax}";
-
-            // draw the message
-            Font font = new Font(FontFamily.GenericMonospace, 8, FontStyle.Regular);
-            SolidBrush brush = new SolidBrush(Color.Yellow);
-            SolidBrush brushShadow = new SolidBrush(Color.Black);
-            int posX = 5;
-            int posY = 5;
-            gfx.DrawString(msg, font, brushShadow, new Point(posX + 1, posY + 1));
-            gfx.DrawString(msg, font, brush, new Point(posY, posY));
-
-            // draw a histogram bitmap
-            Bitmap hist = Histogram(new Size(100, 40), sciTifImage.valuesRaw);
-            gfx.DrawImage(hist, new Point(5, 50));
-
+            Bitmap hist = Histogram(new Size(100, 40), sciTifImage.valuesRaw, contrastMin, contrastMax);
+            gfx.DrawImage(hist, new Point(3, 3));
         }
 
         private void toggledoubleclickToolStripMenuItem_Click(object sender, EventArgs e)
@@ -652,6 +664,11 @@ namespace SciTIFlib
             Debug(">>>>>>> selected index changed");
             fileNavSelectedIndex = listBox1.SelectedIndex;
             SetImage(fileNavSeenFiles[fileNavSelectedIndex]);
+        }
+
+        private void splitContainerTopHoriz_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            ResizeImageToFitPanel();
         }
     }
 }
