@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}</ProjectGuid>
+    <ProjectGuid>{91E7763E-B438-46C1-B2D6-42C7B2D42584}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>sandbox</RootNamespace>
-    <AssemblyName>sandbox</AssemblyName>
+    <RootNamespace>sandbox3</RootNamespace>
+    <AssemblyName>sandbox3</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,11 +53,17 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form2.cs">
+    <Compile Include="FormChannels.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="FormChannels.Designer.cs">
+      <DependentUpon>FormChannels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormContrast.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormContrast.Designer.cs">
+      <DependentUpon>FormContrast.cs</DependentUpon>
     </Compile>
     <Compile Include="Frame.cs" />
     <Compile Include="FrameSet.cs" />
@@ -65,8 +72,11 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="FormChannels.resx">
+      <DependentUpon>FormChannels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormContrast.resx">
+      <DependentUpon>FormContrast.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -89,6 +99,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SciTifLib\SciTIFlib.csproj">
+      <Project>{8094CD1E-0B0E-45A7-80F5-277850067D9A}</Project>
+      <Name>SciTIFlib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

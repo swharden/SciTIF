@@ -7,32 +7,14 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sandbox2
+namespace sandbox3
 {
-    /// <summary>
-    /// A frame is a single collection of pixel values (int16 depth)
-    /// </summary>
-    class Frame
-    {
-        public int displayMin;
-        public int displayMax;
-        public Size size;
-        public UInt16[] pixels;
 
-        public Frame(UInt16[] pixels, Size size, int displayMin = 0, int displayMax = 54321)
-        {
-            this.pixels = pixels;
-            this.size = size;
-            this.displayMin = displayMin;
-            this.displayMax = displayMax;
-        }
-    }
-
-    class Frames
+    class FrameSet
     {
         public Bitmap bmpOriginal;
         public Frame[] frames;
-        public Frames(string imageFilePath)
+        public FrameSet(string imageFilePath)
         {
             bmpOriginal = new Bitmap(imageFilePath);
 
@@ -51,9 +33,9 @@ namespace sandbox2
 
             // load these arrays into frames
             frames = new Frame[3];
-            frames[0] = new Frame(pixelsR, bmpOriginal.Size);
-            frames[1] = new Frame(pixelsG, bmpOriginal.Size);
-            frames[2] = new Frame(pixelsB, bmpOriginal.Size);
+            frames[0] = new Frame(pixelsR, bmpOriginal.Size, "red");
+            frames[1] = new Frame(pixelsG, bmpOriginal.Size, "green");
+            frames[2] = new Frame(pixelsB, bmpOriginal.Size, "blue");
         }
 
         /// <summary>
@@ -83,18 +65,26 @@ namespace sandbox2
             return bmp;
         }
 
-        public Bitmap AddChannel(Bitmap bmp, UInt16[] pixels, string color = "gray")
+        public Bitmap AddChannel(Bitmap bmp, Frame frame, string forceColor="")
         {
+            if (frame.visible == false)
+                return bmp;
+
+            string color = frame.color;
+            if (forceColor != "")
+                color = forceColor;
+
             byte[] bytes = BitmapToBytes(bmp);
-            for (int i = 0; i < pixels.Length; i++)
+            for (int i = 0; i < frame.pixels.Length; i++)
             {
-                byte val = (byte)pixels[i];
+                byte val = (byte)frame.pixels[i];
                 if (color == "gray")
                 {
                     bytes[i * 3 + 2] = val; // red
                     bytes[i * 3 + 1] = val; // green
                     bytes[i * 3 + 0] = val; // blue
-                } else if (color == "red")
+                }
+                else if (color == "red")
                 {
                     bytes[i * 3 + 2] = val; // red
                 }

@@ -34,11 +34,11 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.cbDisplayMode = new System.Windows.Forms.ComboBox();
             this.hScrollChannel = new System.Windows.Forms.HScrollBar();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lblC = new System.Windows.Forms.Label();
             this.cbLUT = new System.Windows.Forms.ComboBox();
             this.checkVisible = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblZ = new System.Windows.Forms.Label();
             this.hScrollSlice = new System.Windows.Forms.HScrollBar();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -70,8 +70,7 @@
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(568, 475);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
@@ -96,7 +95,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
             this.tableLayoutPanel2.Controls.Add(this.cbDisplayMode, 4, 0);
             this.tableLayoutPanel2.Controls.Add(this.hScrollChannel, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label5, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblC, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.cbLUT, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.checkVisible, 3, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -110,7 +109,6 @@
             // cbDisplayMode
             // 
             this.cbDisplayMode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbDisplayMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDisplayMode.FormattingEnabled = true;
             this.cbDisplayMode.Items.AddRange(new object[] {
             "Merge",
@@ -132,23 +130,23 @@
             this.hScrollChannel.Name = "hScrollChannel";
             this.hScrollChannel.Size = new System.Drawing.Size(262, 24);
             this.hScrollChannel.TabIndex = 0;
+            this.hScrollChannel.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollChannel_Scroll_1);
             this.hScrollChannel.ValueChanged += new System.EventHandler(this.hScrollChannel_ValueChanged);
             // 
-            // label5
+            // lblC
             // 
-            this.label5.AutoSize = true;
-            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(3, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(69, 24);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "C: 1/3";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblC.AutoSize = true;
+            this.lblC.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblC.Location = new System.Drawing.Point(3, 0);
+            this.lblC.Name = "lblC";
+            this.lblC.Size = new System.Drawing.Size(69, 24);
+            this.lblC.TabIndex = 1;
+            this.lblC.Text = "C: 1/3";
+            this.lblC.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cbLUT
             // 
             this.cbLUT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbLUT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbLUT.FormattingEnabled = true;
             this.cbLUT.Items.AddRange(new object[] {
             "Gray",
@@ -171,13 +169,14 @@
             this.checkVisible.TabIndex = 3;
             this.checkVisible.Text = "visible";
             this.checkVisible.UseVisualStyleBackColor = true;
+            this.checkVisible.CheckedChanged += new System.EventHandler(this.checkVisible_CheckedChanged);
             // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.label6, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.lblZ, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.hScrollSlice, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 448);
@@ -187,16 +186,16 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(562, 24);
             this.tableLayoutPanel3.TabIndex = 5;
             // 
-            // label6
+            // lblZ
             // 
-            this.label6.AutoSize = true;
-            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(3, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(69, 24);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "Z: 1/22";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblZ.AutoSize = true;
+            this.lblZ.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblZ.Location = new System.Drawing.Point(3, 0);
+            this.lblZ.Name = "lblZ";
+            this.lblZ.Size = new System.Drawing.Size(69, 24);
+            this.lblZ.TabIndex = 2;
+            this.lblZ.Text = "Z: 1/22";
+            this.lblZ.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // hScrollSlice
             // 
@@ -237,12 +236,12 @@
         private System.Windows.Forms.HScrollBar hScrollSlice;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lblC;
         private System.Windows.Forms.ComboBox cbLUT;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox cbDisplayMode;
+        private System.Windows.Forms.Label lblZ;
         private System.Windows.Forms.CheckBox checkVisible;
+        private System.Windows.Forms.ComboBox cbDisplayMode;
     }
 }
 

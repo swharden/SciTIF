@@ -51,6 +51,12 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="BandC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BandC.Designer.cs">
+      <DependentUpon>BandC.cs</DependentUpon>
+    </Compile>
     <Compile Include="Display.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Path.cs" />
@@ -71,6 +77,9 @@
   <ItemGroup>
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BandC.resx">
+      <DependentUpon>BandC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
