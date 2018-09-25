@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.button12 = new System.Windows.Forms.Button();
-            this.button11 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnPercentile = new System.Windows.Forms.Button();
+            this.btnSet = new System.Windows.Forms.Button();
+            this.btnReset = new System.Windows.Forms.Button();
+            this.btnAutoAll = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -60,10 +60,10 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.button12);
-            this.groupBox6.Controls.Add(this.button11);
-            this.groupBox6.Controls.Add(this.button2);
-            this.groupBox6.Controls.Add(this.button1);
+            this.groupBox6.Controls.Add(this.btnPercentile);
+            this.groupBox6.Controls.Add(this.btnSet);
+            this.groupBox6.Controls.Add(this.btnReset);
+            this.groupBox6.Controls.Add(this.btnAutoAll);
             this.groupBox6.Location = new System.Drawing.Point(3, 285);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(165, 72);
@@ -71,41 +71,42 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Controls";
             // 
-            // button12
+            // btnPercentile
             // 
-            this.button12.Location = new System.Drawing.Point(84, 45);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(71, 20);
-            this.button12.TabIndex = 13;
-            this.button12.Text = "Percentile";
-            this.button12.UseVisualStyleBackColor = true;
+            this.btnPercentile.Location = new System.Drawing.Point(84, 45);
+            this.btnPercentile.Name = "btnPercentile";
+            this.btnPercentile.Size = new System.Drawing.Size(71, 20);
+            this.btnPercentile.TabIndex = 13;
+            this.btnPercentile.Text = "Percentile";
+            this.btnPercentile.UseVisualStyleBackColor = true;
             // 
-            // button11
+            // btnSet
             // 
-            this.button11.Location = new System.Drawing.Point(7, 45);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(71, 20);
-            this.button11.TabIndex = 12;
-            this.button11.Text = "Set";
-            this.button11.UseVisualStyleBackColor = true;
+            this.btnSet.Location = new System.Drawing.Point(7, 45);
+            this.btnSet.Name = "btnSet";
+            this.btnSet.Size = new System.Drawing.Size(71, 20);
+            this.btnSet.TabIndex = 12;
+            this.btnSet.Text = "Set";
+            this.btnSet.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // btnReset
             // 
-            this.button2.Location = new System.Drawing.Point(84, 19);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(71, 20);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "Reset";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnReset.Location = new System.Drawing.Point(84, 19);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(71, 20);
+            this.btnReset.TabIndex = 11;
+            this.btnReset.Text = "Reset";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
-            // button1
+            // btnAutoAll
             // 
-            this.button1.Location = new System.Drawing.Point(7, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(71, 20);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "Auto";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnAutoAll.Location = new System.Drawing.Point(7, 19);
+            this.btnAutoAll.Name = "btnAutoAll";
+            this.btnAutoAll.Size = new System.Drawing.Size(71, 20);
+            this.btnAutoAll.TabIndex = 10;
+            this.btnAutoAll.Text = "Auto";
+            this.btnAutoAll.UseVisualStyleBackColor = true;
             // 
             // groupBox5
             // 
@@ -119,7 +120,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.White;
+            this.pictureBox1.BackColor = System.Drawing.Color.DarkGray;
             this.pictureBox1.Location = new System.Drawing.Point(6, 19);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(153, 97);
@@ -294,10 +295,10 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Button button12;
-        private System.Windows.Forms.Button button11;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnPercentile;
+        private System.Windows.Forms.Button btnSet;
+        private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.Button btnAutoAll;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.GroupBox groupBox3;

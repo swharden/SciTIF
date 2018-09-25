@@ -30,12 +30,32 @@ namespace SciTIFlib
 
             public void SetMin(int min)
             {
+                if (min > max)
+                    min = max;
                 this.min = min;
             }
 
             public void SetMax(int max)
             {
+                if (max < min)
+                    max = min;
                 this.max = max;
+            }
+
+            public Bitmap CreateHistogram(Size size)
+            {
+                Bitmap bmp = new Bitmap(size.Width, size.Height);
+                Graphics gfx = Graphics.FromImage(bmp);
+                gfx.Clear(Color.White);
+
+                Rectangle rect = new Rectangle(0, 0, size.Width - 1, size.Height - 1);
+                gfx.DrawRectangle(Pens.Black, rect);
+
+                int pointMin = size.Width * min / (limitMax - limitMin);
+                int pointMax = size.Width * max / (limitMax - limitMin);
+                gfx.DrawLine(Pens.Black, new Point(pointMin, size.Height - 1), new Point(pointMax, 0));
+
+                return bmp;
             }
 
         }
@@ -50,6 +70,9 @@ namespace SciTIFlib
 
         public void UpdateGuiFromDisplayLimits()
         {
+            // histogram
+            pictureBox1.Image = dispLim.CreateHistogram(pictureBox1.Size);
+
             // minimum
             nudMin.Maximum = dispLim.limitMax;
             nudMin.Minimum = dispLim.limitMin;
@@ -65,7 +88,6 @@ namespace SciTIFlib
             scrollMax.Maximum = dispLim.limitMax;
             scrollMax.Minimum = dispLim.limitMin;
             scrollMax.Value = dispLim.max;
-
         }
 
         private void nudMin_ValueChanged(object sender, EventArgs e)
@@ -95,11 +117,20 @@ namespace SciTIFlib
         private void btnMinFull_Click(object sender, EventArgs e)
         {
             dispLim.SetMin(dispLim.limitMin);
+            UpdateGuiFromDisplayLimits();
         }
 
         private void btnMaxFull_Click(object sender, EventArgs e)
         {
             dispLim.SetMax(dispLim.limitMax);
+            UpdateGuiFromDisplayLimits();
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            dispLim.SetMin(dispLim.limitMin);
+            dispLim.SetMax(dispLim.limitMax);
+            UpdateGuiFromDisplayLimits();
         }
     }
 }
