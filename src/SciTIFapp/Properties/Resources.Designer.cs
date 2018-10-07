@@ -61,7 +61,7 @@ namespace SciTIFapp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0.1.3.
+        ///   Looks up a localized string similar to 0.1.4.
         /// </summary>
         internal static string version {
             get {

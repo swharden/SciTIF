@@ -24,14 +24,20 @@ namespace SciTIFapp
 
         public FormMain()
         {
-            InitializeComponent();            
+            InitializeComponent();
+
+            // prepare GUI settings
+            pictureBox1.BackColor = SystemColors.Control;
+            splitContainer1.Panel1Collapsed = true;
+
+            // do important stuff
             Log($"SciTIF {version}");
             CheckCommandLineArguments();
         }
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            formConsole.Visible = true;
+            
         }
 
         private void CheckCommandLineArguments()
@@ -119,6 +125,7 @@ namespace SciTIFapp
             else
                 SetImage(imageFiles[thisIndex + 1]);
         }
+
         public void NavigatePrevious()
         {
             Log("Previous image...");
@@ -132,50 +139,89 @@ namespace SciTIFapp
         }
 
         // ######################################################################
+        // KEY CAPTURE ACTIONS (forward to GUI actions)
+
+        private void FormMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            Log($"Keypress: {e.KeyCode}");
+            if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Up)
+                nextToolStripMenuItem_Click(null, null);
+            else if (e.KeyCode == Keys.Right || e.KeyCode == Keys.Down)
+                previousToolStripMenuItem_Click(null, null);
+            else if (e.KeyCode == Keys.C)
+                developerConsoleToolStripMenuItem_Click(null, null);
+            else if (e.KeyCode == Keys.N)
+                navigatorToolStripMenuItem_Click(null, null);
+            else if (ModifierKeys == Keys.Control && e.KeyCode == Keys.W)
+                exitToolStripMenuItem_Click(null, null);
+            else if (ModifierKeys == Keys.Control && e.KeyCode == Keys.O)
+                openToolStripMenuItem_Click(null, null);
+            else if (ModifierKeys == Keys.Control && e.KeyCode == Keys.S)
+                saveAsToolStripMenuItem_Click(null, null);
+            else if (e.KeyCode == Keys.F5)
+                rescanFolderToolStripMenuItem_Click(null, null);
+            else
+                Log("Keypress was not handled.");
+
+            // don't let other objects process this command
+            e.Handled = true;
+        }
+
+        // ######################################################################
         // GUI ACTIONS
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
+
         private void sciTIFProjectPageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/swharden/SciTIF");
         }
+
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormAbout frm = new FormAbout();
             frm.ShowDialog();
         }
+
         private void developerConsoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             formConsole.Visible = true;
             formConsole.BringToFront();
         }
+
         private void blackToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pictureBox1.BackColor = Color.Black;
         }
+
         private void whiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pictureBox1.BackColor = Color.White;
         }
+
         private void blueDarkToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pictureBox1.BackColor = Color.Navy;
         }
+
         private void grayDarkToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pictureBox1.BackColor = Color.DarkGray;
         }
+
         private void grayLightToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pictureBox1.BackColor = Color.LightGray;
         }
+
         private void defaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pictureBox1.BackColor = SystemColors.Control;
         }
+
         private void magentaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pictureBox1.BackColor = Color.Magenta;
@@ -189,21 +235,6 @@ namespace SciTIFapp
             SetImage(selectedFilePath);
         }
 
-        private void FormMain_KeyDown(object sender, KeyEventArgs e)
-        {
-            Log($"Keypress: {e.KeyCode}");
-
-            if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Up)
-                NavigatePrevious();
-            else if (e.KeyCode == Keys.Right || e.KeyCode == Keys.Down)
-                NavigateNext();
-            else
-                Log("Keypress was not handled.");
-
-            // don't let other objects process this command
-            e.Handled = true;
-        }
-
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog diag = new OpenFileDialog();
@@ -215,6 +246,44 @@ namespace SciTIFapp
             if (diag.ShowDialog() == DialogResult.OK) {
                 SetImage(diag.FileName);
             }
+        }
+
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
+
+        private void navigatorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            splitContainer1.Panel1Collapsed = !splitContainer1.Panel1Collapsed;
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog savefile = new SaveFileDialog();
+            savefile.FileName = System.IO.Path.GetFileNameWithoutExtension(imageFilePath) + "_modified.jpg";
+            savefile.Filter = "JPG Files (*.jpg)|*.jpg";
+            savefile.Filter += "|PNG files (*.png)|*.png";
+            savefile.Filter += "|TIF files (*.tif)|*.tif";
+            savefile.Filter += "|All files (*.*)|*.*";
+            if (savefile.ShowDialog() == DialogResult.OK) {
+                Log($"Saving: {savefile.FileName}");
+            }
+        }
+
+        private void nextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NavigateNext();
+        }
+
+        private void previousToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NavigatePrevious();
+        }
+
+        private void rescanFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ScanFolder(imageFolderPath);
         }
     }
 }
