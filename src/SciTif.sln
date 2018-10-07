@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sandbox", "sandbox\sandbox.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sandbox3", "sandbox3\sandbox3.csproj", "{91E7763E-B438-46C1-B2D6-42C7B2D42584}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriConDemo", "BriConDemo\BriConDemo.csproj", "{8DE6E673-910E-45AA-872D-72F3BB60ECFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriConUC", "BriConUC\BriConUC.csproj", "{7A216FDF-5C90-4E61-8564-A63A77BC3E48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{91E7763E-B438-46C1-B2D6-42C7B2D42584}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91E7763E-B438-46C1-B2D6-42C7B2D42584}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91E7763E-B438-46C1-B2D6-42C7B2D42584}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DE6E673-910E-45AA-872D-72F3BB60ECFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DE6E673-910E-45AA-872D-72F3BB60ECFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DE6E673-910E-45AA-872D-72F3BB60ECFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DE6E673-910E-45AA-872D-72F3BB60ECFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A216FDF-5C90-4E61-8564-A63A77BC3E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A216FDF-5C90-4E61-8564-A63A77BC3E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A216FDF-5C90-4E61-8564-A63A77BC3E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A216FDF-5C90-4E61-8564-A63A77BC3E48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
