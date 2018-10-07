@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SciTIFlib", "SciTifLib\SciTIFlib.csproj", "{8094CD1E-0B0E-45A7-80F5-277850067D9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SciTIFbrowser", "SciTIFbrowser\SciTIFbrowser.csproj", "{F404E4E5-220F-4365-B830-2594E0136516}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sandbox", "sandbox\sandbox.csproj", "{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sandbox3", "sandbox3\sandbox3.csproj", "{91E7763E-B438-46C1-B2D6-42C7B2D42584}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriConDemo", "BriConDemo\BriConDemo.csproj", "{8DE6E673-910E-45AA-872D-72F3BB60ECFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriConUC", "BriConUC\BriConUC.csproj", "{7A216FDF-5C90-4E61-8564-A63A77BC3E48}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8094CD1E-0B0E-45A7-80F5-277850067D9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8094CD1E-0B0E-45A7-80F5-277850067D9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8094CD1E-0B0E-45A7-80F5-277850067D9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8094CD1E-0B0E-45A7-80F5-277850067D9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F404E4E5-220F-4365-B830-2594E0136516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F404E4E5-220F-4365-B830-2594E0136516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F404E4E5-220F-4365-B830-2594E0136516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F404E4E5-220F-4365-B830-2594E0136516}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4BB991F-F401-47CC-9872-9A7CE2CDA9C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E7763E-B438-46C1-B2D6-42C7B2D42584}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E7763E-B438-46C1-B2D6-42C7B2D42584}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E7763E-B438-46C1-B2D6-42C7B2D42584}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E7763E-B438-46C1-B2D6-42C7B2D42584}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DE6E673-910E-45AA-872D-72F3BB60ECFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DE6E673-910E-45AA-872D-72F3BB60ECFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DE6E673-910E-45AA-872D-72F3BB60ECFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DE6E673-910E-45AA-872D-72F3BB60ECFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A216FDF-5C90-4E61-8564-A63A77BC3E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A216FDF-5C90-4E61-8564-A63A77BC3E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A216FDF-5C90-4E61-8564-A63A77BC3E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A216FDF-5C90-4E61-8564-A63A77BC3E48}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9E17967B-8C4B-4872-87C6-0A2B9412B5F5}
+	EndGlobalSection
+EndGlobal
