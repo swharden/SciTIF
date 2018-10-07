@@ -17,6 +17,7 @@ namespace SciTIFapp
         public List<string> imageFiles = new List<string>();
         public readonly string version = Properties.Resources.ResourceManager.GetString("version");
 
+        bool stretchImageToFitWindow = true;
         FormConsole formConsole = new FormConsole();
 
         // ######################################################################
@@ -27,7 +28,7 @@ namespace SciTIFapp
             InitializeComponent();
 
             // prepare GUI settings
-            pictureBox1.BackColor = SystemColors.Control;
+            pbImage.BackColor = SystemColors.Control;
             splitContainer1.Panel1Collapsed = true;
 
             // do important stuff
@@ -86,29 +87,45 @@ namespace SciTIFapp
 
         public void SetImage(string imageFilePath)
         {
+            // prevent reloading the same image
             if (this.imageFilePath == imageFilePath)
             {
-                Log($"Image already loaded: {imageFilePath}");
-                return;
+                Log($"Image already loaded!");
+            }
+            else
+            {
+                Log($"Loading image: {imageFilePath}");
+                System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                SimpleImageLoader img = new SimpleImageLoader(imageFilePath);
+                pbImage.Image = img.bmpPreview;
+                double timeMS = stopwatch.ElapsedTicks * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
+                System.Console.WriteLine(string.Format("Image loaded in {0:0.00} ms", timeMS));
+                pbImage.Width = img.bmpPreview.Width;
+                pbImage.Height = img.bmpPreview.Height;
             }
 
             this.imageFilePath = imageFilePath;
             string imageFilename = System.IO.Path.GetFileName(imageFilePath);
-            Log($"setting image: {imageFilePath}");
 
-            // update the GUI to reflect the new image
+            // set picturebox size based on whether or not it should be stretched
+            if (stretchImageToFitWindow)
+            {
+                pbImage.Dock = DockStyle.Fill;
+                panelImage.AutoScroll = false;
+            }
+            else
+            {
+                pbImage.Dock = DockStyle.None;
+                panelImage.AutoScroll = true;
+            }
+
+            // update the GUI to reflect the new image file name
             this.Text = $"SciTIF - {imageFilename}";
-
-            // load the image and display it
-            SimpleImageLoader img = new SimpleImageLoader(imageFilePath);
-            pictureBox1.Image = img.bmpPreview;
 
             // if this image is in a different folder, scan the new folder to aid navigation
             string thisImageFolder = System.IO.Path.GetDirectoryName(imageFilePath);
             if (this.imageFolderPath != thisImageFolder)
-            {
                 ScanFolder(thisImageFolder);
-            }
 
             // ensure the listbox selection is accurate
             lbFiles.SelectedIndex = imageFiles.IndexOf(imageFilePath);
@@ -194,37 +211,37 @@ namespace SciTIFapp
 
         private void blackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox1.BackColor = Color.Black;
+            pbImage.BackColor = Color.Black;
         }
 
         private void whiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox1.BackColor = Color.White;
+            pbImage.BackColor = Color.White;
         }
 
         private void blueDarkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox1.BackColor = Color.Navy;
+            pbImage.BackColor = Color.Navy;
         }
 
         private void grayDarkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox1.BackColor = Color.DarkGray;
+            pbImage.BackColor = Color.DarkGray;
         }
 
         private void grayLightToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox1.BackColor = Color.LightGray;
+            pbImage.BackColor = Color.LightGray;
         }
 
         private void defaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox1.BackColor = SystemColors.Control;
+            pbImage.BackColor = SystemColors.Control;
         }
 
         private void magentaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox1.BackColor = Color.Magenta;
+            pbImage.BackColor = Color.Magenta;
         }
 
         private void lbFiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -284,6 +301,29 @@ namespace SciTIFapp
         private void rescanFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ScanFolder(imageFolderPath);
+        }
+
+        private void pbImage_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        public void toggleStretchImageToFitWindow()
+        {
+            Log("Toggling image stretch mode");
+            stretchImageToFitWindow = !stretchImageToFitWindow;
+            fitImageToWindowToolStripMenuItem.Checked = stretchImageToFitWindow;
+            SetImage(imageFilePath);
+        }
+
+        private void fitImageToWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toggleStretchImageToFitWindow();
+        }
+
+        private void pbImage_DoubleClick(object sender, EventArgs e)
+        {
+            toggleStretchImageToFitWindow();
         }
     }
 }
