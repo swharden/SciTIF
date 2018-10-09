@@ -18,7 +18,6 @@ namespace SciTIFapp
         public readonly string version = Properties.Resources.ResourceManager.GetString("version");
 
         bool stretchImageToFitWindow = true;
-        FormConsole formConsole = new FormConsole();
 
         // ######################################################################
         // STARTUP BEHAVIOR
@@ -30,6 +29,7 @@ namespace SciTIFapp
             // prepare GUI settings
             pbImage.BackColor = SystemColors.Control;
             splitContainer1.Panel1Collapsed = true;
+            splitContainer2.Panel2Collapsed = true;
 
             // do important stuff
             Log($"SciTIF {version}");
@@ -38,14 +38,14 @@ namespace SciTIFapp
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void CheckCommandLineArguments()
         {
             string[] args = Environment.GetCommandLineArgs();
             string argsString = "";
-            for (int i=0; i<args.Length; i++)
+            for (int i = 0; i < args.Length; i++)
                 argsString += $"\n  [{i}] \"{args[i]}\"";
             Log($"Command line arguments: {argsString}");
 
@@ -56,11 +56,35 @@ namespace SciTIFapp
 
         // ######################################################################
         // CORE METHODS
-        
-        public void Log(string message)
+
+        System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        double lastCommandTime;
+        public void Log(string message, bool breakBefore = true)
         {
             Console.WriteLine(message);
-            formConsole.Log(message);
+
+            // format this log line
+            double timeSec = (double)stopwatch.ElapsedTicks / System.Diagnostics.Stopwatch.Frequency;
+            message = string.Format("[{0:000.000}] {1}", timeSec, message);
+
+            // add a line break by default
+            if (breakBefore && rtbConsole.Text.Length > 0)
+                message = "\n" + message;
+
+            // add another line break if it's the first line in a while
+            double timeDiffFromLastCommand = Math.Abs(timeSec - lastCommandTime);
+            lastCommandTime = timeSec;
+            if (timeDiffFromLastCommand > .25 && rtbConsole.Text.Length > 0)
+                message = "\n" + message;
+
+            // update the text area
+            rtbConsole.Text += message;
+
+            // place the caret at the end
+            rtbConsole.SelectionStart = rtbConsole.Text.Length;
+
+            // scroll to the caret
+            rtbConsole.ScrollToCaret(); 
         }
 
         public void ScanFolder(string folderPath)
@@ -187,6 +211,8 @@ namespace SciTIFapp
         // ######################################################################
         // GUI ACTIONS
 
+
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -205,8 +231,9 @@ namespace SciTIFapp
 
         private void developerConsoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            formConsole.Visible = true;
-            formConsole.BringToFront();
+            //formConsole.Visible = true;
+            //formConsole.BringToFront();
+            toggleDeveloperConsole();
         }
 
         private void blackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -259,8 +286,9 @@ namespace SciTIFapp
             diag.Filter += "|JPG Files (*.jpg, *.jpeg)|*.jpg;*.jpeg";
             diag.Filter += "|PNG Files (*.png)|*.png;*.png";
             diag.Filter += "|BMP Files (*.bmp)|*.bmp;*.bmp";
-            diag.Filter  += "|All files (*.*)|*.*";
-            if (diag.ShowDialog() == DialogResult.OK) {
+            diag.Filter += "|All files (*.*)|*.*";
+            if (diag.ShowDialog() == DialogResult.OK)
+            {
                 SetImage(diag.FileName);
             }
         }
@@ -283,7 +311,8 @@ namespace SciTIFapp
             savefile.Filter += "|PNG files (*.png)|*.png";
             savefile.Filter += "|TIF files (*.tif)|*.tif";
             savefile.Filter += "|All files (*.*)|*.*";
-            if (savefile.ShowDialog() == DialogResult.OK) {
+            if (savefile.ShowDialog() == DialogResult.OK)
+            {
                 Log($"Saving: {savefile.FileName}");
             }
         }
@@ -324,6 +353,11 @@ namespace SciTIFapp
         private void pbImage_DoubleClick(object sender, EventArgs e)
         {
             toggleStretchImageToFitWindow();
+        }
+
+        private void toggleDeveloperConsole()
+        {
+            splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
         }
     }
 }
