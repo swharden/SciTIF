@@ -18,6 +18,12 @@ namespace SciTIFapp
         public readonly string path;
         public string logText = "SimpleImageLoader log:";
 
+        // image propeties 
+        public int depthSource;
+        public int depthDisplay;
+        public int valueMin;
+        public int valueMax;
+
         public SimpleImageLoader(string path)
         {
             this.path = path;
@@ -130,14 +136,14 @@ namespace SciTIFapp
                 pixelsOutput[i] = (byte)(pixelValue);
             }
 
-            // data coming in has a stide width a multiple of [?], so cut-out stride padding
-            int stideMultiple = 4;
-            int strideOverhang = imageSize.Width % stideMultiple;
-            Log($"Stride overhang: {strideOverhang}");
+            // input bytes are padded such that stide is a multiple of 4 bytes, so trim it off
+            int strideByteMultiple = 4;
+            int strideOverhang = imageSize.Width % strideByteMultiple;
+            Log($"Width-stride overhang: {strideOverhang} bytes");
             if (strideOverhang > 0)
             {
-                int strideBytesNeededPerRow = stideMultiple - (strideOverhang);
-                Log($"Trimming {strideBytesNeededPerRow} bytes from the end of each row (stride mismatch)");
+                int strideBytesNeededPerRow = strideByteMultiple - (strideOverhang);
+                Log($"Trimming {strideBytesNeededPerRow} extra bytes from the end of each row");
                 byte[] pixelsOutputOriginal = new byte[pixelCount];
                 Array.Copy(pixelsOutput, pixelsOutputOriginal, pixelCount);
                 pixelsOutput = new byte[pixelCount + strideBytesNeededPerRow * imageSize.Height];
@@ -164,6 +170,12 @@ namespace SciTIFapp
             Marshal.Copy(pixelsOutput, 0, bmpData.Scan0, pixelsOutput.Length);
             Log($"pixelsOutput.Length: {pixelsOutput.Length}, bytes {bmpData.Stride * bmpData.Height}");
             bmp.UnlockBits(bmpData);
+
+            // update class-level variables with image information
+            this.depthSource = sourceImageDepth;
+            this.depthDisplay = dataDepth;
+            this.valueMin = pixelValueMin;
+            this.valueMax = pixelValueMax;
 
             return bmp;
         }

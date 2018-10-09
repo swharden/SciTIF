@@ -53,6 +53,13 @@
             this.panelImage = new System.Windows.Forms.Panel();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.rtbConsole = new System.Windows.Forms.RichTextBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lblDepthFile = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblResolution = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblDepthData = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblLimitMin = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblSizeKb = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblLimitMax = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -64,6 +71,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -315,7 +323,7 @@
             this.pbImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbImage.Location = new System.Drawing.Point(0, 0);
             this.pbImage.Name = "pbImage";
-            this.pbImage.Size = new System.Drawing.Size(490, 194);
+            this.pbImage.Size = new System.Drawing.Size(490, 183);
             this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbImage.TabIndex = 1;
             this.pbImage.TabStop = false;
@@ -328,7 +336,7 @@
             this.lbFiles.FormattingEnabled = true;
             this.lbFiles.Location = new System.Drawing.Point(0, 0);
             this.lbFiles.Name = "lbFiles";
-            this.lbFiles.Size = new System.Drawing.Size(154, 194);
+            this.lbFiles.Size = new System.Drawing.Size(154, 183);
             this.lbFiles.TabIndex = 2;
             this.lbFiles.SelectedIndexChanged += new System.EventHandler(this.lbFiles_SelectedIndexChanged);
             // 
@@ -345,7 +353,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panelImage);
-            this.splitContainer1.Size = new System.Drawing.Size(648, 194);
+            this.splitContainer1.Size = new System.Drawing.Size(648, 183);
             this.splitContainer1.SplitterDistance = 154;
             this.splitContainer1.TabIndex = 3;
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
@@ -356,7 +364,7 @@
             this.panelImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelImage.Location = new System.Drawing.Point(0, 0);
             this.panelImage.Name = "panelImage";
-            this.panelImage.Size = new System.Drawing.Size(490, 194);
+            this.panelImage.Size = new System.Drawing.Size(490, 183);
             this.panelImage.TabIndex = 2;
             // 
             // splitContainer2
@@ -373,8 +381,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.rtbConsole);
-            this.splitContainer2.Size = new System.Drawing.Size(648, 430);
-            this.splitContainer2.SplitterDistance = 194;
+            this.splitContainer2.Size = new System.Drawing.Size(648, 406);
+            this.splitContainer2.SplitterDistance = 183;
             this.splitContainer2.TabIndex = 4;
             // 
             // rtbConsole
@@ -383,9 +391,66 @@
             this.rtbConsole.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtbConsole.Location = new System.Drawing.Point(0, 0);
             this.rtbConsole.Name = "rtbConsole";
-            this.rtbConsole.Size = new System.Drawing.Size(648, 232);
+            this.rtbConsole.Size = new System.Drawing.Size(648, 219);
             this.rtbConsole.TabIndex = 0;
             this.rtbConsole.Text = "developer console";
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblDepthFile,
+            this.lblDepthData,
+            this.lblResolution,
+            this.lblSizeKb,
+            this.lblLimitMin,
+            this.lblLimitMax});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 430);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(648, 24);
+            this.statusStrip1.TabIndex = 1;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // lblDepthFile
+            // 
+            this.lblDepthFile.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblDepthFile.Name = "lblDepthFile";
+            this.lblDepthFile.Size = new System.Drawing.Size(55, 19);
+            this.lblDepthFile.Text = "8-bit file";
+            // 
+            // lblResolution
+            // 
+            this.lblResolution.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblResolution.Name = "lblResolution";
+            this.lblResolution.Size = new System.Drawing.Size(58, 19);
+            this.lblResolution.Text = "1024x768";
+            // 
+            // lblDepthData
+            // 
+            this.lblDepthData.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblDepthData.Name = "lblDepthData";
+            this.lblDepthData.Size = new System.Drawing.Size(68, 19);
+            this.lblDepthData.Text = "12-bit data";
+            // 
+            // lblLimitMin
+            // 
+            this.lblLimitMin.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblLimitMin.Name = "lblLimitMin";
+            this.lblLimitMin.Size = new System.Drawing.Size(50, 19);
+            this.lblLimitMin.Text = "Min: 13";
+            // 
+            // lblSizeKb
+            // 
+            this.lblSizeKb.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblSizeKb.Name = "lblSizeKb";
+            this.lblSizeKb.Size = new System.Drawing.Size(60, 19);
+            this.lblSizeKb.Text = "132.25 kB";
+            // 
+            // lblLimitMax
+            // 
+            this.lblLimitMax.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblLimitMax.Name = "lblLimitMax";
+            this.lblLimitMax.Size = new System.Drawing.Size(57, 19);
+            this.lblLimitMax.Text = "Max: 212";
             // 
             // FormMain
             // 
@@ -394,6 +459,7 @@
             this.ClientSize = new System.Drawing.Size(648, 454);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
@@ -413,6 +479,8 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -457,6 +525,13 @@
         private System.Windows.Forms.ToolStripMenuItem fitImageToWindowToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.RichTextBox rtbConsole;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel lblDepthFile;
+        private System.Windows.Forms.ToolStripStatusLabel lblResolution;
+        private System.Windows.Forms.ToolStripStatusLabel lblDepthData;
+        private System.Windows.Forms.ToolStripStatusLabel lblSizeKb;
+        private System.Windows.Forms.ToolStripStatusLabel lblLimitMin;
+        private System.Windows.Forms.ToolStripStatusLabel lblLimitMax;
     }
 }
 

@@ -111,6 +111,8 @@ namespace SciTIFapp
 
         public void SetImage(string imageFilePath)
         {
+
+
             // prevent reloading the same image
             if (this.imageFilePath == imageFilePath)
             {
@@ -118,6 +120,7 @@ namespace SciTIFapp
             }
             else
             {
+                // load the new image data
                 Log($"Loading image: {imageFilePath}");
                 System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
                 SimpleImageLoader img = new SimpleImageLoader(imageFilePath);
@@ -125,12 +128,22 @@ namespace SciTIFapp
                 pbImage.Image = img.bmpPreview;
                 double timeMS = stopwatch.ElapsedTicks * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
                 System.Console.WriteLine(string.Format("Image loaded in {0:0.00} ms", timeMS));
+
+                // update class level variables 
+                this.imageFilePath = imageFilePath;
+
+                // adjust parts of the GUI which depend on the image info
                 pbImage.Width = img.bmpPreview.Width;
                 pbImage.Height = img.bmpPreview.Height;
+                this.Text = $"SciTIF - {System.IO.Path.GetFileName(imageFilePath)}";
+                lblDepthFile.Text = $"file: {img.depthSource}-bit";
+                lblDepthData.Text = $"display: {img.depthDisplay}-bit";
+                double fileSizeKb = new System.IO.FileInfo(imageFilePath).Length / 1e3;
+                lblSizeKb.Text = $"{fileSizeKb} kB";
+                lblResolution.Text = $"{img.bmpPreview.Width}x{img.bmpPreview.Height}";
+                lblLimitMin.Text = $"min: {img.valueMin}";
+                lblLimitMax.Text = $"max: {img.valueMax}";
             }
-
-            this.imageFilePath = imageFilePath;
-            string imageFilename = System.IO.Path.GetFileName(imageFilePath);
 
             // set picturebox size based on whether or not it should be stretched
             if (stretchImageToFitWindow)
@@ -143,9 +156,6 @@ namespace SciTIFapp
                 pbImage.Dock = DockStyle.None;
                 panelImage.AutoScroll = true;
             }
-
-            // update the GUI to reflect the new image file name
-            this.Text = $"SciTIF - {imageFilename}";
 
             // if this image is in a different folder, scan the new folder to aid navigation
             string thisImageFolder = System.IO.Path.GetDirectoryName(imageFilePath);
