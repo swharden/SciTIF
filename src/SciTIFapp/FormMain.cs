@@ -121,6 +121,7 @@ namespace SciTIFapp
                 Log($"Loading image: {imageFilePath}");
                 System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
                 SimpleImageLoader img = new SimpleImageLoader(imageFilePath);
+                Log(img.logText.Trim());
                 pbImage.Image = img.bmpPreview;
                 double timeMS = stopwatch.ElapsedTicks * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
                 System.Console.WriteLine(string.Format("Image loaded in {0:0.00} ms", timeMS));

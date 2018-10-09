@@ -16,6 +16,7 @@ namespace SciTIFapp
     {
         public Bitmap bmpPreview;
         public readonly string path;
+        public string logText = "SimpleImageLoader log:";
 
         public SimpleImageLoader(string path)
         {
@@ -28,7 +29,15 @@ namespace SciTIFapp
 
         private Bitmap LoadImageNonTiff(string path)
         {
+            Log("Loading image with Bitmap");
             return new Bitmap(path);
+        }
+
+        private void Log(string message)
+        {
+            if (logText!=null)
+                message = "\n  " + message;
+            logText += message;
         }
 
         /// <summary>
@@ -36,7 +45,7 @@ namespace SciTIFapp
         /// </summary>
         private Bitmap LoadImageTiff(string path, int frameNumber = 0)
         {
-            //bmpPreview = new Bitmap(path);
+            Log("Loading image with TiffBitmapDecoder");
 
             // open a file stream and keep it open until we're done reading the file
             Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -47,10 +56,11 @@ namespace SciTIFapp
             {
                 decoder = new TiffBitmapDecoder(stream,
                     BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                Log("TIFF decoder opened successfully");
             }
             catch
             {
-                Console.WriteLine("TiffBitmapDecoder crashed");
+                Log("TIFF decoder crashed");
                 stream.Dispose();
                 return null;
             }
@@ -62,6 +72,7 @@ namespace SciTIFapp
             int bytesPerPixel = sourceImageDepth / 8;
             Size imageSize = new Size(bitmapSource.PixelWidth, bitmapSource.PixelHeight);
             int pixelCount = imageSize.Width * imageSize.Height;
+            Log($"Detected {sourceImageDepth}-bit image ({imageSize.Width}x{imageSize.Height}) with {imageFrames} frames");
 
             // fill a byte array with source data bytes from the file
             int imageByteCount = pixelCount * bytesPerPixel;
@@ -86,16 +97,19 @@ namespace SciTIFapp
             // determine the range of intensity data
             int pixelValueMax = valuesSource.Max();
             int pixelValueMin = valuesSource.Min();
+            Log($"Min/max data values: {pixelValueMin}, {pixelValueMax}");
 
             // predict what bit depth we have based upon pixelValueMax
             int dataDepth = 1;
             while (Math.Pow(2, dataDepth) < pixelValueMax)
                 dataDepth++;
+            Log($"Data bit depth: {dataDepth}");
 
             // determine if we will use the original bit depth or our guessed bit depth
             bool use_detected_camera_depth = true; // should this be an argument?
             if (!use_detected_camera_depth)
                 dataDepth = sourceImageDepth;
+            Log($"Display bit depth: {dataDepth}");
 
             // create and fill a pixel array for the 8-bit final image
             byte[] pixelsOutput = new byte[pixelCount];
