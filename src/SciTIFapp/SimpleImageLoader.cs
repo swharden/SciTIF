@@ -35,7 +35,7 @@ namespace SciTIFapp
 
         private void Log(string message)
         {
-            if (logText!=null)
+            if (logText != null)
                 message = "\n  " + message;
             logText += message;
         }
@@ -70,14 +70,16 @@ namespace SciTIFapp
             BitmapSource bitmapSource = decoder.Frames[frameNumber];
             int sourceImageDepth = bitmapSource.Format.BitsPerPixel;
             int bytesPerPixel = sourceImageDepth / 8;
+            Log($"sourceImageDepth: {sourceImageDepth}");
             Size imageSize = new Size(bitmapSource.PixelWidth, bitmapSource.PixelHeight);
-            int pixelCount = imageSize.Width * imageSize.Height;
             Log($"Detected {sourceImageDepth}-bit image ({imageSize.Width}x{imageSize.Height}) with {imageFrames} frames");
 
             // fill a byte array with source data bytes from the file
+            int pixelCount = imageSize.Width * imageSize.Height;
             int imageByteCount = pixelCount * bytesPerPixel;
             byte[] bytesSource = new byte[imageByteCount];
             bitmapSource.CopyPixels(bytesSource, imageSize.Width * bytesPerPixel, 0);
+            Log($"filled bytesSource with {imageByteCount} bytes about {pixelCount} pixels");
 
             // we can now close the original file
             stream.Dispose();
@@ -128,6 +130,23 @@ namespace SciTIFapp
                 pixelsOutput[i] = (byte)(pixelValue);
             }
 
+            // data coming in has a stide width a multiple of [?], so cut-out stride padding
+            int stideMultiple = 4;
+            int strideOverhang = imageSize.Width % stideMultiple;
+            Log($"Stride overhang: {strideOverhang}");
+            if (strideOverhang > 0)
+            {
+                int strideBytesNeededPerRow = stideMultiple - (strideOverhang);
+                Log($"Trimming {strideBytesNeededPerRow} bytes from the end of each row (stride mismatch)");
+                byte[] pixelsOutputOriginal = new byte[pixelCount];
+                Array.Copy(pixelsOutput, pixelsOutputOriginal, pixelCount);
+                pixelsOutput = new byte[pixelCount + strideBytesNeededPerRow * imageSize.Height];
+                int newStrideWidth = imageSize.Width + strideBytesNeededPerRow;
+                for (int row = 0; row < imageSize.Height; row++)
+                    for (int col = 0; col < imageSize.Width; col++)
+                        pixelsOutput[row * newStrideWidth + col] = pixelsOutputOriginal[row * imageSize.Width + col];
+            }
+
             // create the output bitmap (8-bit indexed color)
             var format = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
             Bitmap bmp = new Bitmap(imageSize.Width, imageSize.Height, format);
@@ -140,8 +159,10 @@ namespace SciTIFapp
 
             // copy the new pixel data into the data of our output bitmap
             var rect = new Rectangle(0, 0, imageSize.Width, imageSize.Height);
-            BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadOnly, format);
+            BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadWrite, format);
+            Log($"bmpData byte size: {bmpData.Stride * bmpData.Height}");
             Marshal.Copy(pixelsOutput, 0, bmpData.Scan0, pixelsOutput.Length);
+            Log($"pixelsOutput.Length: {pixelsOutput.Length}, bytes {bmpData.Stride * bmpData.Height}");
             bmp.UnlockBits(bmpData);
 
             return bmp;
