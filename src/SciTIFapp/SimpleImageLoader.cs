@@ -23,6 +23,8 @@ namespace SciTIFapp
         public int depthDisplay;
         public int valueMin;
         public int valueMax;
+        public int frameCount;
+        public int frame;
 
         public SimpleImageLoader(string path)
         {
@@ -31,12 +33,6 @@ namespace SciTIFapp
                 bmpPreview = LoadImageTiff(path);
             else
                 bmpPreview = LoadImageNonTiff(path);
-        }
-
-        private Bitmap LoadImageNonTiff(string path)
-        {
-            Log("Loading image with Bitmap");
-            return new Bitmap(path);
         }
 
         private void Log(string message)
@@ -176,6 +172,24 @@ namespace SciTIFapp
             this.depthDisplay = dataDepth;
             this.valueMin = pixelValueMin;
             this.valueMax = pixelValueMax;
+            this.frameCount = imageFrames;
+            this.frame = frameNumber;
+
+            return bmp;
+        }
+
+        private Bitmap LoadImageNonTiff(string path)
+        {
+            Log("Loading image with Bitmap");
+            Bitmap bmp = new Bitmap(path);
+
+            // update class-level variables with image information
+            this.depthSource = 8;
+            this.depthDisplay = 8;
+            this.valueMin = 0; // TODO: function to get limits of BMP
+            this.valueMax = 255; // TODO: function to get limits of BMP
+            this.frameCount = 1;
+            this.frame = 1;
 
             return bmp;
         }

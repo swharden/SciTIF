@@ -84,7 +84,7 @@ namespace SciTIFapp
             rtbConsole.SelectionStart = rtbConsole.Text.Length;
 
             // scroll to the caret
-            rtbConsole.ScrollToCaret(); 
+            rtbConsole.ScrollToCaret();
         }
 
         public void ScanFolder(string folderPath)
@@ -109,16 +109,14 @@ namespace SciTIFapp
                 lbFiles.Items.Add(System.IO.Path.GetFileName(filePath));
         }
 
-        public void SetImage(string imageFilePath)
+        public void SetImage(string imageFilePath = "")
         {
-
+            // allow function to be called without argument to update GUI after resize
+            if (imageFilePath == "")
+                imageFilePath = this.imageFilePath;
 
             // prevent reloading the same image
-            if (this.imageFilePath == imageFilePath)
-            {
-                Log($"Image already loaded!");
-            }
-            else
+            if (this.imageFilePath != imageFilePath)
             {
                 // load the new image data
                 Log($"Loading image: {imageFilePath}");
@@ -135,7 +133,7 @@ namespace SciTIFapp
                 // adjust parts of the GUI which depend on the image info
                 pbImage.Width = img.bmpPreview.Width;
                 pbImage.Height = img.bmpPreview.Height;
-                this.Text = $"SciTIF - {System.IO.Path.GetFileName(imageFilePath)}";
+                this.Text = $"SciTIF - {System.IO.Path.GetFileName(imageFilePath)} ({img.frame + 1}/{img.frameCount})";
                 lblDepthFile.Text = $"file: {img.depthSource}-bit";
                 lblDepthData.Text = $"display: {img.depthDisplay}-bit";
                 double fileSizeKb = new System.IO.FileInfo(imageFilePath).Length / 1e3;
@@ -143,6 +141,7 @@ namespace SciTIFapp
                 lblResolution.Text = $"{img.bmpPreview.Width}x{img.bmpPreview.Height}";
                 lblLimitMin.Text = $"min: {img.valueMin}";
                 lblLimitMax.Text = $"max: {img.valueMax}";
+                lblFrame.Text = $"frame {img.frame + 1} of {img.frameCount}";
             }
 
             // set picturebox size based on whether or not it should be stretched
@@ -155,7 +154,10 @@ namespace SciTIFapp
             {
                 pbImage.Dock = DockStyle.None;
                 panelImage.AutoScroll = true;
+                lblZoom.Text = "zoom: 1:1";
             }
+            double zoomFrac = (double)pbImage.Width / pbImage.Image.Width;
+            lblZoom.Text = string.Format("zoom: {0:0.0}%", zoomFrac * 100);
 
             // if this image is in a different folder, scan the new folder to aid navigation
             string thisImageFolder = System.IO.Path.GetDirectoryName(imageFilePath);
@@ -369,6 +371,11 @@ namespace SciTIFapp
         private void toggleDeveloperConsole()
         {
             splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
+        }
+
+        private void FormMain_SizeChanged(object sender, EventArgs e)
+        {
+            SetImage();
         }
     }
 }
