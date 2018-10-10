@@ -26,11 +26,11 @@ namespace SciTIFapp
         public int frameCount;
         public int frame;
 
-        public SimpleImageLoader(string path)
+        public SimpleImageLoader(string path, int frameNumber = 0)
         {
             this.path = path;
             if (path.ToUpper().EndsWith(".TIF") || path.ToUpper().EndsWith(".TIFF"))
-                bmpPreview = LoadImageTiff(path);
+                bmpPreview = LoadImageTiff(path, frameNumber);
             else
                 bmpPreview = LoadImageNonTiff(path);
         }
@@ -189,7 +189,7 @@ namespace SciTIFapp
             this.valueMin = 0; // TODO: function to get limits of BMP
             this.valueMax = 255; // TODO: function to get limits of BMP
             this.frameCount = 1;
-            this.frame = 1;
+            this.frame = 0;
 
             return bmp;
         }

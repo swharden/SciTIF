@@ -56,12 +56,15 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblDepthFile = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblDepthData = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblZoom = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblFrame = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblResolution = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblSizeKb = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblLimitMin = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblLimitMax = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblFrame = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblZoom = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tableImageFrameScroll = new System.Windows.Forms.TableLayoutPanel();
+            this.panelScrollFrame = new System.Windows.Forms.Panel();
+            this.scrollFrame = new System.Windows.Forms.HScrollBar();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -74,6 +77,8 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.tableImageFrameScroll.SuspendLayout();
+            this.panelScrollFrame.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -325,12 +330,13 @@
             this.pbImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbImage.Location = new System.Drawing.Point(0, 0);
             this.pbImage.Name = "pbImage";
-            this.pbImage.Size = new System.Drawing.Size(472, 241);
+            this.pbImage.Size = new System.Drawing.Size(456, 226);
             this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbImage.TabIndex = 1;
             this.pbImage.TabStop = false;
             this.pbImage.Click += new System.EventHandler(this.pbImage_Click);
             this.pbImage.DoubleClick += new System.EventHandler(this.pbImage_DoubleClick);
+            this.pbImage.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbImage_MouseClick);
             // 
             // lbFiles
             // 
@@ -338,7 +344,7 @@
             this.lbFiles.FormattingEnabled = true;
             this.lbFiles.Location = new System.Drawing.Point(0, 0);
             this.lbFiles.Name = "lbFiles";
-            this.lbFiles.Size = new System.Drawing.Size(148, 241);
+            this.lbFiles.Size = new System.Drawing.Size(164, 246);
             this.lbFiles.TabIndex = 2;
             this.lbFiles.SelectedIndexChanged += new System.EventHandler(this.lbFiles_SelectedIndexChanged);
             // 
@@ -354,9 +360,9 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.panelImage);
-            this.splitContainer1.Size = new System.Drawing.Size(624, 241);
-            this.splitContainer1.SplitterDistance = 148;
+            this.splitContainer1.Panel2.Controls.Add(this.tableImageFrameScroll);
+            this.splitContainer1.Size = new System.Drawing.Size(624, 246);
+            this.splitContainer1.SplitterDistance = 164;
             this.splitContainer1.TabIndex = 3;
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
@@ -365,8 +371,9 @@
             this.panelImage.Controls.Add(this.pbImage);
             this.panelImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelImage.Location = new System.Drawing.Point(0, 0);
+            this.panelImage.Margin = new System.Windows.Forms.Padding(0);
             this.panelImage.Name = "panelImage";
-            this.panelImage.Size = new System.Drawing.Size(472, 241);
+            this.panelImage.Size = new System.Drawing.Size(456, 226);
             this.panelImage.TabIndex = 2;
             // 
             // splitContainer2
@@ -384,7 +391,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.rtbConsole);
             this.splitContainer2.Size = new System.Drawing.Size(624, 393);
-            this.splitContainer2.SplitterDistance = 241;
+            this.splitContainer2.SplitterDistance = 246;
             this.splitContainer2.TabIndex = 4;
             // 
             // rtbConsole
@@ -396,7 +403,7 @@
             this.rtbConsole.ForeColor = System.Drawing.Color.Black;
             this.rtbConsole.Location = new System.Drawing.Point(0, 0);
             this.rtbConsole.Name = "rtbConsole";
-            this.rtbConsole.Size = new System.Drawing.Size(624, 148);
+            this.rtbConsole.Size = new System.Drawing.Size(624, 143);
             this.rtbConsole.TabIndex = 0;
             this.rtbConsole.Text = "developer console";
             // 
@@ -431,6 +438,20 @@
             this.lblDepthData.Size = new System.Drawing.Size(68, 19);
             this.lblDepthData.Text = "12-bit data";
             // 
+            // lblZoom
+            // 
+            this.lblZoom.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblZoom.Name = "lblZoom";
+            this.lblZoom.Size = new System.Drawing.Size(39, 19);
+            this.lblZoom.Text = "100%";
+            // 
+            // lblFrame
+            // 
+            this.lblFrame.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblFrame.Name = "lblFrame";
+            this.lblFrame.Size = new System.Drawing.Size(80, 19);
+            this.lblFrame.Text = "frame 1 of 12";
+            // 
             // lblResolution
             // 
             this.lblResolution.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
@@ -459,19 +480,44 @@
             this.lblLimitMax.Size = new System.Drawing.Size(57, 19);
             this.lblLimitMax.Text = "Max: 212";
             // 
-            // lblFrame
+            // tableImageFrameScroll
             // 
-            this.lblFrame.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblFrame.Name = "lblFrame";
-            this.lblFrame.Size = new System.Drawing.Size(80, 19);
-            this.lblFrame.Text = "frame 1 of 12";
+            this.tableImageFrameScroll.ColumnCount = 1;
+            this.tableImageFrameScroll.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableImageFrameScroll.Controls.Add(this.panelImage, 0, 0);
+            this.tableImageFrameScroll.Controls.Add(this.panelScrollFrame, 0, 1);
+            this.tableImageFrameScroll.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableImageFrameScroll.Location = new System.Drawing.Point(0, 0);
+            this.tableImageFrameScroll.Margin = new System.Windows.Forms.Padding(0);
+            this.tableImageFrameScroll.Name = "tableImageFrameScroll";
+            this.tableImageFrameScroll.RowCount = 2;
+            this.tableImageFrameScroll.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableImageFrameScroll.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableImageFrameScroll.Size = new System.Drawing.Size(456, 246);
+            this.tableImageFrameScroll.TabIndex = 3;
             // 
-            // lblZoom
+            // panelScrollFrame
             // 
-            this.lblZoom.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblZoom.Name = "lblZoom";
-            this.lblZoom.Size = new System.Drawing.Size(39, 19);
-            this.lblZoom.Text = "100%";
+            this.panelScrollFrame.Controls.Add(this.scrollFrame);
+            this.panelScrollFrame.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelScrollFrame.Location = new System.Drawing.Point(0, 226);
+            this.panelScrollFrame.Margin = new System.Windows.Forms.Padding(0);
+            this.panelScrollFrame.Name = "panelScrollFrame";
+            this.panelScrollFrame.Size = new System.Drawing.Size(456, 20);
+            this.panelScrollFrame.TabIndex = 3;
+            // 
+            // scrollFrame
+            // 
+            this.scrollFrame.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scrollFrame.LargeChange = 1;
+            this.scrollFrame.Location = new System.Drawing.Point(0, 0);
+            this.scrollFrame.Maximum = 12;
+            this.scrollFrame.Name = "scrollFrame";
+            this.scrollFrame.Size = new System.Drawing.Size(456, 20);
+            this.scrollFrame.TabIndex = 0;
+            this.scrollFrame.Value = 3;
+            this.scrollFrame.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrollFrame_Scroll);
+            this.scrollFrame.ValueChanged += new System.EventHandler(this.scrollFrame_ValueChanged);
             // 
             // FormMain
             // 
@@ -503,6 +549,8 @@
             this.splitContainer2.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.tableImageFrameScroll.ResumeLayout(false);
+            this.panelScrollFrame.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -556,6 +604,9 @@
         private System.Windows.Forms.ToolStripStatusLabel lblLimitMax;
         private System.Windows.Forms.ToolStripStatusLabel lblFrame;
         private System.Windows.Forms.ToolStripStatusLabel lblZoom;
+        private System.Windows.Forms.TableLayoutPanel tableImageFrameScroll;
+        private System.Windows.Forms.Panel panelScrollFrame;
+        private System.Windows.Forms.HScrollBar scrollFrame;
     }
 }
 

@@ -13,6 +13,8 @@ namespace SciTIFapp
     public partial class FormMain : Form
     {
         public string imageFilePath;
+        public int imageFrame;
+        public Size imageSize;
         public string imageFolderPath;
         public List<string> imageFiles = new List<string>();
         public readonly string version = Properties.Resources.ResourceManager.GetString("version");
@@ -25,6 +27,9 @@ namespace SciTIFapp
         public FormMain()
         {
             InitializeComponent();
+
+            // prepare to capture mouse wheel events
+            panelImage.MouseWheel += new MouseEventHandler(this.panelImage_MouseWheel);
 
             // prepare GUI settings
             pbImage.BackColor = SystemColors.Control;
@@ -109,19 +114,19 @@ namespace SciTIFapp
                 lbFiles.Items.Add(System.IO.Path.GetFileName(filePath));
         }
 
-        public void SetImage(string imageFilePath = "")
+        public void SetImage(string imageFilePath = "", int frameNumber = 0)
         {
             // allow function to be called without argument to update GUI after resize
             if (imageFilePath == "")
                 imageFilePath = this.imageFilePath;
 
             // prevent reloading the same image
-            if (this.imageFilePath != imageFilePath)
+            if (this.imageFilePath != imageFilePath || this.imageFrame != frameNumber)
             {
                 // load the new image data
                 Log($"Loading image: {imageFilePath}");
                 System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
-                SimpleImageLoader img = new SimpleImageLoader(imageFilePath);
+                SimpleImageLoader img = new SimpleImageLoader(imageFilePath, frameNumber);
                 Log(img.logText.Trim());
                 pbImage.Image = img.bmpPreview;
                 double timeMS = stopwatch.ElapsedTicks * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
@@ -129,10 +134,10 @@ namespace SciTIFapp
 
                 // update class level variables 
                 this.imageFilePath = imageFilePath;
+                this.imageFrame = frameNumber;
 
                 // adjust parts of the GUI which depend on the image info
-                pbImage.Width = img.bmpPreview.Width;
-                pbImage.Height = img.bmpPreview.Height;
+                imageSize = new Size(img.bmpPreview.Width, img.bmpPreview.Height);
                 this.Text = $"SciTIF - {System.IO.Path.GetFileName(imageFilePath)} ({img.frame + 1}/{img.frameCount})";
                 lblDepthFile.Text = $"file: {img.depthSource}-bit";
                 lblDepthData.Text = $"display: {img.depthDisplay}-bit";
@@ -142,6 +147,8 @@ namespace SciTIFapp
                 lblLimitMin.Text = $"min: {img.valueMin}";
                 lblLimitMax.Text = $"max: {img.valueMax}";
                 lblFrame.Text = $"frame {img.frame + 1} of {img.frameCount}";
+                scrollFrame.Maximum = img.frameCount - 1;
+                scrollFrame.Value = img.frame;
             }
 
             // set picturebox size based on whether or not it should be stretched
@@ -153,11 +160,18 @@ namespace SciTIFapp
             else
             {
                 pbImage.Dock = DockStyle.None;
+                pbImage.Size = imageSize;
                 panelImage.AutoScroll = true;
                 lblZoom.Text = "zoom: 1:1";
             }
             double zoomFrac = (double)pbImage.Width / pbImage.Image.Width;
             lblZoom.Text = string.Format("zoom: {0:0.0}%", zoomFrac * 100);
+
+            // hide the scrollbar for single-frame images
+            if (scrollFrame.Maximum == 0)
+                panelScrollFrame.Visible = false;
+            else
+                panelScrollFrame.Visible = true;
 
             // if this image is in a different folder, scan the new folder to aid navigation
             string thisImageFolder = System.IO.Path.GetDirectoryName(imageFilePath);
@@ -377,5 +391,33 @@ namespace SciTIFapp
         {
             SetImage();
         }
+
+        private void scrollFrame_Scroll(object sender, ScrollEventArgs e)
+        {
+        }
+
+        private void scrollFrame_ValueChanged(object sender, EventArgs e)
+        {
+            SetImage("", scrollFrame.Value);
+        }
+
+        private void pbImage_MouseClick(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void panelImage_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                if (scrollFrame.Value < scrollFrame.Maximum)
+                    scrollFrame.Value += 1;
+            }
+            else
+            {
+                if (scrollFrame.Value > 0)
+                    scrollFrame.Value -= 1;
+            }
+        }
+
     }
 }
