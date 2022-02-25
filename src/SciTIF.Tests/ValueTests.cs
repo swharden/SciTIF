@@ -19,7 +19,7 @@ namespace SciTIF.Tests
                 Console.WriteLine(item);
                 string filePath = Path.Combine(SampleData.DataFolder, fileName);
                 var tif = new TifFile(filePath);
-                Assert.AreEqual(value, tif.Values[y, x], item.ToString());
+                Assert.AreEqual(value, tif.Channels[0].Values[y, x], item.ToString());
             }
         }
     }

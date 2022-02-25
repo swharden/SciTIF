@@ -3,9 +3,9 @@ using System;
 
 namespace SciTIF.TifReaders;
 
-internal class ReaderFloat32 : IReadGrayscale
+internal class ReaderFloat32 : ITifReader
 {
-    public ImageData ReadGrayscale(Tiff tif)
+    public ImageData[] Read(Tiff tif)
     {
         const int bytesPerPixel = 4;
 
@@ -25,6 +25,6 @@ internal class ReaderFloat32 : IReadGrayscale
             }
         }
 
-        return new ImageData(pixelValues);
+        return new ImageData[] { new ImageData(pixelValues) };
     }
 }

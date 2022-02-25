@@ -3,9 +3,9 @@ using System;
 
 namespace SciTIF.TifReaders;
 
-internal class ReaderInt8 : IReadGrayscale
+internal class ReaderInt8 : ITifReader
 {
-    public ImageData ReadGrayscale(Tiff tif)
+    public ImageData[] Read(Tiff tif)
     {
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
@@ -29,6 +29,6 @@ internal class ReaderInt8 : IReadGrayscale
             }
         }
 
-        return new ImageData(pixelValues);
+        return new ImageData[] { new ImageData(pixelValues) };
     }
 }

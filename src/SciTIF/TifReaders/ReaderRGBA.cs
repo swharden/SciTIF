@@ -2,7 +2,7 @@
 
 namespace SciTIF.TifReaders;
 
-internal class ReaderRGB : ITifReader
+internal class ReaderRGBA : ITifReader
 {
     public ImageData[] Read(Tiff tif)
     {
@@ -12,6 +12,7 @@ internal class ReaderRGB : ITifReader
         double[,] valuesR = new double[height, width];
         double[,] valuesG = new double[height, width];
         double[,] valuesB = new double[height, width];
+        double[,] valuesA = new double[height, width];
 
         int[] raster = new int[height * width];
         tif.ReadRGBAImage(width, height, raster, true);
@@ -20,11 +21,11 @@ internal class ReaderRGB : ITifReader
         {
             for (int x = 0; x < width; x++)
             {
-                int sourceY = height - y - 1;
-                int offset = sourceY * width + x;
+                int offset = y * width + x;
                 valuesR[y, x] = Tiff.GetR(raster[offset]);
                 valuesG[y, x] = Tiff.GetG(raster[offset]);
                 valuesB[y, x] = Tiff.GetB(raster[offset]);
+                valuesA[y, x] = Tiff.GetB(raster[offset]);
             }
         }
 
@@ -32,6 +33,7 @@ internal class ReaderRGB : ITifReader
             new ImageData(valuesR),
             new ImageData(valuesG),
             new ImageData(valuesB),
+            new ImageData(valuesA),
         };
     }
 }
