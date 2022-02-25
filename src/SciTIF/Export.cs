@@ -9,6 +9,42 @@ namespace SciTIF;
 
 public static class Export
 {
+    public static void PNG(string filePath, TifFile tif, bool autoScale = false)
+    {
+        if (tif.Channels.Length == 1)
+        {
+            double[,] gray = tif.Channels[0].Values;
+
+            if (autoScale)
+            {
+                gray = Adjust.AutoScale(gray);
+            }
+
+            PNG(filePath, gray);
+            return;
+        }
+        else if (tif.Channels.Length == 3 || tif.Channels.Length == 4)
+        {
+            double[,] r = tif.Channels[0].Values;
+            double[,] g = tif.Channels[1].Values;
+            double[,] b = tif.Channels[2].Values;
+
+            if (autoScale)
+            {
+                r = Adjust.AutoScale(r);
+                g = Adjust.AutoScale(g);
+                b = Adjust.AutoScale(b);
+            }
+
+            PNG(filePath, r, g, b);
+            return;
+        }
+        else
+        {
+            throw new InvalidOperationException("unsupported number of channels");
+        }
+    }
+
     public static void PNG(string filePath, double[,] values)
     {
         using Bitmap bmp = GetBitmapGrayscale(values);

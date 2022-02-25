@@ -51,8 +51,7 @@ namespace SciTIF.Tests
             TifFile tif = new(filePath);
             Console.WriteLine(tif.FormatDescription);
 
-            double[,] scaled = Adjust.AutoScale(tif.Channels[0].Values);
-            Export.PNG("rgb8.png", scaled);
+            Export.PNG("rgb8.png", tif.Channels[0].Values, tif.Channels[1].Values, tif.Channels[2].Values);
 
             Assert.AreEqual(
                 expected: new double[] { 7, 7, 7, 255 },
