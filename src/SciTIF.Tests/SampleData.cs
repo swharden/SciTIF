@@ -40,14 +40,14 @@ namespace SciTIF.Tests
         public static List<(string, int, int, double)> ExpectedResults()
         {
             /* Made with ImageJ macro:
-             *   print("\\Clear");
-             *   titles = getList("image.titles");
-             *   for (i=0; i<titles.length; i++){
-	         *       selectWindow(titles[i]);
-             *       print(titles[i] + ",0,0," + getValue(0,0));
-             *       print(titles[i] + ",1,0," + getValue(1,0));
-             *       print(titles[i] + ",7,3," + getValue(7,3));
-             *   }
+                print("\\Clear");
+                titles = getList("image.titles");
+                for (i=0; i<titles.length; i++){
+	                selectWindow(titles[i]);
+                    print(titles[i] + ",0,0," + getValue(0,0));
+                    print(titles[i] + ",1,0," + getValue(1,0));
+                    print(titles[i] + ",7,3," + getValue(7,3));
+                }
              */
 
             List<(string, int, int, double)> pixelValues = new();
@@ -152,6 +152,29 @@ namespace SciTIF.Tests
             pixelValues.Add(("ZSeries-06082017-1213-682_Cycle00001_Ch2_MIP.tif", 0, 0, 203));
             pixelValues.Add(("ZSeries-06082017-1213-682_Cycle00001_Ch2_MIP.tif", 1, 0, 218));
             pixelValues.Add(("ZSeries-06082017-1213-682_Cycle00001_Ch2_MIP.tif", 7, 3, 189));
+
+            pixelValues.Add(("20220224-09.tif", 0, 0, 271));
+            pixelValues.Add(("20220224-09.tif", 1, 0, 264));
+            pixelValues.Add(("20220224-09.tif", 7, 3, 265));
+
+            pixelValues.Add(("20220224-02.tif", 0, 0, 588));
+            pixelValues.Add(("20220224-02.tif", 1, 0, 595));
+            pixelValues.Add(("20220224-02.tif", 7, 3, 579));
+
+            // TODO: this
+            //pixelValues.Add(("LennaRGB.tif", 0, 0, 162));
+            //pixelValues.Add(("LennaRGB.tif", 1, 0, 161.3333));
+            //pixelValues.Add(("LennaRGB.tif", 7, 3, 162.6667));
+
+            pixelValues.Add(("LennaIndexed.tif", 0, 0, 137));
+            pixelValues.Add(("LennaIndexed.tif", 1, 0, 11));
+            pixelValues.Add(("LennaIndexed.tif", 7, 3, 61));
+
+            // TODO: this
+            //pixelValues.Add(("20220224-ucx.tif", 0, 0, 5));
+            //pixelValues.Add(("20220224-ucx.tif", 1, 0, 5));
+            //pixelValues.Add(("20220224-ucx.tif", 7, 3, 7));
+            //pixelValues.Add(("20220224-ucx.tif", 188, 280, 89)); // 131, 131, 5
 
             return pixelValues;
         }
