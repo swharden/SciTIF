@@ -4,5 +4,5 @@ namespace SciTIF.TifReaders;
 
 public interface IReadGrayscale
 {
-    public double[,] Read(Tiff tif);
+    public ImageData ReadGrayscale(Tiff tif);
 }

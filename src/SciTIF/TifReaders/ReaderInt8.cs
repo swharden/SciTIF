@@ -5,7 +5,7 @@ namespace SciTIF.TifReaders;
 
 internal class ReaderInt8 : IReadGrayscale
 {
-    public double[,] Read(Tiff tif)
+    public ImageData ReadGrayscale(Tiff tif)
     {
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
@@ -29,6 +29,6 @@ internal class ReaderInt8 : IReadGrayscale
             }
         }
 
-        return pixelValues;
+        return new ImageData(pixelValues);
     }
 }

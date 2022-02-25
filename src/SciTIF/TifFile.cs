@@ -9,8 +9,12 @@ public class TifFile
     public readonly string FilePath;
     public int Width => Values.GetLength(1);
     public int Height => Values.GetLength(0);
-    public readonly double[,] Values; // TODO: this is currently only grayscale
+    public readonly ImageData ImageData;
+    public double[,] Values => ImageData.Values; // TODO: this is currently only grayscale
+
     public readonly int BitsPerSample;
+    public readonly int SamplesPerPixel;
+    public readonly string ColorFormat;
 
     public TifFile(string filePath)
     {
@@ -23,10 +27,12 @@ public class TifFile
         using Tiff tif = Tiff.Open(FilePath, "r");
 
         BitsPerSample = tif.GetField(TiffTag.BITSPERSAMPLE)[0].ToInt();
-        string ColorFormat = tif.GetField(TiffTag.PHOTOMETRIC)[0].ToString();
-        int SamplesPerPixel = 1;
+        ColorFormat = tif.GetField(TiffTag.PHOTOMETRIC)[0].ToString();
+        SamplesPerPixel = 1;
         if (tif.GetField(TiffTag.SAMPLESPERPIXEL) is not null)
             SamplesPerPixel = tif.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToInt();
+
+        Console.WriteLine($"Loading {BitsPerSample}-bit {ColorFormat} ({SamplesPerPixel} samples/pixel): {Path.GetFileName(filePath)}");
 
         TifReaders.IReadGrayscale reader;
 
@@ -62,7 +68,7 @@ public class TifFile
             throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel");
         }
 
-        Values = reader.Read(tif);
+        ImageData = reader.ReadGrayscale(tif);
     }
 
     public override string ToString()
