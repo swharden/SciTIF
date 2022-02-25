@@ -100,17 +100,17 @@ namespace SciTIF.Tests
             pixelValues.Add(("calibration-20x-ruler-0.32365.tif", 1, 0, 1896));
             pixelValues.Add(("calibration-20x-ruler-0.32365.tif", 7, 3, 1929));
 
-            //pixelValues.Add(("fluo-3ch-8bitColor.tif", 0, 0, 49.6667)); // TODO: support this type
-            //pixelValues.Add(("fluo-3ch-8bitColor.tif", 1, 0, 15.3333));
-            //pixelValues.Add(("fluo-3ch-8bitColor.tif", 7, 3, 24.6667));
+            pixelValues.Add(("fluo-3ch-8bitColor.tif", 0, 0, 49.6667));
+            pixelValues.Add(("fluo-3ch-8bitColor.tif", 1, 0, 15.3333));
+            pixelValues.Add(("fluo-3ch-8bitColor.tif", 7, 3, 24.6667));
 
-            //pixelValues.Add(("fluo-3ch-8bit-composite.tif", 0, 0, 54)); // TODO: support this type
-            //pixelValues.Add(("fluo-3ch-8bit-composite.tif", 1, 0, 9));
-            //pixelValues.Add(("fluo-3ch-8bit-composite.tif", 7, 3, 29));
+            pixelValues.Add(("fluo-3ch-8bit-composite.tif", 0, 0, 54));
+            pixelValues.Add(("fluo-3ch-8bit-composite.tif", 1, 0, 9));
+            pixelValues.Add(("fluo-3ch-8bit-composite.tif", 7, 3, 29));
 
-            //pixelValues.Add(("fluo-3ch-16bit.tif", 0, 0, 91)); // TODO: support this type
-            //pixelValues.Add(("fluo-3ch-16bit.tif", 1, 0, 76));
-            //pixelValues.Add(("fluo-3ch-16bit.tif", 7, 3, 206));
+            pixelValues.Add(("fluo-3ch-16bit.tif", 0, 0, 91));
+            pixelValues.Add(("fluo-3ch-16bit.tif", 1, 0, 76));
+            pixelValues.Add(("fluo-3ch-16bit.tif", 7, 3, 206));
 
             pixelValues.Add(("LineScan-06092017-1414-623_Cycle00001_Ch1_000001.ome.tif", 0, 0, 247));
             pixelValues.Add(("LineScan-06092017-1414-623_Cycle00001_Ch1_000001.ome.tif", 1, 0, 139));
@@ -171,10 +171,9 @@ namespace SciTIF.Tests
             pixelValues.Add(("20220224-02.tif", 1, 0, 595));
             pixelValues.Add(("20220224-02.tif", 7, 3, 579));
 
-            // TODO: this
-            //pixelValues.Add(("LennaRGB.tif", 0, 0, 162));
-            //pixelValues.Add(("LennaRGB.tif", 1, 0, 161.3333));
-            //pixelValues.Add(("LennaRGB.tif", 7, 3, 162.6667));
+            pixelValues.Add(("LennaRGB.tif", 0, 0, 162));
+            pixelValues.Add(("LennaRGB.tif", 1, 0, 161.3333));
+            pixelValues.Add(("LennaRGB.tif", 7, 3, 162.6667));
 
             pixelValues.Add(("LennaIndexed.tif", 0, 0, 137));
             pixelValues.Add(("LennaIndexed.tif", 1, 0, 11));
@@ -183,7 +182,7 @@ namespace SciTIF.Tests
             pixelValues.Add(("20220224-ucx.tif", 0, 0, 5));
             pixelValues.Add(("20220224-ucx.tif", 1, 0, 5));
             pixelValues.Add(("20220224-ucx.tif", 7, 3, 7));
-            pixelValues.Add(("20220224-ucx.tif", 188, 260, 89)); // 131, 131, 5
+            pixelValues.Add(("20220224-ucx.tif", 188, 260, 89));
 
             return pixelValues;
         }
