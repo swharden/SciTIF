@@ -22,7 +22,7 @@ namespace SciTIF.Tests
 
                 Console.WriteLine($"{fileName} {tif.FormatDescription}");
 
-                double[] channelValues = tif.GetPixel(x, y);
+                double[] channelValues = tif.GetPixel(x, y).Take(3).ToArray(); // ignore alpha (last)
                 double actualMean = Math.Round(channelValues.Sum() / channelValues.Length, 4);
                 Assert.AreEqual(expectedMean, actualMean, $"{fileName} X={x} Y={y} {tif.FormatDescription}");
             }
