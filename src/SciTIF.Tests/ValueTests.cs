@@ -15,11 +15,15 @@ namespace SciTIF.Tests
         {
             foreach (var item in SampleData.ExpectedResults())
             {
-                (string fileName, int x, int y, double value) = item;
+                (string fileName, int x, int y, double expectedMean) = item;
                 Console.WriteLine(item);
                 string filePath = Path.Combine(SampleData.DataFolder, fileName);
                 var tif = new TifFile(filePath);
-                Assert.AreEqual(value, tif.Channels[0].Values[y, x], item.ToString());
+
+                double[] channelValues = tif.GetPixel(x, y);
+                string debugHint = string.Join(", ", channelValues.Select(x => x.ToString()));
+                double actualMean = channelValues.Sum() / channelValues.Length;
+                Assert.AreEqual(expectedMean, actualMean, item.ToString() + "|" + debugHint);
             }
         }
     }

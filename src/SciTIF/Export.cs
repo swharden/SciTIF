@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace SciTIF;
@@ -9,8 +11,14 @@ public static class Export
 {
     public static void PNG(string filePath, double[,] values)
     {
-        using Bitmap bmp = GetBitmap(values);
-        bmp.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+        using Bitmap bmp = GetBitmapGrayscale(values);
+        bmp.Save(filePath, ImageFormat.Png);
+    }
+
+    public static void PNG(string filePath, double[,] r, double[,] g, double[,] b)
+    {
+        using Bitmap bmp = GetBitmapRGB(r, g, b);
+        bmp.Save(filePath, ImageFormat.Png);
     }
 
     private static byte Clamp(double x, byte min = 0, byte max = 255)
@@ -24,29 +32,58 @@ public static class Export
     }
 
     // TODO: implement with SkiaSharp
-    private static Bitmap GetBitmap(double[,] values)
+    private static Bitmap GetBitmapGrayscale(double[,] values)
     {
         int width = values.GetLength(1);
         int height = values.GetLength(0);
         int stride = (width % 4 == 0) ? width : width + 4 - width % 4;
 
-        byte[] pixelsOutput = new byte[stride * height];
+        byte[] bytes = new byte[stride * height];
         for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++)
-                pixelsOutput[y * stride + x] = Clamp(values[y, x]);
+                bytes[y * stride + x] = Clamp(values[y, x]);
 
-        var formatOutput = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
-
-        var rect = new Rectangle(0, 0, width, height);
+        PixelFormat formatOutput = PixelFormat.Format8bppIndexed;
+        Rectangle rect = new(0, 0, width, height);
         Bitmap bmp = new(stride, height, formatOutput);
-        System.Drawing.Imaging.BitmapData bmpData = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, formatOutput);
-        System.Runtime.InteropServices.Marshal.Copy(pixelsOutput, 0, bmpData.Scan0, pixelsOutput.Length);
+        BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadOnly, formatOutput);
+        Marshal.Copy(bytes, 0, bmpData.Scan0, bytes.Length);
         bmp.UnlockBits(bmpData);
 
         System.Drawing.Imaging.ColorPalette pal = bmp.Palette;
         for (int i = 0; i < 256; i++)
-            pal.Entries[i] = System.Drawing.Color.FromArgb(255, i, i, i);
+            pal.Entries[i] = Color.FromArgb(255, i, i, i);
         bmp.Palette = pal;
+
+        return bmp;
+    }
+
+    // TODO: implement with SkiaSharp
+    private static Bitmap GetBitmapRGB(double[,] r, double[,] g, double[,] b)
+    {
+        int width = r.GetLength(1);
+        int height = r.GetLength(0);
+        int stride = (width % 4 == 0) ? width : width + 4 - width % 4;
+        int bytesPerPixel = 3;
+
+        byte[] bytes = new byte[stride * height * bytesPerPixel];
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                int offset = (y * stride + x) * bytesPerPixel;
+                bytes[offset + 0] = Clamp(b[y, x]); // blue
+                bytes[offset + 1] = Clamp(g[y, x]); // green
+                bytes[offset + 2] = Clamp(r[y, x]); // red
+            }
+        }
+
+        PixelFormat formatOutput = PixelFormat.Format24bppRgb;
+        Rectangle rect = new(0, 0, width, height);
+        Bitmap bmp = new(stride, height, formatOutput);
+        BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadOnly, formatOutput);
+        Marshal.Copy(bytes, 0, bmpData.Scan0, bytes.Length);
+        bmp.UnlockBits(bmpData);
 
         return bmp;
     }

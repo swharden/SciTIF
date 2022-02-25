@@ -170,11 +170,10 @@ namespace SciTIF.Tests
             pixelValues.Add(("LennaIndexed.tif", 1, 0, 11));
             pixelValues.Add(("LennaIndexed.tif", 7, 3, 61));
 
-            // TODO: this
-            //pixelValues.Add(("20220224-ucx.tif", 0, 0, 5));
-            //pixelValues.Add(("20220224-ucx.tif", 1, 0, 5));
-            //pixelValues.Add(("20220224-ucx.tif", 7, 3, 7));
-            //pixelValues.Add(("20220224-ucx.tif", 188, 280, 89)); // 131, 131, 5
+            pixelValues.Add(("20220224-ucx.tif", 0, 0, 5));
+            pixelValues.Add(("20220224-ucx.tif", 1, 0, 5));
+            pixelValues.Add(("20220224-ucx.tif", 7, 3, 7));
+            pixelValues.Add(("20220224-ucx.tif", 188, 260, 89)); // 131, 131, 5
 
             return pixelValues;
         }

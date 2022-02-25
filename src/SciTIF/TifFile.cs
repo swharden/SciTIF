@@ -34,6 +34,39 @@ public class TifFile
         return $"TifFile: {Path.GetFileName(FilePath)}";
     }
 
+    public void SaveGrayscalePng(string filePath)
+    {
+        double[,] values;
+        if (Channels.Length == 1)
+        {
+            values = Channels[0].Values;
+        }
+        else
+        {
+            values = new double[Channels[0].Values.GetLength(0), Channels[0].Values.GetLength(1)];
+            for (int y = 0; y < values.GetLength(0); y++)
+            {
+                for (int x = 0; x < values.GetLength(1); x++)
+                {
+                    for (int i = 0; i < Channels.Length; i++)
+                    {
+                        values[y, x] += Channels[i].Values[y, x];
+                    }
+                    values[y, x] /= Channels.Length;
+                }
+            }
+        }
+        Export.PNG(filePath, values);
+    }
+
+    public void SaveRgbPng(string filePath)
+    {
+        if (Channels.Length != 3)
+            throw new InvalidOperationException("this method requires exactly 3 channels (R, G, B)");
+
+        Export.PNG(filePath, Channels[0].Values, Channels[1].Values, Channels[2].Values);
+    }
+
     /// <summary>
     /// Analyze the type of TIF file and return the appropriate <see cref="ITifReader"/>
     /// </summary>
@@ -48,7 +81,7 @@ public class TifFile
         if (tif.GetField(TiffTag.SAMPLESPERPIXEL) is not null)
             SamplesPerPixel = tif.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToInt();
 
-        Console.WriteLine($"Loading {BitsPerSample}-bit {ColorFormat} ({SamplesPerPixel} samples/pixel): {tif.FileName()}");
+        //Console.WriteLine($"Loading {BitsPerSample}-bit {ColorFormat} ({SamplesPerPixel} samples/pixel): {tif.FileName()}");
 
         ITifReader reader;
         if (ColorFormat == "RGB")
