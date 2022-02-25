@@ -96,7 +96,7 @@ public class TifFile
         if (tif.GetField(TiffTag.PLANARCONFIG) is not null)
             planarConfig = ((PlanarConfig)tif.GetField(TiffTag.PLANARCONFIG)[0].ToInt()).ToString();
 
-        StringBuilder sb = new($"{BitsPerSample}-bit {ColorFormat}");
+        StringBuilder sb = new($"{BitsPerSample}-bit {ColorFormat} with {SamplesPerPixel} samples/pixel");
         //sb.Append($" {SamplesPerPixel} samples/pixel");
         //sb.Append($" Order={order}");
         //sb.Append($" Photometric={photometric}");

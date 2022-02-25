@@ -119,9 +119,9 @@ namespace SciTIF.Tests
             pixelValues.Add(("LineScan-06092017-1414-623_Cycle00001_Ch2_000001.ome.tif", 1, 0, 98));
             pixelValues.Add(("LineScan-06092017-1414-623_Cycle00001_Ch2_000001.ome.tif", 7, 3, 96));
 
-            //pixelValues.Add(("LineScan-06092017-1414-623-Cycle00002-Window2-Ch1-8bit-Reference.tif", 0, 0, 7)); 
-            //pixelValues.Add(("LineScan-06092017-1414-623-Cycle00002-Window2-Ch1-8bit-Reference.tif", 1, 0, 7));
-            //pixelValues.Add(("LineScan-06092017-1414-623-Cycle00002-Window2-Ch1-8bit-Reference.tif", 7, 3, 4));
+            pixelValues.Add(("LineScan-06092017-1414-623-Cycle00002-Window2-Ch1-8bit-Reference.tif", 0, 0, 7));
+            pixelValues.Add(("LineScan-06092017-1414-623-Cycle00002-Window2-Ch1-8bit-Reference.tif", 1, 0, 7));
+            pixelValues.Add(("LineScan-06092017-1414-623-Cycle00002-Window2-Ch1-8bit-Reference.tif", 7, 3, 4));
 
             pixelValues.Add(("proj.tif", 0, 0, 260));
             pixelValues.Add(("proj.tif", 1, 0, 273));

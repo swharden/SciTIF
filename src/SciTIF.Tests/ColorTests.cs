@@ -43,5 +43,20 @@ namespace SciTIF.Tests
             double[,] scaled = Adjust.AutoScale(tif.Channels[0].Values);
             Export.PNG("ruler.png", scaled);
         }
+
+        [Test]
+        public void Test_Load_ColorImage_Rgb8()
+        {
+            string filePath = Path.Combine(SampleData.DataFolder, "LineScan-06092017-1414-623-Cycle00002-Window2-Ch1-8bit-Reference.tif");
+            TifFile tif = new(filePath);
+            Console.WriteLine(tif.FormatDescription);
+
+            double[,] scaled = Adjust.AutoScale(tif.Channels[0].Values);
+            Export.PNG("rgb8.png", scaled);
+
+            Assert.AreEqual(7, tif.Channels[0].Values[0, 0]);
+            Assert.AreEqual(7, tif.Channels[1].Values[0, 0]);
+            Assert.AreEqual(7, tif.Channels[2].Values[0, 0]);
+        }
     }
 }

@@ -21,7 +21,8 @@ internal class ReaderRGBA : ITifReader
         {
             for (int x = 0; x < width; x++)
             {
-                int offset = y * width + x;
+                int sourceY = height - y - 1;
+                int offset = sourceY * width + x;
                 valuesR[y, x] = Tiff.GetR(raster[offset]);
                 valuesG[y, x] = Tiff.GetG(raster[offset]);
                 valuesB[y, x] = Tiff.GetB(raster[offset]);
