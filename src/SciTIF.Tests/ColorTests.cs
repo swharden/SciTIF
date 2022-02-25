@@ -21,7 +21,7 @@ namespace SciTIF.Tests
         }
 
         [Test]
-        public void Test_Load_ColorImage_Scan()
+        public void Test_Load_ColorImage_RGB()
         {
             string filePath = Path.Combine(SampleData.DataFolder, "20220224-ucx.tif");
             TifFile tif = new(filePath);
@@ -31,6 +31,17 @@ namespace SciTIF.Tests
 
             tif.SaveGrayscalePng("scan.png");
             tif.SaveRgbPng("scan2.png");
+        }
+
+        [Test]
+        public void Test_Load_ColorImage_16bitGrayscale()
+        {
+            string filePath = Path.Combine(SampleData.DataFolder, "calibration-20x-ruler-0.32365.tif");
+            TifFile tif = new(filePath);
+            Assert.AreEqual(1896, tif.Channels[0].Values[0, 0]);
+
+            double[,] scaled = Adjust.AutoScale(tif.Channels[0].Values);
+            Export.PNG("ruler.png", scaled);
         }
     }
 }

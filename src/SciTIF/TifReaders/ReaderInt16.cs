@@ -22,14 +22,15 @@ internal class ReaderInt16 : ITifReader
             tif.ReadRawStrip(i, bytes, i * stripSize, stripSize);
         }
 
+        int msbOffset = tif.IsBigEndian() ? 0 : 1;
+        int lsbOffset = tif.IsBigEndian() ? 1 : 0;
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
                 int offset = (y * width + x) * bytesPerPixel;
-                pixelValues[y, x] = 0;
-                pixelValues[y, x] += bytes[offset];
-                pixelValues[y, x] += bytes[offset + 1] << 8;
+                pixelValues[y, x] += bytes[offset + lsbOffset];
+                pixelValues[y, x] += bytes[offset + msbOffset] << 8;
             }
         }
 

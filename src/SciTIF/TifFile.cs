@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using BitMiracle.LibTiff.Classic;
 
 namespace SciTIF;
@@ -10,6 +11,7 @@ public class TifFile
 {
     public readonly string FilePath;
     public readonly ImageData[] Channels;
+    public readonly string FormatDescription;
 
     public TifFile(string filePath)
     {
@@ -18,7 +20,8 @@ public class TifFile
             throw new FileNotFoundException(filePath);
 
         using Tiff tif = Tiff.Open(FilePath, "r");
-        Channels = GetBestReader(tif).Read(tif);
+        (ITifReader reader, FormatDescription) = GetBestReader(tif);
+        Channels = reader.Read(tif);
     }
 
     /// <summary>
@@ -31,7 +34,7 @@ public class TifFile
 
     public override string ToString()
     {
-        return $"TifFile: {Path.GetFileName(FilePath)}";
+        return $"TifFile {FormatDescription}: {Path.GetFileName(FilePath)}";
     }
 
     public void SaveGrayscalePng(string filePath)
@@ -73,7 +76,7 @@ public class TifFile
     /// <param name="tif"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    private static ITifReader GetBestReader(Tiff tif)
+    private static (ITifReader reader, string imageType) GetBestReader(Tiff tif)
     {
         int BitsPerSample = tif.GetField(TiffTag.BITSPERSAMPLE)[0].ToInt();
         string ColorFormat = tif.GetField(TiffTag.PHOTOMETRIC)[0].ToString();
@@ -81,7 +84,24 @@ public class TifFile
         if (tif.GetField(TiffTag.SAMPLESPERPIXEL) is not null)
             SamplesPerPixel = tif.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToInt();
 
-        //Console.WriteLine($"Loading {BitsPerSample}-bit {ColorFormat} ({SamplesPerPixel} samples/pixel): {tif.FileName()}");
+        string order = "unknown";
+        if (tif.GetField(TiffTag.FILLORDER) is not null)
+            order = ((FillOrder)tif.GetField(TiffTag.FILLORDER)[0].ToInt()).ToString();
+
+        string photometric = "unknown";
+        if (tif.GetField(TiffTag.PHOTOMETRIC) is not null)
+            photometric = ((Photometric)tif.GetField(TiffTag.PHOTOMETRIC)[0].ToInt()).ToString();
+
+        string planarConfig = "unknown";
+        if (tif.GetField(TiffTag.PLANARCONFIG) is not null)
+            planarConfig = ((PlanarConfig)tif.GetField(TiffTag.PLANARCONFIG)[0].ToInt()).ToString();
+
+        StringBuilder sb = new($"{BitsPerSample}-bit {ColorFormat}");
+        //sb.Append($" {SamplesPerPixel} samples/pixel");
+        //sb.Append($" Order={order}");
+        //sb.Append($" Photometric={photometric}");
+        //sb.Append($" Planar={planarConfig}");
+        string imageType = sb.ToString();
 
         ITifReader reader;
         if (ColorFormat == "RGB")
@@ -116,6 +136,6 @@ public class TifFile
             throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel");
         }
 
-        return reader;
+        return (reader, imageType);
     }
 }

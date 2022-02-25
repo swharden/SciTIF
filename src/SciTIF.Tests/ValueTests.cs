@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using BitMiracle.LibTiff.Classic;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,14 +17,14 @@ namespace SciTIF.Tests
             foreach (var item in SampleData.ExpectedResults())
             {
                 (string fileName, int x, int y, double expectedMean) = item;
-                Console.WriteLine(item);
                 string filePath = Path.Combine(SampleData.DataFolder, fileName);
-                var tif = new TifFile(filePath);
+                TifFile tif = new(filePath);
+
+                Console.WriteLine($"{fileName} {tif.FormatDescription}");
 
                 double[] channelValues = tif.GetPixel(x, y);
-                string debugHint = string.Join(", ", channelValues.Select(x => x.ToString()));
                 double actualMean = channelValues.Sum() / channelValues.Length;
-                Assert.AreEqual(expectedMean, actualMean, item.ToString() + "|" + debugHint);
+                Assert.AreEqual(expectedMean, actualMean, $"{fileName} X={x} Y={y} {tif.FormatDescription}");
             }
         }
     }
