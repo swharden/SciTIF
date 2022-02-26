@@ -9,26 +9,32 @@ internal class ReaderIndexed8 : ITifReader
     {
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        double[,] pixelValues = new double[height, width];
 
-        int numberOfStrips = tif.NumberOfStrips();
-        int stripSize = tif.StripSize();
+        double[,] r = new double[height, width];
+        double[,] g = new double[height, width];
+        double[,] b = new double[height, width];
+        double[,] a = new double[height, width];
 
-        byte[] bytes = new byte[numberOfStrips * stripSize];
-        for (int i = 0; i < numberOfStrips; ++i)
-        {
-            tif.ReadRawStrip(i, bytes, i * stripSize, stripSize);
-        }
+        int[] rgba = new int[width * height];
+        tif.ReadRGBAImage(width, height, rgba);
 
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                int offset = (y * width + x);
-                pixelValues[y, x] = bytes[offset];
+                int sourceY = height - 1 - y;
+                r[y, x] = Tiff.GetR(rgba[sourceY * width + x]);
+                g[y, x] = Tiff.GetG(rgba[sourceY * width + x]);
+                b[y, x] = Tiff.GetB(rgba[sourceY * width + x]);
+                a[y, x] = Tiff.GetA(rgba[sourceY * width + x]);
             }
         }
 
-        return new ImageData[] { new ImageData(pixelValues) };
+        return new ImageData[] {
+            new ImageData(r),
+            new ImageData(g),
+            new ImageData(b),
+            new ImageData(a),
+        };
     }
 }

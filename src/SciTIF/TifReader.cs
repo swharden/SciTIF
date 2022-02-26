@@ -61,7 +61,7 @@ public static class TifReader
         {
             reader = BitsPerSample switch
             {
-                8 => new TifReaders.ReaderInt8(),
+                8 => new TifReaders.ReaderIndexed8(),
                 _ => throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel")
             };
         }

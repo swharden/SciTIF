@@ -11,16 +11,6 @@ namespace SciTIF.Tests
     internal class ColorTests
     {
         [Test]
-        public void Test_Load_ColorImage_Lenna()
-        {
-            string filePath = Path.Combine(SampleData.DataFolder, "LennaRGB.tif");
-            TifFile tif = new(filePath);
-            Assert.AreEqual(
-                expected: new double[] { 225, 136, 125 },
-                actual: tif.GetPixel(0, 0));
-        }
-
-        [Test]
         public void Test_Load_ColorImage_RGB()
         {
             string filePath = Path.Combine(SampleData.DataFolder, "20220224-ucx.tif");
@@ -38,7 +28,7 @@ namespace SciTIF.Tests
             Assert.AreEqual(1896, tif.Channels[0].Values[0, 0]);
 
             double[,] scaled = Adjust.AutoScale(tif.Channels[0].Values);
-            Assert.AreNotEqual(1896, scaled[0,0]);
+            Assert.AreNotEqual(1896, scaled[0, 0]);
         }
 
         [Test]
@@ -55,6 +45,22 @@ namespace SciTIF.Tests
             Assert.AreEqual(
                 expected: new double[] { 0, 255, 255, 255 },
                 actual: tif.GetPixel(75, 244));
+        }
+
+        [Test]
+        public void Test_Load_ColorImage_Indexed()
+        {
+            string filePathRGB = Path.Combine(SampleData.DataFolder, "LennaRGB.tif");
+            TifFile tifRGB = new(filePathRGB);
+            Assert.AreEqual(
+                expected: new double[] { 225, 136, 125 },
+                actual: tifRGB.GetPixel(0, 0));
+
+            string filePathIndexed = Path.Combine(SampleData.DataFolder, "LennaIndexed.tif");
+            TifFile tifIndexed = new(filePathIndexed);
+            Assert.AreEqual(
+                expected: new double[] { 221, 133, 125, 255 },
+                actual: tifIndexed.GetPixel(0, 0));
         }
     }
 }
