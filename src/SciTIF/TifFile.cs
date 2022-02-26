@@ -138,4 +138,9 @@ public class TifFile
 
         return (reader, imageType);
     }
+
+    public void SavePng(string outputPath, bool autoScale = false)
+    {
+        Export.PNG(outputPath, this, autoScale: autoScale);
+    }
 }
