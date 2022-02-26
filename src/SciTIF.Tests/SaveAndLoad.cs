@@ -20,12 +20,19 @@ namespace SciTIF.Tests
                 Directory.CreateDirectory(outputFolder);
             Console.WriteLine(outputFolder);
 
-            foreach (string filePath in SampleData.TifFiles)
+            foreach (string tifInputPath in SampleData.TifFiles)
             {
-                string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath) + ".png");
-                TifFile tif = new(filePath);
-                tif.SavePng(outputPath, autoScale: true);
-                Console.WriteLine(outputPath);
+                System.Drawing.Bitmap bmp1 = new(tifInputPath);
+
+                string pngOutputPath = Path.Combine(outputFolder, Path.GetFileName(tifInputPath) + ".png");
+                TifFile tif = new(tifInputPath);
+                Assert.AreEqual(bmp1.Size.Width, tif.Channels[0].Width, tif.ToString());
+
+                tif.SavePng(pngOutputPath, autoScale: true);
+                Console.WriteLine(pngOutputPath);
+
+                System.Drawing.Bitmap bmp2 = new(pngOutputPath);
+                Assert.AreEqual(bmp1.Size, bmp2.Size, tif.ToString());
             }
         }
     }
