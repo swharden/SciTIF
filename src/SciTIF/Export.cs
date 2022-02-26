@@ -80,18 +80,23 @@ public static class Export
                 bytes[y * stride + x] = Clamp(values[y, x]);
 
         PixelFormat formatOutput = PixelFormat.Format8bppIndexed;
+
         Rectangle rect = new(0, 0, width, height);
-        Bitmap bmp = new(stride, height, formatOutput);
+        using Bitmap bmp = new(stride, height, formatOutput);
         BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadOnly, formatOutput);
         Marshal.Copy(bytes, 0, bmpData.Scan0, bytes.Length);
         bmp.UnlockBits(bmpData);
 
-        System.Drawing.Imaging.ColorPalette pal = bmp.Palette;
+        ColorPalette pal = bmp.Palette;
         for (int i = 0; i < 256; i++)
             pal.Entries[i] = Color.FromArgb(255, i, i, i);
         bmp.Palette = pal;
 
-        return bmp;
+        Bitmap bmp2 = new(width, height, PixelFormat.Format32bppPArgb);
+        Graphics gfx2 = Graphics.FromImage(bmp2);
+        gfx2.DrawImage(bmp, 0, 0);
+
+        return bmp2;
     }
 
     // TODO: implement with SkiaSharp
@@ -121,6 +126,10 @@ public static class Export
         Marshal.Copy(bytes, 0, bmpData.Scan0, bytes.Length);
         bmp.UnlockBits(bmpData);
 
-        return bmp;
+        Bitmap bmp2 = new(width, height, PixelFormat.Format32bppPArgb);
+        Graphics gfx2 = Graphics.FromImage(bmp2);
+        gfx2.DrawImage(bmp, 0, 0);
+
+        return bmp2;
     }
 }
