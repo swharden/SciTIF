@@ -28,9 +28,6 @@ namespace SciTIF.Tests
             Assert.AreEqual(
                 expected: new double[] { 131, 131, 5 },
                 actual: tif.GetPixel(188, 260));
-
-            tif.SaveGrayscalePng("scan.png");
-            tif.SaveRgbPng("scan2.png");
         }
 
         [Test]
@@ -41,7 +38,7 @@ namespace SciTIF.Tests
             Assert.AreEqual(1896, tif.Channels[0].Values[0, 0]);
 
             double[,] scaled = Adjust.AutoScale(tif.Channels[0].Values);
-            Export.PNG("ruler.png", scaled);
+            Assert.AreNotEqual(1896, scaled[0,0]);
         }
 
         [Test]
@@ -50,8 +47,6 @@ namespace SciTIF.Tests
             string filePath = Path.Combine(SampleData.DataFolder, "LineScan-06092017-1414-623-Cycle00002-Window2-Ch1-8bit-Reference.tif");
             TifFile tif = new(filePath);
             Console.WriteLine(tif.FormatDescription);
-
-            Export.PNG("rgb8.png", tif.Channels[0].Values, tif.Channels[1].Values, tif.Channels[2].Values);
 
             Assert.AreEqual(
                 expected: new double[] { 7, 7, 7, 255 },
