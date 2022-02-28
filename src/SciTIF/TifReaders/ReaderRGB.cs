@@ -1,4 +1,5 @@
 ﻿using BitMiracle.LibTiff.Classic;
+using System.Linq;
 
 namespace SciTIF.TifReaders;
 
@@ -6,6 +7,15 @@ internal class ReaderRGB : ITifReader
 {
     public ImageData[] Read(Tiff tif)
     {
+        return Enumerable.Range(0, tif.NumberOfDirectories())
+            .SelectMany(x => ReadDirectory(tif, x))
+            .ToArray();
+    }
+
+    public ImageData[] ReadDirectory(Tiff tif, int directory)
+    {
+        tif.SetDirectory((short)directory);
+
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
 

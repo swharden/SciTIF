@@ -23,7 +23,7 @@ public static class Export
             PNG(filePath, gray);
             return;
         }
-        else if (tif.Channels.Length == 3 || tif.Channels.Length == 4)
+        else if (tif.Channels.Length >= 3)
         {
             double[,] r = tif.Channels[0].Values;
             double[,] g = tif.Channels[1].Values;
