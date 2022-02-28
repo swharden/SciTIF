@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace SciTIF.Tests
 {
-    public class ValueTests
+    public class SampleDataTests
     {
         [Test]
-        public void Test_ExpectedValues_Match()
+        public void Test_PixelValues_MatchImageJ()
         {
-            foreach (var item in SampleData.ExpectedResults())
+            foreach (var item in SampleData.PixelValues())
             {
                 (string fileName, int x, int y, double expectedMean) = item;
                 string filePath = Path.Combine(SampleData.DataFolder, fileName);
@@ -30,6 +30,21 @@ namespace SciTIF.Tests
                     continue; // TODO: improve RGB testing
 
                 Assert.AreEqual(expectedMean, actualMean, $"{fileName} X={x} Y={y} {tif.FormatDescription}");
+            }
+        }
+
+        [Test]
+        public void Test_Dimensions_MatchImageJ()
+        {
+            foreach (var dims in SampleData.Dimensions())
+            {
+                string filePath = Path.Combine(SampleData.DataFolder, dims.filename);
+                Console.WriteLine(filePath);
+                TifFile tif = new(filePath);
+
+                Assert.AreEqual(dims.width, tif.Width);
+                Assert.AreEqual(dims.height, tif.Height);
+                Assert.AreEqual(dims.channels * dims.slices * dims.frames, tif.ImageCount);
             }
         }
     }

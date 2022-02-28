@@ -37,7 +37,58 @@ namespace SciTIF.Tests
             Assert.IsNotEmpty(TifFiles);
         }
 
-        public static List<(string filename, int x, int y, double meanPixelValue)> ExpectedResults()
+        public static List<(string filename, int width, int height, int channels, int slices, int frames)> Dimensions()
+        {
+            /* Made with ImageJ macro:
+                print("\\Clear");
+                titles = getList("image.titles");
+                for (i=0; i<titles.length; i++){
+	                selectWindow(titles[i]);
+	                getDimensions(width, height, channels, slices, frames);
+                    print("info.Add((\"" + titles[i] + "\"," + width + "," +
+                      height + "," + channels + "," + slices + "," + frames + "));");
+                }
+            */
+
+            List<(string, int, int, int, int, int)> info = new();
+            info.Add(("2018_08_14_DIC2_0000 4x.tif", 696, 520, 1, 1, 1));
+            info.Add(("2018_08_14_DIC2_0000a.tif", 696, 520, 1, 1, 1));
+            info.Add(("2018_08_14_DIC2_0000i.tif", 696, 520, 1, 1, 1));
+            info.Add(("2018_08_14_DIC2_0000r.tif", 696, 520, 1, 1, 1));
+            info.Add(("16923029b-after.tif", 696, 520, 1, 1, 1));
+            info.Add(("16923029-f10.tif", 1392, 1040, 1, 1, 1));
+            info.Add(("16923029-f20.tif", 1392, 1040, 1, 1, 1));
+            info.Add(("17418028_MMStack_Pos0.ome.tif", 1344, 1100, 1, 1, 4));
+            info.Add(("18622000.tif", 696, 520, 1, 1, 1));
+            info.Add(("20220224-02.tif", 287, 246, 1, 1, 1));
+            info.Add(("20220224-09.tif", 236, 193, 1, 1, 1));
+            info.Add(("20220224-ucx.tif", 346, 612, 1, 1, 1));
+            info.Add(("1536355916.608.tif", 1392, 1040, 1, 1, 1));
+            info.Add(("C3Z4F5.tif", 400, 300, 3, 4, 5));
+            info.Add(("calibration-20x-ruler-0.32365.TIF", 1392, 1040, 1, 1, 1));
+            info.Add(("fluo-3ch-8bitColor.tif", 421, 421, 1, 1, 1));
+            info.Add(("fluo-3ch-8bit-composite.tif", 421, 421, 3, 1, 1));
+            info.Add(("fluo-3ch-16bit.tif", 1024, 1024, 3, 1, 1));
+            info.Add(("LennaIndexed.tif", 102, 102, 1, 1, 1));
+            info.Add(("LennaRGB.tif", 102, 102, 1, 1, 1));
+            info.Add(("LineScan-06092017-1414-623_Cycle00001_Ch1_000001.ome.tif", 131, 1000, 1, 1, 1));
+            info.Add(("LineScan-06092017-1414-623_Cycle00001_Ch2_000001.ome.tif", 131, 1000, 1, 1, 1));
+            info.Add(("LineScan-06092017-1414-623-Cycle00002-Window2-Ch1-8bit-Reference.tif", 512, 512, 1, 1, 1));
+            info.Add(("proj.tif", 1024, 1024, 1, 1, 1));
+            info.Add(("SingleImage-04142017-1215-126_Cycle00001_Ch2_000001.ome.tif", 1024, 1024, 1, 1, 1));
+            info.Add(("Substack (1-81-4)0012.tif", 1818, 1362, 1, 1, 1));
+            info.Add(("TSeries-04142017-1215-1341_Cycle00001_Ch1_000082.ome.tif", 128, 128, 1, 1, 1));
+            info.Add(("TSeries-04142017-1215-1342_Cycle00001_Ch1_000007.ome.tif", 256, 256, 1, 1, 1));
+            info.Add(("TSeries-12022016-1322-1168_Cycle00001_Ch1_000007.ome.tif", 512, 512, 1, 1, 1));
+            info.Add(("TSeries-12022016-1322-1168_Cycle00001_Ch2_000007.ome.tif", 512, 512, 1, 1, 1));
+            info.Add(("video-gcamp.tif", 454, 340, 1, 21, 1));
+            info.Add(("ZSeries-06082017-1213-682_Cycle00001_Ch1_MIP.tif", 512, 512, 1, 1, 1));
+            info.Add(("ZSeries-06082017-1213-682_Cycle00001_Ch2_MIP.tif", 512, 512, 1, 1, 1));
+
+            return info;
+        }
+
+        public static List<(string filename, int x, int y, double meanPixelValue)> PixelValues()
         {
             /* Made with ImageJ macro:
                 print("\\Clear");

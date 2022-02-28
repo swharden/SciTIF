@@ -12,7 +12,13 @@ public static class TifReader
     /// </summary>
     internal static (ITifReader reader, string imageType) GetBestReader(Tiff tif)
     {
-        int BitsPerSample = tif.GetField(TiffTag.BITSPERSAMPLE)[0].ToInt();
+        if (tif is null)
+            throw new ArgumentNullException(nameof(tif));
+
+        int BitsPerSample = 8;
+        if (tif.GetField(TiffTag.BITSPERSAMPLE) is not null)
+            BitsPerSample = tif.GetField(TiffTag.BITSPERSAMPLE)[0].ToInt();
+
         string ColorFormat = tif.GetField(TiffTag.PHOTOMETRIC)[0].ToString();
         int SamplesPerPixel = 1;
         if (tif.GetField(TiffTag.SAMPLESPERPIXEL) is not null)
