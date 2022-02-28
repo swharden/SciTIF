@@ -19,4 +19,6 @@ public class ImageData
 
         Values = data;
     }
+
+    public void SavePng(string filePath) => Export.PNG(filePath, Values);
 }
