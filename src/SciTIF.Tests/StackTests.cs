@@ -28,5 +28,15 @@ namespace SciTIF.Tests
                 tif.Channels[i].SavePng(outputFilePath);
             }
         }
+
+        [Test]
+        public void Test_Series()
+        {
+            string filePath = Path.Combine(SampleData.DataFolder, "video-gcamp.tif");
+            TifFile tif = new(filePath);
+            Console.WriteLine(tif.Channels.Length);
+            ImageData p = Process.ProjectMean(tif.Channels);
+            p.SavePng("proj.png");
+        }
     }
 }
