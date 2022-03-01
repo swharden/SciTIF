@@ -44,4 +44,10 @@ public class ImageData
 
         return new ImageData(result);
     }
+
+    public double this[int y, int x]
+    {
+        get => Values[y, x];
+        set => Values[y, x] = value;
+    }
 }
