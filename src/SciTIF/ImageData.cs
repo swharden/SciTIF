@@ -12,6 +12,11 @@ public class ImageData
     public int Width => Values.GetLength(1);
     public int Height => Values.GetLength(0);
 
+    public ImageData(int width, int height)
+    {
+        Values = new double[width, height];
+    }
+
     public ImageData(double[,] data)
     {
         if (data is null)
