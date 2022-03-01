@@ -26,4 +26,18 @@ public class ImageData
     }
 
     public void SavePng(string filePath) => Export.PNG(filePath, Values);
+
+    public static ImageData operator +(ImageData a, ImageData b)
+    {
+        if (a.Width != b.Width || a.Height != b.Height)
+            throw new InvalidOperationException("images must be same dimensions");
+
+        double[,] result = new double[a.Height, a.Width];
+
+        for (int y = 0; y < a.Height; y++)
+            for (int x = 0; x < a.Width; x++)
+                result[y, x] = a.Values[y, x] + b.Values[y, x];
+
+        return new ImageData(result);
+    }
 }
