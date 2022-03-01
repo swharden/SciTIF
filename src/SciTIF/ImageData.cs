@@ -14,7 +14,7 @@ public class ImageData
 
     public ImageData(int width, int height)
     {
-        Values = new double[width, height];
+        Values = new double[height, width];
         Width = width;
         Height = height;
     }

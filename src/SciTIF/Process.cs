@@ -8,7 +8,7 @@ namespace SciTIF
     {
         public static ImageData ProjectMean(ImageData[] frames)
         {
-            ImageData sum = new(frames[0].Height, frames[0].Width);
+            ImageData sum = new(frames[0].Width, frames[0].Height);
 
             foreach (ImageData frame in frames)
                 sum += frame;
