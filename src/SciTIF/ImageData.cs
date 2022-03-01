@@ -9,12 +9,14 @@ namespace SciTIF;
 public class ImageData
 {
     public readonly double[,] Values;
-    public int Width => Values.GetLength(1);
-    public int Height => Values.GetLength(0);
+    public readonly int Height;
+    public readonly int Width;
 
     public ImageData(int width, int height)
     {
         Values = new double[width, height];
+        Width = width;
+        Height = height;
     }
 
     public ImageData(double[,] data)
@@ -23,6 +25,8 @@ public class ImageData
             throw new ArgumentNullException(nameof(data));
 
         Values = data;
+        Width = Values.GetLength(1);
+        Height = Values.GetLength(0);
     }
 
     public void SavePng(string filePath) => Export.PNG(filePath, Values);
