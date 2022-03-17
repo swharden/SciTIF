@@ -27,6 +27,7 @@ public class TifFile
         if (!File.Exists(filePath))
             throw new FileNotFoundException(filePath);
 
+        Tiff.SetErrorHandler(new TiffErrorHandlers.Silent());
         using Tiff tif = Tiff.Open(FilePath, "r");
 
         if (tif is null)
