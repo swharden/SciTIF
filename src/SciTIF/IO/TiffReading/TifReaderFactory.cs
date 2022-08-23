@@ -1,11 +1,9 @@
 ﻿using BitMiracle.LibTiff.Classic;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace SciTIF;
+namespace SciTIF.IO.TiffReading;
 
-public static class TifReader
+public static class TifReaderFactory
 {
     /// <summary>
     /// Analyze the type of TIF file and return the best reader
@@ -21,8 +19,8 @@ public static class TifReader
         {
             reader = SamplesPerPixel switch
             {
-                4 => new TifReaders.ReaderRGBA(),
-                3 => new TifReaders.ReaderRGB(),
+                4 => new ReaderRGBA(),
+                3 => new ReaderRGB(),
                 _ => throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel")
             };
         }
@@ -30,9 +28,9 @@ public static class TifReader
         {
             reader = BitsPerSample switch
             {
-                32 => new TifReaders.ReaderFloat32(),
-                16 => new TifReaders.ReaderInt16(),
-                8 => new TifReaders.ReaderInt8(),
+                32 => new ReaderFloat32(),
+                16 => new ReaderInt16(),
+                8 => new ReaderInt8(),
                 _ => throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel")
             };
         }
@@ -40,7 +38,7 @@ public static class TifReader
         {
             reader = BitsPerSample switch
             {
-                8 => new TifReaders.ReaderIndexed8(),
+                8 => new ReaderIndexed8(),
                 _ => throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel")
             };
         }

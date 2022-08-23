@@ -1,8 +1,8 @@
 ﻿using BitMiracle.LibTiff.Classic;
 
-namespace SciTIF.TifReaders;
+namespace SciTIF.IO.TiffReading;
 
-internal class ReaderRGB : ReaderBase
+internal class ReaderRGBA : ReaderBase
 {
     public override Image ReadSlice(Tiff tif, int directory)
     {
@@ -10,7 +10,7 @@ internal class ReaderRGB : ReaderBase
 
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        Image data = new(width, height, 3);
+        Image data = new(width, height, 4);
 
         int[] raster = new int[height * width];
         tif.ReadRGBAImage(width, height, raster, true);
@@ -25,6 +25,7 @@ internal class ReaderRGB : ReaderBase
                 data.Values[destOffset] = Tiff.GetR(raster[offset]);
                 data.Values[destOffset + 1] = Tiff.GetG(raster[offset]);
                 data.Values[destOffset + 2] = Tiff.GetB(raster[offset]);
+                data.Values[destOffset + 3] = Tiff.GetA(raster[offset]);
             }
         }
 

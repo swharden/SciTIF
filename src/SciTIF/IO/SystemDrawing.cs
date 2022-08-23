@@ -1,72 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Imaging;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace SciTIF;
+namespace SciTIF.IO;
 
-public static class Export
+public static class SystemDrawing
 {
-    public static void PNG(string filePath, TifFile tif, bool autoScale = false)
-    {
-        if (tif.Slices == 1)
-        {
-            Image img = tif.GetSlice(0);
-            if (autoScale)
-                img.AutoScale();
-
-            PNG(filePath, img);
-            return;
-        }
-        else if (tif.Slices >= 3)
-        {
-            Image r = tif.GetSlice(0);
-            Image g = tif.GetSlice(1);
-            Image b = tif.GetSlice(2);
-
-            if (autoScale)
-            {
-                r.AutoScale();
-                g.AutoScale();
-                b.AutoScale();
-            }
-
-            PNG(filePath, r, g, b);
-            return;
-        }
-        else
-        {
-            throw new InvalidOperationException("unsupported number of channels");
-        }
-    }
-
-    public static void PNG(string filePath, Image img)
-    {
-        using Bitmap bmp = GetBitmapGrayscale(img);
-        bmp.Save(filePath, ImageFormat.Png);
-    }
-
-    public static void PNG(string filePath, Image r, Image g, Image b)
-    {
-        using Bitmap bmp = GetBitmapRGB(r, g, b);
-        bmp.Save(filePath, ImageFormat.Png);
-    }
-
-    private static byte Clamp(double x, byte min = 0, byte max = 255)
-    {
-        if (x < min)
-            return min;
-        else if (x > max)
-            return max;
-        else
-            return (byte)x;
-    }
-
-    // TODO: implement with SkiaSharp
-
-    private static Bitmap GetBitmapGrayscale(Image img)
+    public static Bitmap GetBitmapGrayscale(Image img)
     {
         int width = img.Width;
         int height = img.Height;
@@ -99,8 +42,7 @@ public static class Export
         return bmp2;
     }
 
-    // TODO: implement with SkiaSharp
-    private static Bitmap GetBitmapRGB(Image r, Image g, Image b)
+    public static Bitmap GetBitmapRGB(Image r, Image g, Image b)
     {
         int width = r.Width;
         int height = r.Height;
@@ -132,5 +74,60 @@ public static class Export
         gfx2.DrawImage(bmp, 0, 0);
 
         return bmp2;
+    }
+
+    private static byte Clamp(double x, byte min = 0, byte max = 255)
+    {
+        if (x < min)
+            return min;
+        else if (x > max)
+            return max;
+        else
+            return (byte)x;
+    }
+
+    public static void SavePNG(string filePath, TifFile tif, bool autoScale = false)
+    {
+        if (tif.Slices == 1)
+        {
+            Image img = tif.GetSlice(0);
+            if (autoScale)
+                img.AutoScale();
+
+            SavePNG(filePath, img);
+            return;
+        }
+        else if (tif.Slices >= 3)
+        {
+            Image r = tif.GetSlice(0);
+            Image g = tif.GetSlice(1);
+            Image b = tif.GetSlice(2);
+
+            if (autoScale)
+            {
+                r.AutoScale();
+                g.AutoScale();
+                b.AutoScale();
+            }
+
+            SavePNG(filePath, r, g, b);
+            return;
+        }
+        else
+        {
+            throw new InvalidOperationException("unsupported number of channels");
+        }
+    }
+
+    public static void SavePNG(string filePath, Image img)
+    {
+        using Bitmap bmp = SystemDrawing.GetBitmapGrayscale(img);
+        bmp.Save(filePath, ImageFormat.Png);
+    }
+
+    public static void SavePNG(string filePath, Image r, Image g, Image b)
+    {
+        using Bitmap bmp = SystemDrawing.GetBitmapRGB(r, g, b);
+        bmp.Save(filePath, ImageFormat.Png);
     }
 }

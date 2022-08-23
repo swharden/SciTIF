@@ -47,6 +47,13 @@ public class Image
         return new Image(a.Width, a.Height, values, a.Channels);
     }
 
+    public void SavePng(string filename, bool autoscale = false)
+    {
+        if (autoscale)
+            AutoScale();
+        IO.SystemDrawing.SavePNG(filename, this);
+    }
+
     public void Remember()
     {
         if (RememberedValues is null)

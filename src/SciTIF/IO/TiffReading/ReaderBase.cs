@@ -1,7 +1,7 @@
 ﻿using BitMiracle.LibTiff.Classic;
 using System.Linq;
 
-namespace SciTIF.TifReaders;
+namespace SciTIF.IO.TiffReading;
 
 internal abstract class ReaderBase : ITifReader
 {

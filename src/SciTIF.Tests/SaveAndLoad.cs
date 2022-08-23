@@ -25,7 +25,7 @@ namespace SciTIF.Tests
                 TifFile tif = new(tifInputPath);
                 Assert.AreEqual(bmp1.Size.Width, tif.Width, tif.ToString());
 
-                Export.PNG(pngOutputPath, tif);
+                tif.GetSlice(0).SavePng(pngOutputPath);
                 Console.WriteLine(pngOutputPath);
 
                 //System.Drawing.Bitmap bmp2 = new(pngOutputPath);

@@ -1,7 +1,7 @@
 ﻿using BitMiracle.LibTiff.Classic;
 using System;
 
-namespace SciTIF.TifReaders;
+namespace SciTIF.IO.TiffReading;
 
 internal class ReaderFloat32 : ReaderBase
 {

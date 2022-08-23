@@ -25,7 +25,7 @@ namespace SciTIF.Tests
             {
                 string outputFilePath = Path.Combine(outputFolder, $"test-stack-{i:000}.png");
                 Console.WriteLine(outputFilePath);
-                Export.PNG(outputFilePath, tif.GetSlice(i));
+                tif.GetSlice(i).SavePng(outputFilePath);
             }
         }
 
@@ -36,7 +36,7 @@ namespace SciTIF.Tests
             TifFile tif = new(filePath);
             Console.WriteLine(tif.Slices);
             Image p = tif.Stack.ProjectMean();
-            Export.PNG("proj.png", p);
+            p.SavePng("proj.png");
         }
     }
 }
