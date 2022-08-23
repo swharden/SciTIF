@@ -12,36 +12,9 @@ public static class TifReader
     /// </summary>
     internal static (ITifReader reader, string imageType) GetBestReader(Tiff tif)
     {
-        if (tif is null)
-            throw new ArgumentNullException(nameof(tif));
-
-        int BitsPerSample = 8;
-        if (tif.GetField(TiffTag.BITSPERSAMPLE) is not null)
-            BitsPerSample = tif.GetField(TiffTag.BITSPERSAMPLE)[0].ToInt();
-
         string ColorFormat = tif.GetField(TiffTag.PHOTOMETRIC)[0].ToString();
-        int SamplesPerPixel = 1;
-        if (tif.GetField(TiffTag.SAMPLESPERPIXEL) is not null)
-            SamplesPerPixel = tif.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToInt();
-
-        string order = "unknown";
-        if (tif.GetField(TiffTag.FILLORDER) is not null)
-            order = ((FillOrder)tif.GetField(TiffTag.FILLORDER)[0].ToInt()).ToString();
-
-        string photometric = "unknown";
-        if (tif.GetField(TiffTag.PHOTOMETRIC) is not null)
-            photometric = ((Photometric)tif.GetField(TiffTag.PHOTOMETRIC)[0].ToInt()).ToString();
-
-        string planarConfig = "unknown";
-        if (tif.GetField(TiffTag.PLANARCONFIG) is not null)
-            planarConfig = ((PlanarConfig)tif.GetField(TiffTag.PLANARCONFIG)[0].ToInt()).ToString();
-
-        StringBuilder sb = new($"{BitsPerSample}-bit {ColorFormat} with {SamplesPerPixel} samples/pixel");
-        //sb.Append($" {SamplesPerPixel} samples/pixel");
-        //sb.Append($" Order={order}");
-        //sb.Append($" Photometric={photometric}");
-        //sb.Append($" Planar={planarConfig}");
-        string imageType = sb.ToString();
+        int BitsPerSample = tif.FieldValueOrDefault(TiffTag.BITSPERSAMPLE, 8);
+        int SamplesPerPixel = tif.FieldValueOrDefault(TiffTag.SAMPLESPERPIXEL, 1);
 
         ITifReader reader;
         if (ColorFormat == "RGB")
@@ -76,6 +49,16 @@ public static class TifReader
             throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel");
         }
 
+        string imageType = $"{BitsPerSample}-bit {ColorFormat} with {SamplesPerPixel} samples/pixel";
         return (reader, imageType);
+    }
+
+    public static int FieldValueOrDefault(this Tiff tif, TiffTag tag, int defaultValue)
+    {
+        var field = tif.GetField(tag);
+        if (field is not null)
+            return field[0].ToInt();
+        else
+            return defaultValue;
     }
 }
