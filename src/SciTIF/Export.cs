@@ -11,20 +11,20 @@ public static class Export
 {
     public static void PNG(string filePath, TifFile tif, bool autoScale = false)
     {
-        if (tif.Slices.Length == 1)
+        if (tif.Slices == 1)
         {
-            ImageData img = tif.Slices[0];
+            Image img = tif.GetSlice(0);
             if (autoScale)
                 Adjust.AutoScale(img);
 
             PNG(filePath, img);
             return;
         }
-        else if (tif.Slices.Length >= 3)
+        else if (tif.Slices >= 3)
         {
-            ImageData r = tif.Slices[0];
-            ImageData g = tif.Slices[1];
-            ImageData b = tif.Slices[2];
+            Image r = tif.GetSlice(0);
+            Image g = tif.GetSlice(1);
+            Image b = tif.GetSlice(2);
 
             if (autoScale)
             {
@@ -42,13 +42,13 @@ public static class Export
         }
     }
 
-    public static void PNG(string filePath, ImageData img)
+    public static void PNG(string filePath, Image img)
     {
         using Bitmap bmp = GetBitmapGrayscale(img);
         bmp.Save(filePath, ImageFormat.Png);
     }
 
-    public static void PNG(string filePath, ImageData r, ImageData g, ImageData b)
+    public static void PNG(string filePath, Image r, Image g, Image b)
     {
         using Bitmap bmp = GetBitmapRGB(r, g, b);
         bmp.Save(filePath, ImageFormat.Png);
@@ -66,7 +66,7 @@ public static class Export
 
     // TODO: implement with SkiaSharp
 
-    private static Bitmap GetBitmapGrayscale(ImageData img)
+    private static Bitmap GetBitmapGrayscale(Image img)
     {
         int width = img.Width;
         int height = img.Height;
@@ -100,7 +100,7 @@ public static class Export
     }
 
     // TODO: implement with SkiaSharp
-    private static Bitmap GetBitmapRGB(ImageData r, ImageData g, ImageData b)
+    private static Bitmap GetBitmapRGB(Image r, Image g, Image b)
     {
         int width = r.Width;
         int height = r.Height;

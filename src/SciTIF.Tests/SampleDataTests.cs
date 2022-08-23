@@ -33,24 +33,27 @@ namespace SciTIF.Tests
                 TifFile tif = new(filePath);
                 Console.WriteLine($"{fileName} {tif.FormatDescription}");
 
-                double[] pixelValues = tif.Slices[0].GetPixelValues(x, y).Take(3).ToArray();
+                double[] pixelValues = tif.GetSlice(0).GetPixelValues(x, y).Take(3).ToArray();
                 double mean = pixelValues.Sum() / pixelValues.Length;
                 Assert.That(expectedMean, Is.EqualTo(mean).Within(.01));
             }
         }
 
+        [Ignore("need to separate channels from colors")]
         [Test]
         public void Test_Dimensions_MatchImageJ()
         {
+            // TODO: separate colors, channels, and slices
+
             foreach (var known in SampleData.Dimensions())
             {
                 string filePath = Path.Combine(SampleData.DataFolder, known.filename);
-                Console.WriteLine(filePath);
                 TifFile tif = new(filePath);
-
+                Console.WriteLine($"{filePath}: {tif.Reader}");
                 Assert.AreEqual(known.width, tif.Width, filePath);
                 Assert.AreEqual(known.height, tif.Height, filePath);
-                Assert.AreEqual(known.channels * known.slices * known.frames, tif.ImageCount, filePath);
+                Assert.AreEqual(known.channels, tif.Channels, filePath);
+                Assert.AreEqual(known.slices, tif.Slices, filePath);
             }
         }
     }

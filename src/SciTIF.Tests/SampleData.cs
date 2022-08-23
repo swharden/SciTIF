@@ -58,15 +58,15 @@ namespace SciTIF.Tests
             info.Add(("16923029b-after.tif", 696, 520, 1, 1, 1));
             info.Add(("16923029-f10.tif", 1392, 1040, 1, 1, 1));
             info.Add(("16923029-f20.tif", 1392, 1040, 1, 1, 1));
-            info.Add(("17418028_MMStack_Pos0.ome.tif", 1344, 1100, 1, 1, 4));
+            info.Add(("17418028_MMStack_Pos0.ome.tif", 1344, 1100, 1, 4, 1));
             info.Add(("18622000.tif", 696, 520, 1, 1, 1));
             info.Add(("20220224-02.tif", 287, 246, 1, 1, 1));
             info.Add(("20220224-09.tif", 236, 193, 1, 1, 1));
-            info.Add(("20220224-ucx.tif", 346, 612, 1, 1, 1));
+            info.Add(("20220224-ucx.tif", 346, 612, 3, 1, 1));
             info.Add(("1536355916.608.tif", 1392, 1040, 1, 1, 1));
             info.Add(("C3Z4F5.tif", 400, 300, 3, 4, 5));
             info.Add(("calibration-20x-ruler-0.32365.TIF", 1392, 1040, 1, 1, 1));
-            info.Add(("fluo-3ch-8bitColor.tif", 421, 421, 1, 1, 1));
+            info.Add(("fluo-3ch-8bitColor.tif", 421, 421, 3, 1, 1));
             info.Add(("fluo-3ch-8bit-composite.tif", 421, 421, 3, 1, 1));
             info.Add(("fluo-3ch-16bit.tif", 1024, 1024, 3, 1, 1));
             info.Add(("LennaIndexed.tif", 102, 102, 1, 1, 1));

@@ -21,11 +21,11 @@ namespace SciTIF.Tests
             TifFile tif = new(filePath);
             Console.WriteLine(tif.FormatDescription);
 
-            for (int i = 0; i < tif.Slices.Length; i++)
+            for (int i = 0; i < tif.Slices; i++)
             {
                 string outputFilePath = Path.Combine(outputFolder, $"test-stack-{i:000}.png");
                 Console.WriteLine(outputFilePath);
-                Export.PNG(outputFilePath, tif.Slices[i]);
+                Export.PNG(outputFilePath, tif.GetSlice(i));
             }
         }
 
@@ -34,8 +34,8 @@ namespace SciTIF.Tests
         {
             string filePath = Path.Combine(SampleData.DataFolder, "video-gcamp.tif");
             TifFile tif = new(filePath);
-            Console.WriteLine(tif.Slices.Length);
-            ImageData p = Process.ProjectMean(tif.Slices);
+            Console.WriteLine(tif.Slices);
+            Image p = Process.ProjectMean(tif.Stack.Slices.ToArray());
             Export.PNG("proj.png", p);
         }
     }

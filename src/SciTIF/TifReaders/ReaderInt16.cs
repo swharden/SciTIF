@@ -1,19 +1,10 @@
 ﻿using BitMiracle.LibTiff.Classic;
-using System;
-using System.Linq;
 
 namespace SciTIF.TifReaders;
 
-internal class ReaderInt16 : ITifReader
+internal class ReaderInt16 : ReaderBase
 {
-    public ImageData[] ReadAllSlices(Tiff tif)
-    {
-        return Enumerable.Range(0, tif.NumberOfDirectories())
-            .Select(x => ReadSlice(tif, x))
-            .ToArray();
-    }
-
-    public ImageData ReadSlice(Tiff tif, int directory)
+    public override Image ReadSlice(Tiff tif, int directory)
     {
         tif.SetDirectory((short)directory);
 
@@ -21,7 +12,7 @@ internal class ReaderInt16 : ITifReader
 
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        ImageData data = new(width, height);
+        Image data = new(width, height);
 
         int numberOfStrips = tif.NumberOfStrips();
         int stripSize = tif.StripSize();

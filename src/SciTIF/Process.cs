@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SciTIF
 {
     public static class Process
     {
-        public static ImageData ProjectMean(ImageData[] frames)
+        public static Image ProjectMean(IEnumerable<Image> frames)
         {
-            ImageData sum = new(frames[0].Width, frames[0].Height);
+            Image sum = new(frames.First().Width, frames.First().Height);
 
-            foreach (ImageData frame in frames)
+            foreach (Image frame in frames)
                 sum += frame;
 
             return sum;

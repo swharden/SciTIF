@@ -6,14 +6,14 @@ namespace SciTIF;
 /// <summary>
 /// Floating-point representation of pixel intensity values
 /// </summary>
-public class ImageData
+public class Image
 {
     public readonly double[] Values;
     public readonly int Height;
     public readonly int Width;
     public readonly int Channels;
 
-    public ImageData(int width, int height, int channels = 1)
+    public Image(int width, int height, int channels = 1)
     {
         Width = width;
         Height = height;
@@ -21,7 +21,7 @@ public class ImageData
         Values = new double[width * height * channels];
     }
 
-    public ImageData(int width, int height, double[] values, int channels = 1)
+    public Image(int width, int height, double[] values, int channels = 1)
     {
         if (values.Length != (width * height * channels))
             throw new ArgumentException("invalid length");
@@ -32,7 +32,7 @@ public class ImageData
         Values = values;
     }
 
-    public static ImageData operator +(ImageData a, ImageData b)
+    public static Image operator +(Image a, Image b)
     {
         if ((a.Width != b.Width) || (a.Height != b.Height) || (a.Channels != b.Channels) || (a.Values.Length != b.Values.Length))
             throw new ArgumentException("image operations require identical dimensions");
@@ -42,7 +42,7 @@ public class ImageData
         for (int i = 0; i < values.Length; i++)
             values[i] = a.Values[i] + b.Values[i];
 
-        return new ImageData(a.Width, a.Height, values, a.Channels);
+        return new Image(a.Width, a.Height, values, a.Channels);
     }
 
     public int GetIndex(int x, int y, int channel = 0)

@@ -14,7 +14,7 @@ namespace SciTIF.Tests
     {
         public void AssertPixelValues(TifFile tif, int x, int y, double r, double g, double b)
         {
-            double[] actual = tif.Slices[0].GetPixelValues(x, y);
+            double[] actual = tif.GetSlice(0).GetPixelValues(x, y);
             Assert.That(actual.Length, Is.EqualTo(3));
             Assert.That(actual[0], Is.EqualTo(r));
             Assert.That(actual[1], Is.EqualTo(g));
@@ -23,7 +23,7 @@ namespace SciTIF.Tests
 
         public void AssertPixelValues(TifFile tif, int x, int y, double r, double g, double b, double a)
         {
-            double[] actual = tif.Slices[0].GetPixelValues(x, y);
+            double[] actual = tif.GetSlice(0).GetPixelValues(x, y);
             Assert.That(actual.Length, Is.EqualTo(4));
             Assert.That(actual[0], Is.EqualTo(r));
             Assert.That(actual[1], Is.EqualTo(g));
@@ -44,10 +44,10 @@ namespace SciTIF.Tests
         {
             string filePath = Path.Combine(SampleData.DataFolder, "calibration-20x-ruler-0.32365.tif");
             TifFile tif = new(filePath);
-            Assert.AreEqual(1896, tif.Slices[0].Values[0]);
+            Assert.AreEqual(1896, tif.GetSlice(0).Values[0]);
 
-            Adjust.AutoScale(tif.Slices[0]);
-            Assert.AreNotEqual(1896, tif.Slices[0].Values[0]);
+            Adjust.AutoScale(tif.GetSlice(0));
+            Assert.AreNotEqual(1896, tif.GetSlice(0).Values[0]);
         }
 
         [Test]

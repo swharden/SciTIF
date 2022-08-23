@@ -7,12 +7,14 @@ namespace SciTIF;
 public class TifFile
 {
     public readonly string FilePath;
-    public readonly ImageData[] Slices;
+    public readonly Stack Stack;
     public readonly string FormatDescription;
+    public readonly ITifReader Reader;
 
-    public readonly int Width;
-    public readonly int Height;
-    public readonly int ImageCount;
+    public int Width => Stack.Width;
+    public int Height => Stack.Height;
+    public int Channels => Stack.Channels;
+    public int Slices => Stack.Count;
 
     public TifFile(string filePath)
     {
@@ -32,11 +34,12 @@ public class TifFile
         if (tif is null)
             throw new InvalidProgramException($"Y U NULL? {filePath}");
 
-        (ITifReader reader, FormatDescription) = TifReader.GetBestReader(tif);
-        //Console.WriteLine($"BEST READER: {reader}");
-        Slices = reader.ReadAllSlices(tif);
-        Width = Slices[0].Width;
-        Height = Slices[0].Height;
-        ImageCount = tif.NumberOfDirectories();
+        (Reader, FormatDescription) = TifReader.GetBestReader(tif);
+        Stack = Reader.ReadAllSlices(tif);
+    }
+
+    public Image GetSlice(int sliceIndex)
+    {
+        return Stack.Slices[sliceIndex];
     }
 }
