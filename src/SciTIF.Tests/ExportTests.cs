@@ -21,9 +21,10 @@ namespace SciTIF.Tests
             {
                 TifFile tif = new(tifPath);
                 Console.WriteLine(tif);
-                string outputPath = Path.Combine(outputFolder, Path.GetFileName(tifPath)+".png");
+                string outputPath = Path.Combine(outputFolder, Path.GetFileName(tifPath) + ".png");
                 Console.WriteLine(outputPath);
-                Export.PNG(outputPath, Adjust.AutoScale(tif.Channels[0].Values));
+                Adjust.AutoScale(tif.Channels[0]);
+                Export.PNG(outputPath, tif.Channels[0]);
             }
         }
     }

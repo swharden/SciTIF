@@ -4,6 +4,6 @@ namespace SciTIF;
 
 public interface ITifReader
 {
-    public ImageData[] Read(Tiff tif);
-    public ImageData[] ReadDirectory(Tiff tif, int directory);
+    public ImageDataXY[] Read(Tiff tif);
+    public ImageDataXY[] ReadDirectory(Tiff tif, int directory);
 }

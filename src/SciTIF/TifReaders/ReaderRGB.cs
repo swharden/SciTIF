@@ -5,23 +5,23 @@ namespace SciTIF.TifReaders;
 
 internal class ReaderRGB : ITifReader
 {
-    public ImageData[] Read(Tiff tif)
+    public ImageDataXY[] Read(Tiff tif)
     {
         return Enumerable.Range(0, tif.NumberOfDirectories())
             .SelectMany(x => ReadDirectory(tif, x))
             .ToArray();
     }
 
-    public ImageData[] ReadDirectory(Tiff tif, int directory)
+    public ImageDataXY[] ReadDirectory(Tiff tif, int directory)
     {
         tif.SetDirectory((short)directory);
 
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
 
-        double[,] valuesR = new double[height, width];
-        double[,] valuesG = new double[height, width];
-        double[,] valuesB = new double[height, width];
+        double[] valuesR = new double[height * width];
+        double[] valuesG = new double[height * width];
+        double[] valuesB = new double[height * width];
 
         int[] raster = new int[height * width];
         tif.ReadRGBAImage(width, height, raster, true);
@@ -32,16 +32,17 @@ internal class ReaderRGB : ITifReader
             {
                 int sourceY = height - y - 1;
                 int offset = sourceY * width + x;
-                valuesR[y, x] = Tiff.GetR(raster[offset]);
-                valuesG[y, x] = Tiff.GetG(raster[offset]);
-                valuesB[y, x] = Tiff.GetB(raster[offset]);
+                int destOffset = y * width + x;
+                valuesR[destOffset] = Tiff.GetR(raster[offset]);
+                valuesG[destOffset] = Tiff.GetG(raster[offset]);
+                valuesB[destOffset] = Tiff.GetB(raster[offset]);
             }
         }
 
-        return new ImageData[] {
-            new ImageData(valuesR),
-            new ImageData(valuesG),
-            new ImageData(valuesB),
+        return new ImageDataXY[] {
+            new ImageDataXY(width, height, valuesR),
+            new ImageDataXY(width, height, valuesG),
+            new ImageDataXY(width, height, valuesB),
         };
     }
 }

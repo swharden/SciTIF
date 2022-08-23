@@ -1,0 +1,10 @@
+print("\\Clear");
+width = getWidth();
+height = getHeight();
+
+print("title = " + getTitle());
+print("width = " + width);
+print("height = " + height);
+
+print("pixel [7, 13] = " + getPixel(7,13));
+print("value [7, 13] = " + getValue(7,13));

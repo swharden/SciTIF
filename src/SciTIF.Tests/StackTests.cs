@@ -15,7 +15,7 @@ namespace SciTIF.Tests
         {
             string outputFolder = Path.GetFullPath("_multiChannelFrames");
             if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);    
+                Directory.CreateDirectory(outputFolder);
 
             string filePath = Path.Combine(SampleData.DataFolder, "C3Z4F5.tif");
             TifFile tif = new(filePath);
@@ -25,7 +25,7 @@ namespace SciTIF.Tests
             {
                 string outputFilePath = Path.Combine(outputFolder, $"test-stack-{i:000}.png");
                 Console.WriteLine(outputFilePath);
-                tif.Channels[i].SavePng(outputFilePath);
+                Export.PNG(outputFilePath, tif.Channels[i]);
             }
         }
 
@@ -35,8 +35,8 @@ namespace SciTIF.Tests
             string filePath = Path.Combine(SampleData.DataFolder, "video-gcamp.tif");
             TifFile tif = new(filePath);
             Console.WriteLine(tif.Channels.Length);
-            ImageData p = Process.ProjectMean(tif.Channels);
-            p.SavePng("proj.png");
+            ImageDataXY p = Process.ProjectMean(tif.Channels);
+            Export.PNG("proj.png", p);
         }
     }
 }

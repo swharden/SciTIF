@@ -34,26 +34,36 @@ namespace SciTIF.Tests
 
                 Console.WriteLine($"{fileName} {tif.FormatDescription}");
 
-                double[] channelValues = tif.GetPixel(x, y).Take(3).ToArray(); // ignore alpha (last)
-                Console.WriteLine(fileName + " : " + string.Join(",", (channelValues.Select(x => x.ToString()))));
-                double actualMean = Math.Round(channelValues.Sum() / channelValues.Length, 4);
-
-                Assert.AreEqual(expectedMean, actualMean, $"{fileName} X={x} Y={y} {tif.FormatDescription}");
+                if (tif.Channels.Length == 1)
+                {
+                    double value = tif.Channels[0].GetPixel(x, y);
+                    Assert.That(value, Is.EqualTo(expectedMean).Within(.01));
+                }
+                else
+                {
+                    double valueR = tif.Channels[0].GetPixel(x, y);
+                    double valueG = tif.Channels[1].GetPixel(x, y);
+                    double valueB = tif.Channels[2].GetPixel(x, y);
+                    double[] channelValues = { valueR, valueG, valueB };
+                    Console.WriteLine(fileName + " : " + string.Join(",", (channelValues.Select(x => x.ToString()))));
+                    double mean = channelValues.Sum() / channelValues.Length;
+                    Assert.That(mean, Is.EqualTo(expectedMean).Within(.01));
+                }
             }
         }
 
         [Test]
         public void Test_Dimensions_MatchImageJ()
         {
-            foreach (var dims in SampleData.Dimensions())
+            foreach (var known in SampleData.Dimensions())
             {
-                string filePath = Path.Combine(SampleData.DataFolder, dims.filename);
+                string filePath = Path.Combine(SampleData.DataFolder, known.filename);
                 Console.WriteLine(filePath);
                 TifFile tif = new(filePath);
 
-                Assert.AreEqual(dims.width, tif.Width, filePath);
-                Assert.AreEqual(dims.height, tif.Height, filePath);
-                Assert.AreEqual(dims.channels * dims.slices * dims.frames, tif.ImageCount, filePath);
+                Assert.AreEqual(known.width, tif.Width, filePath);
+                Assert.AreEqual(known.height, tif.Height, filePath);
+                Assert.AreEqual(known.channels * known.slices * known.frames, tif.ImageCount, filePath);
             }
         }
     }

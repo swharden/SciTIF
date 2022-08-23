@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using BitMiracle.LibTiff.Classic;
 
 namespace SciTIF;
@@ -8,7 +7,7 @@ namespace SciTIF;
 public class TifFile
 {
     public readonly string FilePath;
-    public readonly ImageData[] Channels;
+    public readonly ImageDataXY[] Channels;
     public readonly string FormatDescription;
 
     public readonly int Width;
@@ -34,27 +33,10 @@ public class TifFile
             throw new InvalidProgramException($"Y U NULL? {filePath}");
 
         (ITifReader reader, FormatDescription) = TifReader.GetBestReader(tif);
+        //Console.WriteLine($"BEST READER: {reader}");
         Channels = reader.Read(tif);
         Width = Channels[0].Width;
         Height = Channels[0].Height;
         ImageCount = tif.NumberOfDirectories();
-    }
-
-    public override string ToString()
-    {
-        return $"TifFile {FormatDescription}: {Path.GetFileName(FilePath)}";
-    }
-
-    /// <summary>
-    /// Return the values (one per channel) for the given position in the image data
-    /// </summary>
-    public double[] GetPixel(int x, int y)
-    {
-        return Channels.Select(img => img.Values[y, x]).ToArray();
-    }
-
-    public void SavePng(string outputPath, bool autoScale = false)
-    {
-        Export.PNG(outputPath, this, autoScale: autoScale);
     }
 }

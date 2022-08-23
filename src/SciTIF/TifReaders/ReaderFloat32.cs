@@ -6,14 +6,14 @@ namespace SciTIF.TifReaders;
 
 internal class ReaderFloat32 : ITifReader
 {
-    public ImageData[] Read(Tiff tif)
+    public ImageDataXY[] Read(Tiff tif)
     {
         return Enumerable.Range(0, tif.NumberOfDirectories())
             .SelectMany(x => ReadDirectory(tif, x))
             .ToArray();
     }
 
-    public ImageData[] ReadDirectory(Tiff tif, int directory)
+    public ImageDataXY[] ReadDirectory(Tiff tif, int directory)
     {
         tif.SetDirectory((short)directory);
 
@@ -21,7 +21,7 @@ internal class ReaderFloat32 : ITifReader
 
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        double[,] pixelValues = new double[height, width];
+        double[] values = new double[height * width];
 
         byte[] lineBytes = new byte[tif.ScanlineSize()];
         byte[] pixelBytes = new byte[bytesPerPixel];
@@ -31,10 +31,10 @@ internal class ReaderFloat32 : ITifReader
             for (int x = 0; x < width; x++)
             {
                 Array.Copy(lineBytes, x * bytesPerPixel, pixelBytes, 0, bytesPerPixel);
-                pixelValues[y, x] = BitConverter.ToSingle(pixelBytes, 0);
+                values[y * width + x] = BitConverter.ToSingle(pixelBytes, 0);
             }
         }
 
-        return new ImageData[] { new ImageData(pixelValues) };
+        return new ImageDataXY[] { new ImageDataXY(width, height, values) };
     }
 }

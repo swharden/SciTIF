@@ -13,27 +13,24 @@ public static class Export
     {
         if (tif.Channels.Length == 1)
         {
-            double[,] gray = tif.Channels[0].Values;
-
+            ImageDataXY img = tif.Channels[0];
             if (autoScale)
-            {
-                gray = Adjust.AutoScale(gray);
-            }
+                Adjust.AutoScale(img);
 
-            PNG(filePath, gray);
+            PNG(filePath, img);
             return;
         }
         else if (tif.Channels.Length >= 3)
         {
-            double[,] r = tif.Channels[0].Values;
-            double[,] g = tif.Channels[1].Values;
-            double[,] b = tif.Channels[2].Values;
+            ImageDataXY r = tif.Channels[0];
+            ImageDataXY g = tif.Channels[1];
+            ImageDataXY b = tif.Channels[2];
 
             if (autoScale)
             {
-                r = Adjust.AutoScale(r);
-                g = Adjust.AutoScale(g);
-                b = Adjust.AutoScale(b);
+                Adjust.AutoScale(r);
+                Adjust.AutoScale(g);
+                Adjust.AutoScale(b);
             }
 
             PNG(filePath, r, g, b);
@@ -45,13 +42,13 @@ public static class Export
         }
     }
 
-    public static void PNG(string filePath, double[,] values)
+    public static void PNG(string filePath, ImageDataXY img)
     {
-        using Bitmap bmp = GetBitmapGrayscale(values);
+        using Bitmap bmp = GetBitmapGrayscale(img);
         bmp.Save(filePath, ImageFormat.Png);
     }
 
-    public static void PNG(string filePath, double[,] r, double[,] g, double[,] b)
+    public static void PNG(string filePath, ImageDataXY r, ImageDataXY g, ImageDataXY b)
     {
         using Bitmap bmp = GetBitmapRGB(r, g, b);
         bmp.Save(filePath, ImageFormat.Png);
@@ -68,16 +65,19 @@ public static class Export
     }
 
     // TODO: implement with SkiaSharp
-    private static Bitmap GetBitmapGrayscale(double[,] values)
+
+    private static Bitmap GetBitmapGrayscale(ImageDataXY img)
     {
-        int width = values.GetLength(1);
-        int height = values.GetLength(0);
+        int width = img.Width;
+        int height = img.Height;
+        double[] values = img.Values;
+
         int stride = (width % 4 == 0) ? width : width + 4 - width % 4;
 
         byte[] bytes = new byte[stride * height];
         for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++)
-                bytes[y * stride + x] = Clamp(values[y, x]);
+                bytes[y * stride + x] = Clamp(values[width * y + x]);
 
         PixelFormat formatOutput = PixelFormat.Format8bppIndexed;
 
@@ -100,10 +100,10 @@ public static class Export
     }
 
     // TODO: implement with SkiaSharp
-    private static Bitmap GetBitmapRGB(double[,] r, double[,] g, double[,] b)
+    private static Bitmap GetBitmapRGB(ImageDataXY r, ImageDataXY g, ImageDataXY b)
     {
-        int width = r.GetLength(1);
-        int height = r.GetLength(0);
+        int width = r.Width;
+        int height = r.Height;
         int stride = (width % 4 == 0) ? width : width + 4 - width % 4;
         int bytesPerPixel = 3;
 
@@ -112,10 +112,11 @@ public static class Export
         {
             for (int x = 0; x < width; x++)
             {
-                int offset = (y * stride + x) * bytesPerPixel;
-                bytes[offset + 0] = Clamp(b[y, x]); // blue
-                bytes[offset + 1] = Clamp(g[y, x]); // green
-                bytes[offset + 2] = Clamp(r[y, x]); // red
+                int sourceOffset = y * width + x;
+                int destOffset = (y * stride + x) * bytesPerPixel;
+                bytes[destOffset + 0] = Clamp(b.Values[sourceOffset]);
+                bytes[destOffset + 1] = Clamp(g.Values[sourceOffset]);
+                bytes[destOffset + 2] = Clamp(r.Values[sourceOffset]);
             }
         }
 

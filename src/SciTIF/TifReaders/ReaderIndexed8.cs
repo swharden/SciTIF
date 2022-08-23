@@ -7,24 +7,24 @@ namespace SciTIF.TifReaders;
 
 internal class ReaderIndexed8 : ITifReader
 {
-    public ImageData[] Read(Tiff tif)
+    public ImageDataXY[] Read(Tiff tif)
     {
         return Enumerable.Range(0, tif.NumberOfDirectories())
             .SelectMany(x => ReadDirectory(tif, x))
             .ToArray();
     }
 
-    private ImageData[] ReadDirectory(Tiff tif, int directory)
+    private ImageDataXY[] ReadDirectory(Tiff tif, int directory)
     {
         tif.SetDirectory((short)directory);
 
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
 
-        double[,] r = new double[height, width];
-        double[,] g = new double[height, width];
-        double[,] b = new double[height, width];
-        double[,] a = new double[height, width];
+        double[] r = new double[height * width];
+        double[] g = new double[height * width];
+        double[] b = new double[height * width];
+        double[] a = new double[height * width];
 
         int[] rgba = new int[width * height];
         tif.ReadRGBAImage(width, height, rgba);
@@ -34,22 +34,23 @@ internal class ReaderIndexed8 : ITifReader
             for (int x = 0; x < width; x++)
             {
                 int sourceY = height - 1 - y;
-                r[y, x] = Tiff.GetR(rgba[sourceY * width + x]);
-                g[y, x] = Tiff.GetG(rgba[sourceY * width + x]);
-                b[y, x] = Tiff.GetB(rgba[sourceY * width + x]);
-                a[y, x] = Tiff.GetA(rgba[sourceY * width + x]);
+                int destOffset = y * width + x;
+                r[destOffset] = Tiff.GetR(rgba[sourceY * width + x]);
+                g[destOffset] = Tiff.GetG(rgba[sourceY * width + x]);
+                b[destOffset] = Tiff.GetB(rgba[sourceY * width + x]);
+                a[destOffset] = Tiff.GetA(rgba[sourceY * width + x]);
             }
         }
 
-        return new ImageData[] {
-            new ImageData(r),
-            new ImageData(g),
-            new ImageData(b),
-            new ImageData(a),
+        return new ImageDataXY[] {
+            new ImageDataXY(width, height, r),
+            new ImageDataXY(width, height, g),
+            new ImageDataXY(width, height, b),
+            new ImageDataXY(width, height, a),
         };
     }
 
-    ImageData[] ITifReader.ReadDirectory(Tiff tif, int directory)
+    ImageDataXY[] ITifReader.ReadDirectory(Tiff tif, int directory)
     {
         throw new NotImplementedException();
     }
