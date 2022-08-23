@@ -9,6 +9,8 @@ namespace SciTIF;
 public class Image
 {
     public readonly double[] Values;
+    private double[]? RememberedValues;
+
     public readonly int Height;
     public readonly int Width;
     public readonly int Channels;
@@ -45,6 +47,22 @@ public class Image
         return new Image(a.Width, a.Height, values, a.Channels);
     }
 
+    public void Remember()
+    {
+        if (RememberedValues is null)
+            RememberedValues = new double[Values.Length];
+
+        Array.Copy(Values, RememberedValues, Values.Length);
+    }
+
+    public void Recall()
+    {
+        if (RememberedValues is null)
+            throw new InvalidOperationException("Recall() requires Remember() to have been called previously");
+        else
+            Array.Copy(RememberedValues, Values, Values.Length);
+    }
+
     public int GetIndex(int x, int y, int channel = 0)
     {
         return (y * Width + x) * Channels + channel;
@@ -59,5 +77,47 @@ public class Image
     public double[] GetPixelValues(int x, int y)
     {
         return Enumerable.Range(GetIndex(x, y), Channels).Select(x => Values[x]).ToArray();
+    }
+
+    public double Min() => Values.Min();
+
+    public double Max() => Values.Max();
+
+    public double Percentile(double percent)
+    {
+        return Percentile(new double[] { percent }).Single();
+    }
+
+    public double[] Percentile(double[] percents)
+    {
+        double[] sorted = new double[Values.Length];
+        Array.Copy(Values, sorted, Values.Length);
+        Array.Sort(sorted);
+
+        return percents.Select(x => (int)(sorted.Length * x / 100)).Select(x => sorted[x]).ToArray();
+    }
+
+    public void AutoScale(double percentileLow = 0, double percentileHigh = 100, double newMax = 255)
+    {
+        double min;
+        double max;
+
+        if (percentileLow == 0 && percentileHigh == 100)
+        {
+            min = Min();
+            max = Max();
+        }
+        else
+        {
+            double[] percents = { percentileLow, percentileHigh };
+            double[] percentiles = Percentile(percents);
+            min = percentiles[0];
+            max = percentiles[1];
+        }
+
+        double scale = newMax / (max - min);
+
+        for (int i = 0; i < Values.Length; i++)
+            Values[i] = (Values[i] - min) * scale;
     }
 }

@@ -46,7 +46,7 @@ namespace SciTIF.Tests
             TifFile tif = new(filePath);
             Assert.AreEqual(1896, tif.GetSlice(0).Values[0]);
 
-            Adjust.AutoScale(tif.GetSlice(0));
+            tif.GetSlice(0).AutoScale();
             Assert.AreNotEqual(1896, tif.GetSlice(0).Values[0]);
         }
 

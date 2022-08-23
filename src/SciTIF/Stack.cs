@@ -22,4 +22,14 @@ public class Stack
     {
         Slices.AddRange(slices);
     }
+
+    public Image ProjectMean()
+    {
+        Image sum = new(Width, Height);
+
+        foreach (Image frame in Slices)
+            sum += frame;
+
+        return sum;
+    }
 }

@@ -23,7 +23,7 @@ namespace SciTIF.Tests
                 Console.WriteLine(tif);
                 string outputPath = Path.Combine(outputFolder, Path.GetFileName(tifPath) + ".png");
                 Console.WriteLine(outputPath);
-                Adjust.AutoScale(tif.GetSlice(0));
+                tif.GetSlice(0).AutoScale();
                 Export.PNG(outputPath, tif);
             }
         }

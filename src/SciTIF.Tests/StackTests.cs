@@ -35,7 +35,7 @@ namespace SciTIF.Tests
             string filePath = Path.Combine(SampleData.DataFolder, "video-gcamp.tif");
             TifFile tif = new(filePath);
             Console.WriteLine(tif.Slices);
-            Image p = Process.ProjectMean(tif.Stack.Slices.ToArray());
+            Image p = tif.Stack.ProjectMean();
             Export.PNG("proj.png", p);
         }
     }

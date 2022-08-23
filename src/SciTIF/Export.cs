@@ -15,7 +15,7 @@ public static class Export
         {
             Image img = tif.GetSlice(0);
             if (autoScale)
-                Adjust.AutoScale(img);
+                img.AutoScale();
 
             PNG(filePath, img);
             return;
@@ -28,9 +28,9 @@ public static class Export
 
             if (autoScale)
             {
-                Adjust.AutoScale(r);
-                Adjust.AutoScale(g);
-                Adjust.AutoScale(b);
+                r.AutoScale();
+                g.AutoScale();
+                b.AutoScale();
             }
 
             PNG(filePath, r, g, b);

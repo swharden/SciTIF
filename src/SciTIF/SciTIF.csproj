@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<LangVersion>latest</LangVersion>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <nullable>Enable</nullable>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.649" />
-		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.649" />
+        <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    </ItemGroup>
 
 </Project>
