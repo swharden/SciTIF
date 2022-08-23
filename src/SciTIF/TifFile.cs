@@ -7,7 +7,7 @@ namespace SciTIF;
 public class TifFile
 {
     public readonly string FilePath;
-    public readonly ImageDataXY[] Channels;
+    public readonly ImageData[] Channels;
     public readonly string FormatDescription;
 
     public readonly int Width;

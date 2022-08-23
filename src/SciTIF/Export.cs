@@ -13,7 +13,7 @@ public static class Export
     {
         if (tif.Channels.Length == 1)
         {
-            ImageDataXY img = tif.Channels[0];
+            ImageData img = tif.Channels[0];
             if (autoScale)
                 Adjust.AutoScale(img);
 
@@ -22,9 +22,9 @@ public static class Export
         }
         else if (tif.Channels.Length >= 3)
         {
-            ImageDataXY r = tif.Channels[0];
-            ImageDataXY g = tif.Channels[1];
-            ImageDataXY b = tif.Channels[2];
+            ImageData r = tif.Channels[0];
+            ImageData g = tif.Channels[1];
+            ImageData b = tif.Channels[2];
 
             if (autoScale)
             {
@@ -42,13 +42,13 @@ public static class Export
         }
     }
 
-    public static void PNG(string filePath, ImageDataXY img)
+    public static void PNG(string filePath, ImageData img)
     {
         using Bitmap bmp = GetBitmapGrayscale(img);
         bmp.Save(filePath, ImageFormat.Png);
     }
 
-    public static void PNG(string filePath, ImageDataXY r, ImageDataXY g, ImageDataXY b)
+    public static void PNG(string filePath, ImageData r, ImageData g, ImageData b)
     {
         using Bitmap bmp = GetBitmapRGB(r, g, b);
         bmp.Save(filePath, ImageFormat.Png);
@@ -66,7 +66,7 @@ public static class Export
 
     // TODO: implement with SkiaSharp
 
-    private static Bitmap GetBitmapGrayscale(ImageDataXY img)
+    private static Bitmap GetBitmapGrayscale(ImageData img)
     {
         int width = img.Width;
         int height = img.Height;
@@ -100,7 +100,7 @@ public static class Export
     }
 
     // TODO: implement with SkiaSharp
-    private static Bitmap GetBitmapRGB(ImageDataXY r, ImageDataXY g, ImageDataXY b)
+    private static Bitmap GetBitmapRGB(ImageData r, ImageData g, ImageData b)
     {
         int width = r.Width;
         int height = r.Height;

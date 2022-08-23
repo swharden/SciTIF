@@ -7,14 +7,14 @@ namespace SciTIF.TifReaders;
 
 internal class ReaderIndexed8 : ITifReader
 {
-    public ImageDataXY[] Read(Tiff tif)
+    public ImageData[] Read(Tiff tif)
     {
         return Enumerable.Range(0, tif.NumberOfDirectories())
             .SelectMany(x => ReadDirectory(tif, x))
             .ToArray();
     }
 
-    private ImageDataXY[] ReadDirectory(Tiff tif, int directory)
+    private ImageData[] ReadDirectory(Tiff tif, int directory)
     {
         tif.SetDirectory((short)directory);
 
@@ -42,15 +42,15 @@ internal class ReaderIndexed8 : ITifReader
             }
         }
 
-        return new ImageDataXY[] {
-            new ImageDataXY(width, height, r),
-            new ImageDataXY(width, height, g),
-            new ImageDataXY(width, height, b),
-            new ImageDataXY(width, height, a),
+        return new ImageData[] {
+            new ImageData(width, height, r),
+            new ImageData(width, height, g),
+            new ImageData(width, height, b),
+            new ImageData(width, height, a),
         };
     }
 
-    ImageDataXY[] ITifReader.ReadDirectory(Tiff tif, int directory)
+    ImageData[] ITifReader.ReadDirectory(Tiff tif, int directory)
     {
         throw new NotImplementedException();
     }

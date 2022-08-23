@@ -5,14 +5,14 @@ namespace SciTIF.TifReaders;
 
 internal class ReaderRGBA : ITifReader
 {
-    public ImageDataXY[] Read(Tiff tif)
+    public ImageData[] Read(Tiff tif)
     {
         return Enumerable.Range(0, tif.NumberOfDirectories())
             .SelectMany(x => ReadDirectory(tif, x))
             .ToArray();
     }
 
-    public ImageDataXY[] ReadDirectory(Tiff tif, int directory)
+    public ImageData[] ReadDirectory(Tiff tif, int directory)
     {
         tif.SetDirectory((short)directory);
 
@@ -41,11 +41,11 @@ internal class ReaderRGBA : ITifReader
             }
         }
 
-        return new ImageDataXY[] {
-            new ImageDataXY(width, height, valuesR),
-            new ImageDataXY(width, height, valuesG),
-            new ImageDataXY(width, height, valuesB),
-            new ImageDataXY(width, height, valuesA),
+        return new ImageData[] {
+            new ImageData(width, height, valuesR),
+            new ImageData(width, height, valuesG),
+            new ImageData(width, height, valuesB),
+            new ImageData(width, height, valuesA),
         };
     }
 }

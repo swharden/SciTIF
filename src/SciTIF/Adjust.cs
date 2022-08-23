@@ -2,7 +2,7 @@
 
 public static class Adjust
 {
-    public static void AutoScale(ImageDataXY img, double percentileLow = 0, double percentileHigh = 100)
+    public static void AutoScale(ImageData img, double percentileLow = 0, double percentileHigh = 100)
     {
         double newMax = 255;
         double min;

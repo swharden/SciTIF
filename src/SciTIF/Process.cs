@@ -6,11 +6,11 @@ namespace SciTIF
 {
     public static class Process
     {
-        public static ImageDataXY ProjectMean(ImageDataXY[] frames)
+        public static ImageData ProjectMean(ImageData[] frames)
         {
-            ImageDataXY sum = new(frames[0].Width, frames[0].Height);
+            ImageData sum = new(frames[0].Width, frames[0].Height);
 
-            foreach (ImageDataXY frame in frames)
+            foreach (ImageData frame in frames)
                 sum += frame;
 
             return sum;
