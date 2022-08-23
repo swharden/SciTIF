@@ -31,24 +31,11 @@ namespace SciTIF.Tests
                 (string fileName, int x, int y, double expectedMean) = item;
                 string filePath = Path.Combine(SampleData.DataFolder, fileName);
                 TifFile tif = new(filePath);
-
                 Console.WriteLine($"{fileName} {tif.FormatDescription}");
 
-                if (tif.Channels.Length == 1)
-                {
-                    double value = tif.Channels[0].GetPixel(x, y);
-                    Assert.That(value, Is.EqualTo(expectedMean).Within(.01));
-                }
-                else
-                {
-                    double valueR = tif.Channels[0].GetPixel(x, y);
-                    double valueG = tif.Channels[1].GetPixel(x, y);
-                    double valueB = tif.Channels[2].GetPixel(x, y);
-                    double[] channelValues = { valueR, valueG, valueB };
-                    Console.WriteLine(fileName + " : " + string.Join(",", (channelValues.Select(x => x.ToString()))));
-                    double mean = channelValues.Sum() / channelValues.Length;
-                    Assert.That(mean, Is.EqualTo(expectedMean).Within(.01));
-                }
+                double[] pixelValues = tif.Slices[0].GetPixelValues(x, y).Take(3).ToArray();
+                double mean = pixelValues.Sum() / pixelValues.Length;
+                Assert.That(expectedMean, Is.EqualTo(mean).Within(.01));
             }
         }
 

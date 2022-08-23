@@ -14,17 +14,21 @@ namespace SciTIF.Tests
     {
         public void AssertPixelValues(TifFile tif, int x, int y, double r, double g, double b)
         {
-            Assert.That(tif.Channels[0].GetPixel(x, y), Is.EqualTo(r));
-            Assert.That(tif.Channels[1].GetPixel(x, y), Is.EqualTo(g));
-            Assert.That(tif.Channels[2].GetPixel(x, y), Is.EqualTo(b));
+            double[] actual = tif.Slices[0].GetPixelValues(x, y);
+            Assert.That(actual.Length, Is.EqualTo(3));
+            Assert.That(actual[0], Is.EqualTo(r));
+            Assert.That(actual[1], Is.EqualTo(g));
+            Assert.That(actual[2], Is.EqualTo(b));
         }
 
         public void AssertPixelValues(TifFile tif, int x, int y, double r, double g, double b, double a)
         {
-            Assert.That(tif.Channels[0].GetPixel(x, y), Is.EqualTo(r));
-            Assert.That(tif.Channels[1].GetPixel(x, y), Is.EqualTo(g));
-            Assert.That(tif.Channels[2].GetPixel(x, y), Is.EqualTo(b));
-            Assert.That(tif.Channels[3].GetPixel(x, y), Is.EqualTo(a));
+            double[] actual = tif.Slices[0].GetPixelValues(x, y);
+            Assert.That(actual.Length, Is.EqualTo(4));
+            Assert.That(actual[0], Is.EqualTo(r));
+            Assert.That(actual[1], Is.EqualTo(g));
+            Assert.That(actual[2], Is.EqualTo(b));
+            Assert.That(actual[3], Is.EqualTo(a));
         }
 
         [Test]
@@ -40,10 +44,10 @@ namespace SciTIF.Tests
         {
             string filePath = Path.Combine(SampleData.DataFolder, "calibration-20x-ruler-0.32365.tif");
             TifFile tif = new(filePath);
-            Assert.AreEqual(1896, tif.Channels[0].Values[0]);
+            Assert.AreEqual(1896, tif.Slices[0].Values[0]);
 
-            Adjust.AutoScale(tif.Channels[0]);
-            Assert.AreNotEqual(1896, tif.Channels[0].Values[0]);
+            Adjust.AutoScale(tif.Slices[0]);
+            Assert.AreNotEqual(1896, tif.Slices[0].Values[0]);
         }
 
         [Test]

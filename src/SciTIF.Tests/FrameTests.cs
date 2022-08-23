@@ -18,7 +18,7 @@ namespace SciTIF.Tests
             string filePath = Path.Combine(SampleData.DataFolder, fileName);
 
             TifFile tf = new(filePath);
-            Console.WriteLine(tf.Channels.Length);
+            Console.WriteLine(tf.Slices.Length);
         }
     }
 }

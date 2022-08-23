@@ -23,7 +23,7 @@ namespace SciTIF.Tests
                 string pngOutputPath = Path.Combine(outputFolder, outputFileName);
 
                 TifFile tif = new(tifInputPath);
-                Assert.AreEqual(bmp1.Size.Width, tif.Channels[0].Width, tif.ToString());
+                Assert.AreEqual(bmp1.Size.Width, tif.Slices[0].Width, tif.ToString());
 
                 Export.PNG(pngOutputPath, tif);
                 Console.WriteLine(pngOutputPath);

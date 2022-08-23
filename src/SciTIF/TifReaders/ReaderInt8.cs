@@ -6,20 +6,20 @@ namespace SciTIF.TifReaders;
 
 internal class ReaderInt8 : ITifReader
 {
-    public ImageData[] Read(Tiff tif)
+    public ImageData[] ReadAllSlices(Tiff tif)
     {
         return Enumerable.Range(0, tif.NumberOfDirectories())
-            .SelectMany(x => ReadDirectory(tif, x))
+            .Select(x => ReadSlice(tif, x))
             .ToArray();
     }
 
-    public ImageData[] ReadDirectory(Tiff tif, int directory)
+    public ImageData ReadSlice(Tiff tif, int slice)
     {
-        tif.SetDirectory((short)directory);
+        tif.SetDirectory((short)slice);
 
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        double[] values = new double[height * width];
+        ImageData data = new(width, height);
 
         int numberOfStrips = tif.NumberOfStrips();
         int stripSize = tif.StripSize();
@@ -35,10 +35,11 @@ internal class ReaderInt8 : ITifReader
             for (int x = 0; x < width; x++)
             {
                 int offset = y * width + x;
-                values[y * width + x] = bytes[offset];
+                int i = data.GetIndex(x, y);
+                data.Values[i] = bytes[offset];
             }
         }
 
-        return new ImageData[] { new ImageData(width, height, values) };
+        return data;
     }
 }

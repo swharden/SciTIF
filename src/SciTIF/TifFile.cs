@@ -7,7 +7,7 @@ namespace SciTIF;
 public class TifFile
 {
     public readonly string FilePath;
-    public readonly ImageData[] Channels;
+    public readonly ImageData[] Slices;
     public readonly string FormatDescription;
 
     public readonly int Width;
@@ -34,9 +34,9 @@ public class TifFile
 
         (ITifReader reader, FormatDescription) = TifReader.GetBestReader(tif);
         //Console.WriteLine($"BEST READER: {reader}");
-        Channels = reader.Read(tif);
-        Width = Channels[0].Width;
-        Height = Channels[0].Height;
+        Slices = reader.ReadAllSlices(tif);
+        Width = Slices[0].Width;
+        Height = Slices[0].Height;
         ImageCount = tif.NumberOfDirectories();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace SciTIF;
 
@@ -53,5 +54,10 @@ public class ImageData
     {
         int i = GetIndex(x, y, channel);
         return Values[i];
+    }
+
+    public double[] GetPixelValues(int x, int y)
+    {
+        return Enumerable.Range(GetIndex(x, y), Channels).Select(x => Values[x]).ToArray();
     }
 }

@@ -11,20 +11,20 @@ public static class Export
 {
     public static void PNG(string filePath, TifFile tif, bool autoScale = false)
     {
-        if (tif.Channels.Length == 1)
+        if (tif.Slices.Length == 1)
         {
-            ImageData img = tif.Channels[0];
+            ImageData img = tif.Slices[0];
             if (autoScale)
                 Adjust.AutoScale(img);
 
             PNG(filePath, img);
             return;
         }
-        else if (tif.Channels.Length >= 3)
+        else if (tif.Slices.Length >= 3)
         {
-            ImageData r = tif.Channels[0];
-            ImageData g = tif.Channels[1];
-            ImageData b = tif.Channels[2];
+            ImageData r = tif.Slices[0];
+            ImageData g = tif.Slices[1];
+            ImageData b = tif.Slices[2];
 
             if (autoScale)
             {
