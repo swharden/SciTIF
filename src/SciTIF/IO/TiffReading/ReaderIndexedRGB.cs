@@ -2,8 +2,10 @@
 
 namespace SciTIF.IO.TiffReading;
 
-internal class ReaderIndexed8 : ReaderBase
+internal class ReaderIndexedRGB : ReaderBase
 {
+    public override bool IsRGBA => true;
+
     public override Image ReadSlice(Tiff tif)
     {
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();

@@ -4,6 +4,8 @@ namespace SciTIF.IO.TiffReading;
 
 internal class ReaderRGBA : ReaderBase
 {
+    public override bool IsRGBA => true;
+
     public override Image ReadSlice(Tiff tif)
     {
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
@@ -22,7 +24,7 @@ internal class ReaderRGBA : ReaderBase
                 byte r = (byte)Tiff.GetR(raster[offset]);
                 byte g = (byte)Tiff.GetG(raster[offset]);
                 byte b = (byte)Tiff.GetB(raster[offset]);
-                byte a = (byte)Tiff.GetB(raster[offset]);
+                byte a = (byte)Tiff.GetA(raster[offset]);
                 img.SetPixel(x, y, r, g, b, a);
             }
         }

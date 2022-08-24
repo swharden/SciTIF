@@ -42,7 +42,37 @@ internal class ImageValidationTests
             Assert.That(tif.Height, Is.EqualTo(known.Height));
             Assert.That(tif.Frames, Is.EqualTo(known.Frames));
             Assert.That(tif.Slices, Is.EqualTo(known.Slices));
-            Assert.That(tif.Channels, Is.EqualTo(known.Channels));
+
+            if (known.Channels > 1)
+                Assert.That(tif.Channels, Is.EqualTo(known.Channels));
+        }
+    }
+
+    [Test]
+    public void Test_ExportSlices_5DSourceImage()
+    {
+        string tifFilePath = Path.Combine(SampleData.DataFolder, "C3Z4F5.tif");
+        TifFile tif = new(tifFilePath);
+        Assert.That(tif.Frames, Is.EqualTo(5));
+        Assert.That(tif.Slices, Is.EqualTo(4));
+        Assert.That(tif.Channels, Is.EqualTo(3));
+
+        string outputFolder = Path.Combine(Path.GetTempPath(), "test-image5d");
+        if (!Directory.Exists(outputFolder))
+            Directory.CreateDirectory(outputFolder);
+
+        for (int frame = 0; frame < tif.Frames; frame++)
+        {
+            for (int slice = 0; slice < tif.Slices; slice++)
+            {
+                for (int channel = 0; channel < tif.Channels; channel++)
+                {
+                    Image img = tif.Data.GetImage(frame, slice, channel);
+                    string saveAs = Path.Combine(outputFolder, $"test5D-F{frame}-S{slice}-C{channel}.png");
+                    img.SavePng(saveAs);
+                    Console.WriteLine(saveAs);
+                }
+            }
         }
     }
 

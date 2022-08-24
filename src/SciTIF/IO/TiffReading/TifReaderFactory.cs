@@ -36,11 +36,12 @@ public static class TifReaderFactory
         }
         else if (ColorFormat == "PALETTE")
         {
-            reader = BitsPerSample switch
-            {
-                8 => new ReaderIndexed8(),
-                _ => throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel")
-            };
+            if (BitsPerSample != 8)
+                throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel");
+
+            // TODO: if 1 channel use RGB?
+            reader = new ReaderInt8();
+            //reader = new ReaderIndexedRGB();
         }
         else
         {

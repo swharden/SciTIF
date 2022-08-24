@@ -11,7 +11,6 @@ public class Image
     public readonly double[] Values;
     private double[]? RememberedValues;
 
-    public bool IsRGBA = false;
     public readonly int Height;
     public readonly int Width;
     public int Samples => Width * Height;

@@ -4,6 +4,8 @@ namespace SciTIF.IO.TiffReading;
 
 internal class ReaderInt16 : ReaderBase
 {
+    public override bool IsRGBA => false;
+
     public override Image ReadSlice(Tiff tif)
     {
         const int bytesPerPixel = 2;

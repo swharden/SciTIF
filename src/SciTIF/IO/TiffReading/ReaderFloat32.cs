@@ -5,6 +5,8 @@ namespace SciTIF.IO.TiffReading;
 
 internal class ReaderFloat32 : ReaderBase
 {
+    public override bool IsRGBA => false;
+
     public override Image ReadSlice(Tiff tif)
     {
 
