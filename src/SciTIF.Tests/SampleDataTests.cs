@@ -1,6 +1,12 @@
-﻿using NUnit.Framework;
+﻿using BitMiracle.LibTiff.Classic;
+using NUnit.Framework;
 using SciTIF.Tests.ImageValidation;
+using System;
+using System.Collections.Generic;
+using System.Drawing.Drawing2D;
+using System.Formats.Asn1;
 using System.IO;
+using System.Linq;
 
 namespace SciTIF.Tests;
 
@@ -29,11 +35,15 @@ internal class SampleDataTests
 
         foreach (string tifPath in SampleData.TifFiles)
         {
+            Console.WriteLine(Path.GetFileName(tifPath));
             ImageInfo known = db.Infos[Path.GetFileName(tifPath)];
-
             TifFile tif = new(tifPath);
             Assert.That(tif.Width, Is.EqualTo(known.Width));
             Assert.That(tif.Height, Is.EqualTo(known.Height));
+            Assert.That(tif.Frames, Is.EqualTo(known.Frames));
+            Assert.That(tif.Slices, Is.EqualTo(known.Slices));
+            Assert.That(tif.Channels, Is.EqualTo(known.Channels));
         }
     }
+
 }

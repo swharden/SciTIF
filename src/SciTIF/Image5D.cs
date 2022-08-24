@@ -10,20 +10,23 @@ public class Image5D
     private readonly MultiChannelImage[] MultiChannelImages;
     public int Width => MultiChannelImages.Any() ? MultiChannelImages.First().Images.First().Width : 0;
     public int Height => MultiChannelImages.Any() ? MultiChannelImages.First().Images.First().Height : 0;
-    public int Channels => MultiChannelImages.Any() ? MultiChannelImages.First().Channels : 0;
 
     public readonly int Slices;
     public readonly int Frames;
+    public readonly int Channels;
 
-    public Image5D(int slices, int frames)
+    public Image5D(int slices, int frames, int channels)
     {
         Slices = slices;
         Frames = frames;
-        MultiChannelImages = new MultiChannelImage[slices * frames];
+        Channels = channels;
+        MultiChannelImages = new MultiChannelImage[slices * frames * channels];
     }
 
+    [Obsolete("work here next")]
     public int GetIndex(int slice, int frame)
     {
+        // TODO: indexing is not supporting channels...
         return Slices * frame + slice;
     }
 

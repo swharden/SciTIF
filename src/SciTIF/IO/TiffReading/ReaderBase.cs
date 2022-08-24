@@ -7,22 +7,24 @@ namespace SciTIF.IO.TiffReading;
 
 internal abstract class ReaderBase : ITifReader
 {
+    public abstract MultiChannelImage ReadSlice(Tiff tif, int directory);
+
     public Image5D Read(Tiff tif)
     {
-        int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
-        int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        int frames = tif.FieldValueOrDefault(TiffTag.FRAMECOUNT, 1);
-        int slices = tif.NumberOfDirectories() / frames;
+        int width = GetImageWidth(tif);
+        int height = GetImageHeight(tif);
+        int frames = GetIntFromDescription(tif, "frames");
+        int slices = GetIntFromDescription(tif, "slices");
+        int channels = GetIntFromDescription(tif, "channels");
 
         string ColorFormat = tif.GetField(TiffTag.PHOTOMETRIC)[0].ToString();
         int BitsPerSample = tif.FieldValueOrDefault(TiffTag.BITSPERSAMPLE, 8);
         int SamplesPerPixel = tif.FieldValueOrDefault(TiffTag.SAMPLESPERPIXEL, 1);
 
-        Image5D images = new(slices, frames);
+        Image5D images = new(slices, frames, channels);
 
         for (short i = 0; i < tif.NumberOfDirectories(); i++)
         {
-            Console.WriteLine($"{tif.FileName()} i={i} {this}");
             MultiChannelImage img = ReadSlice(tif, i);
             images.SetSlice(i, img);
         }
@@ -30,5 +32,28 @@ internal abstract class ReaderBase : ITifReader
         return images;
     }
 
-    public abstract MultiChannelImage ReadSlice(Tiff tif, int directory);
+    private int GetImageWidth(Tiff tif)
+    {
+        return int.Parse(tif.GetFieldDefaulted(TiffTag.IMAGEWIDTH)[0].ToString()!);
+    }
+
+    private int GetImageHeight(Tiff tif)
+    {
+        return int.Parse(tif.GetFieldDefaulted(TiffTag.IMAGELENGTH)[0].ToString()!);
+    }
+
+    private int GetIntFromDescription(Tiff tif, string key, int defaultValue = 1)
+    {
+        FieldValue[] desc = tif.GetField(TiffTag.IMAGEDESCRIPTION);
+        if (desc is not null)
+        {
+            foreach (string line in desc[0].ToString()!.Split('\n'))
+            {
+                Console.WriteLine(line);
+                if (line.Contains(key))
+                    return int.Parse(line.Split('=')[1]);
+            }
+        }
+        return defaultValue;
+    }
 }

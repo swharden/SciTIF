@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.IO;
 using BitMiracle.LibTiff.Classic;
 using SciTIF.IO.TiffReading;
@@ -38,6 +40,23 @@ public class TifFile
 
         (Reader, FormatDescription) = TifReaderFactory.GetBestReader(tif);
         Data = Reader.Read(tif);
+
+    }
+
+    public static Dictionary<string, FieldValue> GetHeaderDictionary(Tiff tif)
+    {
+        Dictionary<string, FieldValue> d = new();
+        foreach (TiffTag tag in Enum.GetValues(typeof(TiffTag)))
+        {
+            FieldValue[] res = tif.GetFieldDefaulted(tag);
+            if (res is null)
+                continue;
+            for (int i = 0; i < res.Length; i++)
+            {
+                d[$"{tag}[{i}]"] = res[i];
+            }
+        }
+        return d;
     }
 
     private class SilentErrorHandler : TiffErrorHandler
