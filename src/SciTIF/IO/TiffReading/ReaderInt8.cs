@@ -4,13 +4,13 @@ namespace SciTIF.IO.TiffReading;
 
 internal class ReaderInt8 : ReaderBase
 {
-    public override Image ReadSlice(Tiff tif, int slice)
+    public override MultiChannelImage ReadSlice(Tiff tif, int slice)
     {
         tif.SetDirectory((short)slice);
 
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        Image data = new(width, height);
+        GrayscaleImage data = new(width, height);
 
         int numberOfStrips = tif.NumberOfStrips();
         int stripSize = tif.StripSize();
@@ -31,6 +31,6 @@ internal class ReaderInt8 : ReaderBase
             }
         }
 
-        return data;
+        return new MultiChannelImage(data);
     }
 }

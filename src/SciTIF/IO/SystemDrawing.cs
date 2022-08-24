@@ -9,7 +9,7 @@ namespace SciTIF.IO;
 
 public static class SystemDrawing
 {
-    public static Bitmap GetBitmapGrayscale(Image img)
+    public static Bitmap GetBitmapGrayscale(GrayscaleImage img)
     {
         int width = img.Width;
         int height = img.Height;
@@ -42,7 +42,7 @@ public static class SystemDrawing
         return bmp2;
     }
 
-    public static Bitmap GetBitmapRGB(Image r, Image g, Image b)
+    public static Bitmap GetBitmapRGB(GrayscaleImage r, GrayscaleImage g, GrayscaleImage b)
     {
         int width = r.Width;
         int height = r.Height;
@@ -88,44 +88,16 @@ public static class SystemDrawing
 
     public static void SavePNG(string filePath, TifFile tif, bool autoScale = false)
     {
-        if (tif.Slices == 1)
-        {
-            Image img = tif.GetSlice(0);
-            if (autoScale)
-                img.AutoScale();
-
-            SavePNG(filePath, img);
-            return;
-        }
-        else if (tif.Slices >= 3)
-        {
-            Image r = tif.GetSlice(0);
-            Image g = tif.GetSlice(1);
-            Image b = tif.GetSlice(2);
-
-            if (autoScale)
-            {
-                r.AutoScale();
-                g.AutoScale();
-                b.AutoScale();
-            }
-
-            SavePNG(filePath, r, g, b);
-            return;
-        }
-        else
-        {
-            throw new InvalidOperationException("unsupported number of channels");
-        }
+        throw new NotImplementedException();
     }
 
-    public static void SavePNG(string filePath, Image img)
+    public static void SavePNG(string filePath, GrayscaleImage img)
     {
         using Bitmap bmp = SystemDrawing.GetBitmapGrayscale(img);
         bmp.Save(filePath, ImageFormat.Png);
     }
 
-    public static void SavePNG(string filePath, Image r, Image g, Image b)
+    public static void SavePNG(string filePath, GrayscaleImage r, GrayscaleImage g, GrayscaleImage b)
     {
         using Bitmap bmp = SystemDrawing.GetBitmapRGB(r, g, b);
         bmp.Save(filePath, ImageFormat.Png);

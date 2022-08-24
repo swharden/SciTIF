@@ -4,13 +4,15 @@ namespace SciTIF.IO.TiffReading;
 
 internal class ReaderRGB : ReaderBase
 {
-    public override Image ReadSlice(Tiff tif, int directory)
+    public override MultiChannelImage ReadSlice(Tiff tif, int directory)
     {
         tif.SetDirectory((short)directory);
 
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        Image data = new(width, height, 3);
+        GrayscaleImage r = new(width, height);
+        GrayscaleImage g = new(width, height);
+        GrayscaleImage b = new(width, height);
 
         int[] raster = new int[height * width];
         tif.ReadRGBAImage(width, height, raster, true);
@@ -21,13 +23,13 @@ internal class ReaderRGB : ReaderBase
             {
                 int sourceY = height - y - 1;
                 int offset = sourceY * width + x;
-                int destOffset = data.GetIndex(x, y);
-                data.Values[destOffset] = Tiff.GetR(raster[offset]);
-                data.Values[destOffset + 1] = Tiff.GetG(raster[offset]);
-                data.Values[destOffset + 2] = Tiff.GetB(raster[offset]);
+                int destOffset = r.GetIndex(x, y);
+                r.Values[destOffset] = Tiff.GetR(raster[offset]);
+                g.Values[destOffset] = Tiff.GetG(raster[offset]);
+                b.Values[destOffset] = Tiff.GetB(raster[offset]);
             }
         }
 
-        return data;
+        return new MultiChannelImage(r, g, b);
     }
 }

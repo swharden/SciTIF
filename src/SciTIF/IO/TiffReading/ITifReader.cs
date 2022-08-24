@@ -4,6 +4,5 @@ namespace SciTIF.IO.TiffReading;
 
 public interface ITifReader
 {
-    public Stack ReadAllSlices(Tiff tif);
-    public Image ReadSlice(Tiff tif, int directory);
+    public Image5D Read(Tiff tif);
 }

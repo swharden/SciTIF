@@ -7,29 +7,18 @@ namespace SciTIF;
 
 public class Stack
 {
-    public readonly List<Image> Slices = new();
+    public readonly List<GrayscaleImage> Slices = new();
     public int Count => Slices.Count;
     public int Width => Slices.First().Width;
     public int Height => Slices.First().Height;
-    public int Channels => Slices.First().Channels;
 
     public Stack()
     {
 
     }
 
-    public Stack(IEnumerable<Image> slices)
+    public Stack(IEnumerable<GrayscaleImage> slices)
     {
         Slices.AddRange(slices);
-    }
-
-    public Image ProjectMean()
-    {
-        Image sum = new(Width, Height);
-
-        foreach (Image frame in Slices)
-            sum += frame;
-
-        return sum;
     }
 }

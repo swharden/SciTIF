@@ -8,14 +8,15 @@ namespace SciTIF;
 public class TifFile
 {
     public readonly string FilePath;
-    public readonly Stack Stack;
+    public readonly Image5D Data;
     public readonly string FormatDescription;
     public readonly ITifReader Reader;
 
-    public int Width => Stack.Width;
-    public int Height => Stack.Height;
-    public int Channels => Stack.Channels;
-    public int Slices => Stack.Count;
+    public int Width => Data.Width;
+    public int Height => Data.Height;
+    public int Channels => Data.Channels;
+    public int Slices => Data.Slices;
+    public int Frames => Data.Frames;
 
     public TifFile(string filePath)
     {
@@ -36,7 +37,7 @@ public class TifFile
             throw new InvalidProgramException($"Y U NULL? {filePath}");
 
         (Reader, FormatDescription) = TifReaderFactory.GetBestReader(tif);
-        Stack = Reader.ReadAllSlices(tif);
+        Data = Reader.Read(tif);
     }
 
     private class SilentErrorHandler : TiffErrorHandler
@@ -46,8 +47,8 @@ public class TifFile
         public override void WarningHandler(Tiff tif, string module, string fmt, params object[] ap) { }
     }
 
-    public Image GetSlice(int sliceIndex)
+    public MultiChannelImage GetSlice(int slice, int frame)
     {
-        return Stack.Slices[sliceIndex];
+        return Data.GetSlice(slice, frame);
     }
 }

@@ -6,37 +6,36 @@ namespace SciTIF;
 /// <summary>
 /// Floating-point representation of pixel intensity values
 /// </summary>
-public class Image
+public class GrayscaleImage
 {
     public readonly double[] Values;
     private double[]? RememberedValues;
 
     public readonly int Height;
     public readonly int Width;
-    public readonly int Channels;
+    public int Samples => Width * Height;
 
-    public Image(int width, int height, int channels = 1)
+    public GrayscaleImage(int width, int height)
     {
         Width = width;
         Height = height;
-        Channels = channels;
-        Values = new double[width * height * channels];
+        Values = new double[Samples];
     }
 
-    public Image(int width, int height, double[] values, int channels = 1)
+    public GrayscaleImage(int width, int height, double[] values)
     {
-        if (values.Length != (width * height * channels))
-            throw new ArgumentException("invalid length");
-
         Width = width;
         Height = height;
-        Channels = channels;
+
+        if (values.Length != Samples)
+            throw new ArgumentException("invalid length");
+
         Values = values;
     }
 
-    public static Image operator +(Image a, Image b)
+    public static GrayscaleImage operator +(GrayscaleImage a, GrayscaleImage b)
     {
-        if ((a.Width != b.Width) || (a.Height != b.Height) || (a.Channels != b.Channels) || (a.Values.Length != b.Values.Length))
+        if ((a.Width != b.Width) || (a.Height != b.Height) || (a.Values.Length != b.Values.Length))
             throw new ArgumentException("image operations require identical dimensions");
 
         double[] values = new double[a.Values.Length];
@@ -44,7 +43,17 @@ public class Image
         for (int i = 0; i < values.Length; i++)
             values[i] = a.Values[i] + b.Values[i];
 
-        return new Image(a.Width, a.Height, values, a.Channels);
+        return new GrayscaleImage(a.Width, a.Height, values);
+    }
+
+    public static GrayscaleImage operator /(GrayscaleImage a, double b)
+    {
+        double[] values = new double[a.Values.Length];
+
+        for (int i = 0; i < values.Length; i++)
+            values[i] = a.Values[i] / b;
+
+        return new GrayscaleImage(a.Width, a.Height, values);
     }
 
     public void SavePng(string filename, bool autoscale = false)
@@ -70,21 +79,9 @@ public class Image
             Array.Copy(RememberedValues, Values, Values.Length);
     }
 
-    public int GetIndex(int x, int y, int channel = 0)
-    {
-        return (y * Width + x) * Channels + channel;
-    }
+    public int GetIndex(int x, int y) => y * Width + x;
 
-    public double GetPixel(int x, int y, int channel = 0)
-    {
-        int i = GetIndex(x, y, channel);
-        return Values[i];
-    }
-
-    public double[] GetPixelValues(int x, int y)
-    {
-        return Enumerable.Range(GetIndex(x, y), Channels).Select(x => Values[x]).ToArray();
-    }
+    public double GetPixel(int x, int y) => Values[GetIndex(x, y)];
 
     public double Min() => Values.Min();
 
@@ -92,16 +89,17 @@ public class Image
 
     public double Percentile(double percent)
     {
-        return Percentile(new double[] { percent }).Single();
+        double[] percents = { percent };
+        return Percentile(percents).Single();
     }
 
     public double[] Percentile(double[] percents)
     {
+        int[] indexes = percents.Select(x => (int)(Values.Length * x / 100)).ToArray();
         double[] sorted = new double[Values.Length];
         Array.Copy(Values, sorted, Values.Length);
         Array.Sort(sorted);
-
-        return percents.Select(x => (int)(sorted.Length * x / 100)).Select(x => sorted[x]).ToArray();
+        return indexes.Select(x => sorted[x]).ToArray();
     }
 
     public void AutoScale(double percentileLow = 0, double percentileHigh = 100, double newMax = 255)
