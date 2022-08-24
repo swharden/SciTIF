@@ -6,22 +6,22 @@ namespace SciTIF;
 
 public class MultiChannelImage
 {
-    public readonly List<GrayscaleImage> Images = new();
+    public readonly List<Image> Images = new();
     public int Channels => Images.Count;
 
-    public MultiChannelImage(GrayscaleImage gray)
+    public MultiChannelImage(Image gray)
     {
         Images.Add(gray);
     }
 
-    public MultiChannelImage(GrayscaleImage r, GrayscaleImage g, GrayscaleImage b)
+    public MultiChannelImage(Image r, Image g, Image b)
     {
         Images.Add(r);
         Images.Add(g);
         Images.Add(b);
     }
 
-    public MultiChannelImage(GrayscaleImage r, GrayscaleImage g, GrayscaleImage b, GrayscaleImage a)
+    public MultiChannelImage(Image r, Image g, Image b, Image a)
     {
         Images.Add(r);
         Images.Add(g);
@@ -29,7 +29,7 @@ public class MultiChannelImage
         Images.Add(a);
     }
 
-    public MultiChannelImage(GrayscaleImage[] channelImages)
+    public MultiChannelImage(Image[] channelImages)
     {
         Images.AddRange(channelImages);
     }

@@ -4,13 +4,13 @@ namespace SciTIF.IO.TiffReading;
 
 internal class ReaderInt16 : ReaderBase
 {
-    public override GrayscaleImage[] ReadSlice(Tiff tif)
+    public override Image ReadSlice(Tiff tif)
     {
         const int bytesPerPixel = 2;
 
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        GrayscaleImage data = new(width, height);
+        Image data = new(width, height);
 
         int numberOfStrips = tif.NumberOfStrips();
         int stripSize = tif.StripSize();
@@ -34,6 +34,6 @@ internal class ReaderInt16 : ReaderBase
             }
         }
 
-        return new GrayscaleImage[] { data };
+        return data;
     }
 }

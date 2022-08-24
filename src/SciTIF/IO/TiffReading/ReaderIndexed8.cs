@@ -4,15 +4,12 @@ namespace SciTIF.IO.TiffReading;
 
 internal class ReaderIndexed8 : ReaderBase
 {
-    public override GrayscaleImage[] ReadSlice(Tiff tif)
+    public override Image ReadSlice(Tiff tif)
     {
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
 
-        GrayscaleImage r = new(width, height);
-        GrayscaleImage g = new(width, height);
-        GrayscaleImage b = new(width, height);
-        GrayscaleImage a = new(width, height);
+        Image img = new(width, height);
 
         int[] rgba = new int[width * height];
         tif.ReadRGBAImage(width, height, rgba);
@@ -22,14 +19,14 @@ internal class ReaderIndexed8 : ReaderBase
             for (int x = 0; x < width; x++)
             {
                 int sourceY = height - 1 - y;
-                int destOffset = r.GetIndex(x, y);
-                r.Values[destOffset] = Tiff.GetR(rgba[sourceY * width + x]);
-                g.Values[destOffset] = Tiff.GetG(rgba[sourceY * width + x]);
-                b.Values[destOffset] = Tiff.GetB(rgba[sourceY * width + x]);
-                a.Values[destOffset] = Tiff.GetA(rgba[sourceY * width + x]);
+                byte r = (byte)Tiff.GetR(rgba[sourceY * width + x]);
+                byte g = (byte)Tiff.GetG(rgba[sourceY * width + x]);
+                byte b = (byte)Tiff.GetB(rgba[sourceY * width + x]);
+                byte a = (byte)Tiff.GetA(rgba[sourceY * width + x]);
+                img.SetPixel(x, y, r, g, b, a);
             }
         }
 
-        return new GrayscaleImage[] { r, g, b, a };
+        return img;
     }
 }

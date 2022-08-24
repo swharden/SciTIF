@@ -5,14 +5,14 @@ namespace SciTIF.IO.TiffReading;
 
 internal class ReaderFloat32 : ReaderBase
 {
-    public override GrayscaleImage[] ReadSlice(Tiff tif)
+    public override Image ReadSlice(Tiff tif)
     {
 
         const int bytesPerPixel = 4;
 
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        GrayscaleImage data = new(width, height);
+        Image data = new(width, height);
 
         byte[] lineBytes = new byte[tif.ScanlineSize()];
         byte[] pixelBytes = new byte[bytesPerPixel];
@@ -27,6 +27,6 @@ internal class ReaderFloat32 : ReaderBase
             }
         }
 
-        return new GrayscaleImage[] { data };
+        return  data;
     }
 }

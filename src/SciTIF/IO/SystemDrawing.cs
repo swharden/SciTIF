@@ -9,7 +9,7 @@ namespace SciTIF.IO;
 
 public static class SystemDrawing
 {
-    public static Bitmap GetBitmapGrayscale(GrayscaleImage img)
+    public static Bitmap GetBitmapGrayscale(Image img)
     {
         int width = img.Width;
         int height = img.Height;
@@ -42,7 +42,7 @@ public static class SystemDrawing
         return bmp2;
     }
 
-    public static Bitmap GetBitmapRGB(GrayscaleImage r, GrayscaleImage g, GrayscaleImage b)
+    public static Bitmap GetBitmapRGB(Image r, Image g, Image b)
     {
         int width = r.Width;
         int height = r.Height;
@@ -91,13 +91,13 @@ public static class SystemDrawing
         throw new NotImplementedException();
     }
 
-    public static void SavePNG(string filePath, GrayscaleImage img)
+    public static void SavePNG(string filePath, Image img)
     {
         using Bitmap bmp = SystemDrawing.GetBitmapGrayscale(img);
         bmp.Save(filePath, ImageFormat.Png);
     }
 
-    public static void SavePNG(string filePath, GrayscaleImage r, GrayscaleImage g, GrayscaleImage b)
+    public static void SavePNG(string filePath, Image r, Image g, Image b)
     {
         using Bitmap bmp = SystemDrawing.GetBitmapRGB(r, g, b);
         bmp.Save(filePath, ImageFormat.Png);

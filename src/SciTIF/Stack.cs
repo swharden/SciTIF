@@ -7,7 +7,7 @@ namespace SciTIF;
 
 public class Stack
 {
-    public readonly List<GrayscaleImage> Slices = new();
+    public readonly List<Image> Slices = new();
     public int Count => Slices.Count;
     public int Width => Slices.First().Width;
     public int Height => Slices.First().Height;
@@ -17,7 +17,7 @@ public class Stack
 
     }
 
-    public Stack(IEnumerable<GrayscaleImage> slices)
+    public Stack(IEnumerable<Image> slices)
     {
         Slices.AddRange(slices);
     }

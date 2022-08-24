@@ -6,23 +6,24 @@ namespace SciTIF;
 /// <summary>
 /// Floating-point representation of pixel intensity values
 /// </summary>
-public class GrayscaleImage
+public class Image
 {
     public readonly double[] Values;
     private double[]? RememberedValues;
 
+    public bool IsRGBA = false;
     public readonly int Height;
     public readonly int Width;
     public int Samples => Width * Height;
 
-    public GrayscaleImage(int width, int height)
+    public Image(int width, int height)
     {
         Width = width;
         Height = height;
         Values = new double[Samples];
     }
 
-    public GrayscaleImage(int width, int height, double[] values)
+    public Image(int width, int height, double[] values)
     {
         Width = width;
         Height = height;
@@ -33,7 +34,7 @@ public class GrayscaleImage
         Values = values;
     }
 
-    public static GrayscaleImage operator +(GrayscaleImage a, GrayscaleImage b)
+    public static Image operator +(Image a, Image b)
     {
         if ((a.Width != b.Width) || (a.Height != b.Height) || (a.Values.Length != b.Values.Length))
             throw new ArgumentException("image operations require identical dimensions");
@@ -43,17 +44,17 @@ public class GrayscaleImage
         for (int i = 0; i < values.Length; i++)
             values[i] = a.Values[i] + b.Values[i];
 
-        return new GrayscaleImage(a.Width, a.Height, values);
+        return new Image(a.Width, a.Height, values);
     }
 
-    public static GrayscaleImage operator /(GrayscaleImage a, double b)
+    public static Image operator /(Image a, double b)
     {
         double[] values = new double[a.Values.Length];
 
         for (int i = 0; i < values.Length; i++)
             values[i] = a.Values[i] / b;
 
-        return new GrayscaleImage(a.Width, a.Height, values);
+        return new Image(a.Width, a.Height, values);
     }
 
     public void SavePng(string filename, bool autoscale = false)
@@ -82,6 +83,11 @@ public class GrayscaleImage
     public int GetIndex(int x, int y) => y * Width + x;
 
     public double GetPixel(int x, int y) => Values[GetIndex(x, y)];
+
+    public void SetPixel(int x, int y, byte r, byte g, byte b, byte a)
+    {
+        Values[GetIndex(x, y)] = a << 24 + b << 16 + g << 8 + r;
+    }
 
     public double Min() => Values.Min();
 
