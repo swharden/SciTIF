@@ -4,10 +4,8 @@ namespace SciTIF.IO.TiffReading;
 
 internal class ReaderRGBA : ReaderBase
 {
-    public override MultiChannelImage ReadSlice(Tiff tif, int directory)
+    public override GrayscaleImage[] ReadSlice(Tiff tif)
     {
-        tif.SetDirectory((short)directory);
-
         int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
         int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
         GrayscaleImage r = new(width, height);
@@ -32,6 +30,6 @@ internal class ReaderRGBA : ReaderBase
             }
         }
 
-        return new MultiChannelImage(r, g, b, a);
+        return new GrayscaleImage[] { r, g, b, a };
     }
 }

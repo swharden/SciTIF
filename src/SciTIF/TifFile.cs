@@ -65,9 +65,4 @@ public class TifFile
         public override void ErrorHandler(Tiff tif, string module, string fmt, params object[] ap) { }
         public override void WarningHandler(Tiff tif, string module, string fmt, params object[] ap) { }
     }
-
-    public MultiChannelImage GetSlice(int slice, int frame)
-    {
-        return Data.GetSlice(slice, frame);
-    }
 }

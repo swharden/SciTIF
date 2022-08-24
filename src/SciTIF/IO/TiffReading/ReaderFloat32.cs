@@ -5,9 +5,8 @@ namespace SciTIF.IO.TiffReading;
 
 internal class ReaderFloat32 : ReaderBase
 {
-    public override MultiChannelImage ReadSlice(Tiff tif, int directory)
+    public override GrayscaleImage[] ReadSlice(Tiff tif)
     {
-        tif.SetDirectory((short)directory);
 
         const int bytesPerPixel = 4;
 
@@ -28,6 +27,6 @@ internal class ReaderFloat32 : ReaderBase
             }
         }
 
-        return new MultiChannelImage(data);
+        return new GrayscaleImage[] { data };
     }
 }

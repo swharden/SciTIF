@@ -1,13 +1,14 @@
 ﻿using BitMiracle.LibTiff.Classic;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 
 namespace SciTIF.IO.TiffReading;
 
 internal abstract class ReaderBase : ITifReader
 {
-    public abstract MultiChannelImage ReadSlice(Tiff tif, int directory);
+    public abstract GrayscaleImage[] ReadSlice(Tiff tif);
 
     public Image5D Read(Tiff tif)
     {
@@ -21,15 +22,23 @@ internal abstract class ReaderBase : ITifReader
         int BitsPerSample = tif.FieldValueOrDefault(TiffTag.BITSPERSAMPLE, 8);
         int SamplesPerPixel = tif.FieldValueOrDefault(TiffTag.SAMPLESPERPIXEL, 1);
 
-        Image5D images = new(slices, frames, channels);
+        Image5D image = new(slices, frames, channels);
 
-        for (short i = 0; i < tif.NumberOfDirectories(); i++)
+        for (int frame = 0; frame < image.Frames; frame++)
         {
-            MultiChannelImage img = ReadSlice(tif, i);
-            images.SetSlice(i, img);
+            for (int slice = 0; slice < image.Slices; slice++)
+            {
+                for (int channel = 0; channel < image.Channels; channel++)
+                {
+                    int i = frame * (image.Slices * image.Channels) + slice * image.Channels + channel;
+                    tif.SetDirectory((short)i);
+                    GrayscaleImage[] images = ReadSlice(tif); // separated by color
+                    image.Set(frame, slice, channel, images[0]); // RGB images aren't treated as 3-channel yet
+                }
+            }
         }
 
-        return images;
+        return image;
     }
 
     private int GetImageWidth(Tiff tif)

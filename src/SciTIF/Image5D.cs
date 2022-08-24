@@ -7,71 +7,41 @@ namespace SciTIF;
 
 public class Image5D
 {
-    private readonly MultiChannelImage[] MultiChannelImages;
-    public int Width => MultiChannelImages.Any() ? MultiChannelImages.First().Images.First().Width : 0;
-    public int Height => MultiChannelImages.Any() ? MultiChannelImages.First().Images.First().Height : 0;
-
-    public readonly int Slices;
-    public readonly int Frames;
-    public readonly int Channels;
+    private readonly GrayscaleImage[,,] Images;
+    public int Width => Images[0, 0, 0].Width;
+    public int Height => Images[0, 0, 0].Height;
+    public int Frames => Images.GetLength(0);
+    public int Slices => Images.GetLength(1);
+    public int Channels => Images.GetLength(2);
 
     public Image5D(int slices, int frames, int channels)
     {
-        Slices = slices;
-        Frames = frames;
-        Channels = channels;
-        MultiChannelImages = new MultiChannelImage[slices * frames * channels];
+        Images = new GrayscaleImage[frames, slices, channels];
     }
 
-    [Obsolete("work here next")]
-    public int GetIndex(int slice, int frame)
+    public GrayscaleImage Get(int frame, int slice, int channel)
     {
-        // TODO: indexing is not supporting channels...
-        return Slices * frame + slice;
+        return Images[frame, slice, channel];
     }
 
-    public MultiChannelImage GetSlice(int slice, int frame)
+    public void Set(int frame, int slice, int channel, GrayscaleImage img)
     {
-        return MultiChannelImages[GetIndex(slice, frame)];
+        Images[frame, slice, channel] = img;
     }
 
-    public MultiChannelImage GetSlice(int index)
+    public static Image5D FromGrayscale(GrayscaleImage img)
     {
-        return MultiChannelImages[index];
+        Image5D img5 = new(1, 1, 1);
+        img5.Set(0, 0, 0, img);
+        return img5;
     }
 
-    public void SetSlice(int slice, int frame, MultiChannelImage img)
+    public static Image5D FromRGB(GrayscaleImage r, GrayscaleImage g, GrayscaleImage b)
     {
-        MultiChannelImages[GetIndex(slice, frame)] = img;
-    }
-
-    public void SetSlice(int directory, MultiChannelImage img)
-    {
-        MultiChannelImages[directory] = img;
-    }
-
-    public MultiChannelImage ProjectMean(int frame)
-    {
-        GrayscaleImage[] sum = new GrayscaleImage[Channels];
-        for (int i = 0; i < Channels; i++)
-        {
-            sum[i] = new(Width, Height);
-        }
-
-        for (int i = 0; i < Slices; i++)
-        {
-            MultiChannelImage multichannel = GetSlice(i, Frames);
-            for (int j = 0; j < Channels; j++)
-            {
-                sum[j] += multichannel.Images[j];
-            }
-        }
-
-        for (int i = 0; i < Channels; i++)
-        {
-            sum[i] /= Channels;
-        }
-
-        return new MultiChannelImage(sum);
+        Image5D img5 = new(1, 1, 3);
+        img5.Set(0, 0, 0, r);
+        img5.Set(0, 0, 0, g);
+        img5.Set(0, 0, 0, b);
+        return img5;
     }
 }
