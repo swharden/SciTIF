@@ -9,7 +9,7 @@ public class Image5D
     /// Stores individual grayscale images indexed by: frame, slice, channel.
     /// RGB images are stored as grayscale images in 3 channels.
     /// </summary>
-    public readonly Image[,,] Images;
+    private readonly Image[,,] Images;
 
     public readonly int Width;
     public readonly int Height;
@@ -18,10 +18,10 @@ public class Image5D
     public readonly int Channels;
 
     public string FilePath { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
 
     public Image5D(string imageFilePath)
     {
-        FilePath = Path.GetFullPath(imageFilePath);
         Image5D img = IO.TifReading.TifReader.LoadTif(imageFilePath);
 
         Width = img.Width;
@@ -30,6 +30,9 @@ public class Image5D
         Slices = img.Slices;
         Frames = img.Frames;
         Images = img.Images;
+
+        FilePath = img.FilePath;
+        Description = img.Description;
     }
 
     [Obsolete("try to construct the array and pass it in")]

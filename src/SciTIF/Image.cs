@@ -6,7 +6,7 @@ using System.Linq;
 namespace SciTIF;
 
 /// <summary>
-/// Floating-point representation of pixel intensity values
+/// Floating-point representation of pixel intensity values from a single-channel image.
 /// </summary>
 public class Image : IEnumerable<double>
 {

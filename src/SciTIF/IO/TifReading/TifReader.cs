@@ -27,7 +27,7 @@ public static class TifReader
         ITifReader reader = GetBestReader(tif);
         Image5D image = reader.Read(tif);
         image.FilePath = filePath;
-
+        image.Description += $"TIF read using {reader}" + Environment.NewLine;
         return image;
     }
 
