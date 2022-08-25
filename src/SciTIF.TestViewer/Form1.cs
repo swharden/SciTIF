@@ -13,12 +13,15 @@ namespace SciTIF.TestViewer
         {
             InitializeComponent();
 
+            this.KeyPreview = true;
+            this.KeyDown += Form1_KeyDown;
+
             btnPrev.Enabled = false;
             btnNext.Enabled = false;
             btnPrev.Click += BtnPrev_Click;
             btnNext.Click += BtnNext_Click;
 
-            string initialImage = @"../../../../../data/images/LennaRGB.tif";
+            string initialImage = @"../../../../../data/images/LennaIndexed.tif";
             LoadImage(initialImage);
 
             sliderFrame.ValueChanged += (s, e) => UpdateImage();
@@ -26,6 +29,16 @@ namespace SciTIF.TestViewer
             sliderChannel.ValueChanged += (s, e) => UpdateImage();
             cbAutoScale.CheckedChanged += (s, e) => ReloadImage();
             cbRGB.CheckedChanged += (s, e) => UpdateImage();
+        }
+
+        private void Form1_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Right)
+                BtnNext_Click(this, EventArgs.Empty);
+            else if (e.KeyCode == Keys.Left)
+                BtnPrev_Click(this, EventArgs.Empty);
+
+            e.Handled = true;
         }
 
         private void BtnNext_Click(object? sender, EventArgs e)
@@ -64,11 +77,14 @@ namespace SciTIF.TestViewer
             if (!File.Exists(imageFilePath))
                 throw new FileNotFoundException(imageFilePath);
 
-            lblFilename.Text = Path.GetFileName(imageFilePath);
             btnNext.Enabled = true;
             btnPrev.Enabled = true;
 
             CurrentTif = new Image5D(imageFilePath);
+            richTextBox1.Text = Path.GetFileName(CurrentTif.FilePath)
+                + Environment.NewLine
+                + CurrentTif.Description;
+
             sliderFrame.SetSize(CurrentTif.Frames);
             sliderSlice.SetSize(CurrentTif.Slices);
             sliderChannel.SetSize(CurrentTif.Channels);

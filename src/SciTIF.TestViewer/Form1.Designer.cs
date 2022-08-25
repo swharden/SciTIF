@@ -35,9 +35,9 @@
             this.btnPrev = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.cbZoom = new System.Windows.Forms.CheckBox();
-            this.lblFilename = new System.Windows.Forms.Label();
             this.cbAutoScale = new System.Windows.Forms.CheckBox();
             this.cbRGB = new System.Windows.Forms.CheckBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,7 +45,7 @@
             // 
             this.sliderFrame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.sliderFrame.Location = new System.Drawing.Point(12, 507);
+            this.sliderFrame.Location = new System.Drawing.Point(12, 671);
             this.sliderFrame.Name = "sliderFrame";
             this.sliderFrame.Size = new System.Drawing.Size(489, 41);
             this.sliderFrame.SliderLabel = "Frame";
@@ -55,7 +55,7 @@
             // 
             this.sliderSlice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.sliderSlice.Location = new System.Drawing.Point(12, 460);
+            this.sliderSlice.Location = new System.Drawing.Point(12, 624);
             this.sliderSlice.Name = "sliderSlice";
             this.sliderSlice.Size = new System.Drawing.Size(489, 41);
             this.sliderSlice.SliderLabel = "Slice";
@@ -65,7 +65,7 @@
             // 
             this.sliderChannel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.sliderChannel.Location = new System.Drawing.Point(12, 413);
+            this.sliderChannel.Location = new System.Drawing.Point(12, 577);
             this.sliderChannel.Name = "sliderChannel";
             this.sliderChannel.Size = new System.Drawing.Size(489, 41);
             this.sliderChannel.SliderLabel = "Channel";
@@ -99,7 +99,7 @@
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.pictureBox1.Location = new System.Drawing.Point(12, 51);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(489, 330);
+            this.pictureBox1.Size = new System.Drawing.Size(489, 418);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
@@ -110,7 +110,7 @@
             this.cbZoom.AutoSize = true;
             this.cbZoom.Checked = true;
             this.cbZoom.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbZoom.Location = new System.Drawing.Point(281, 12);
+            this.cbZoom.Location = new System.Drawing.Point(281, 19);
             this.cbZoom.Name = "cbZoom";
             this.cbZoom.Size = new System.Drawing.Size(58, 19);
             this.cbZoom.TabIndex = 7;
@@ -118,23 +118,13 @@
             this.cbZoom.UseVisualStyleBackColor = true;
             this.cbZoom.CheckedChanged += new System.EventHandler(this.cbStretch_CheckedChanged);
             // 
-            // lblFilename
-            // 
-            this.lblFilename.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblFilename.AutoSize = true;
-            this.lblFilename.Location = new System.Drawing.Point(12, 384);
-            this.lblFilename.Name = "lblFilename";
-            this.lblFilename.Size = new System.Drawing.Size(38, 15);
-            this.lblFilename.TabIndex = 8;
-            this.lblFilename.Text = "label1";
-            // 
             // cbAutoScale
             // 
             this.cbAutoScale.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbAutoScale.AutoSize = true;
             this.cbAutoScale.Checked = true;
             this.cbAutoScale.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbAutoScale.Location = new System.Drawing.Point(196, 12);
+            this.cbAutoScale.Location = new System.Drawing.Point(196, 19);
             this.cbAutoScale.Name = "cbAutoScale";
             this.cbAutoScale.Size = new System.Drawing.Size(79, 19);
             this.cbAutoScale.TabIndex = 10;
@@ -147,21 +137,34 @@
             this.cbRGB.AutoSize = true;
             this.cbRGB.Checked = true;
             this.cbRGB.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbRGB.Location = new System.Drawing.Point(142, 12);
+            this.cbRGB.Location = new System.Drawing.Point(142, 19);
             this.cbRGB.Name = "cbRGB";
             this.cbRGB.Size = new System.Drawing.Size(48, 19);
             this.cbRGB.TabIndex = 11;
             this.cbRGB.Text = "RGB";
             this.cbRGB.UseVisualStyleBackColor = true;
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.richTextBox1.Location = new System.Drawing.Point(12, 475);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.richTextBox1.Size = new System.Drawing.Size(489, 96);
+            this.richTextBox1.TabIndex = 12;
+            this.richTextBox1.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(513, 560);
+            this.ClientSize = new System.Drawing.Size(513, 724);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.cbRGB);
             this.Controls.Add(this.cbAutoScale);
-            this.Controls.Add(this.lblFilename);
             this.Controls.Add(this.cbZoom);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnPrev);
@@ -187,8 +190,8 @@
         private Button btnPrev;
         private PictureBox pictureBox1;
         private CheckBox cbZoom;
-        private Label lblFilename;
         private CheckBox cbAutoScale;
         private CheckBox cbRGB;
+        private RichTextBox richTextBox1;
     }
 }
