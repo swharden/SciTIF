@@ -43,11 +43,13 @@ internal class ImageValidationTests
             Assert.That(tif.Frames, Is.EqualTo(known.Frames));
             Assert.That(tif.Slices, Is.EqualTo(known.Slices));
 
-            if (known.Channels == 1 && tif.Channels == 4)
+            if (known.IsRGB)
             {
-                // RGB source image with 1 channel
-                // is now represented as a RGBA image with separate channels
-                Assert.That(tif.Channels, Is.EqualTo(4));
+                Assert.That(tif.Channels, Is.EqualTo(4)); // was converted to RGBA
+            }
+            else if (known.IsSingleChannelIndexedColor)
+            {
+                Assert.That(tif.Channels, Is.EqualTo(4)); // was converted to RGBA
             }
             else
             {
@@ -88,8 +90,15 @@ internal class ImageValidationTests
                 }
                 else
                 {
-                    double pixelValue = tif.GetImage(0, 0, 0).GetPixel(knownPixel.X, knownPixel.Y);
-                    Assert.That(pixelValue, Is.EqualTo(knownPixel.Value));
+                    if (known.IsSingleChannelIndexedColor)
+                    {
+                        Assert.That(tif.Channels, Is.EqualTo(4)); // ensure it became RGBA
+                    }
+                    else
+                    {
+                        double pixelValue = tif.GetImage(0, 0, 0).GetPixel(knownPixel.X, knownPixel.Y);
+                        Assert.That(pixelValue, Is.EqualTo(knownPixel.Value));
+                    }
                 }
             }
         }

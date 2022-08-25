@@ -11,61 +11,60 @@ internal abstract class ReaderBase : ITifReader
 
     public Image5D Read(Tiff tif)
     {
-        int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
-        int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-        int frames = GetIntFromDescription(tif, "frames");
-        int slices = GetIntFromDescription(tif, "slices");
-        int channels = IsRGBA ? 4 : GetIntFromDescription(tif, "channels");
+        int width = TifInformation.GetWidth(tif);
+        int height = TifInformation.GetHeight(tif);
+        int frames = TifInformation.GetFrames(tif);
+        int slices = TifInformation.GetSlices(tif);
+        int channels = IsRGBA ? 4 : TifInformation.GetChannels(tif);
 
-        Image5D image = new(frames, slices, channels, width, height);
-        LoadAllImages(image, tif, IsRGBA);
+        Image[,,] images = new Image[frames, slices, channels];
 
-        return image;
-    }
-
-    private void LoadAllImages(Image5D image, Tiff tif, bool isRGBA)
-    {
-        for (int frame = 0; frame < image.Frames; frame++)
+        for (int frame = 0; frame < frames; frame++)
         {
-            for (int slice = 0; slice < image.Slices; slice++)
+            for (int slice = 0; slice < slices; slice++)
             {
-                if (isRGBA)
-                    LoadChannelsRGBA(tif, image, frame, slice);
-                else
-                    LoadChannelsGraycale(tif, image, frame, slice);
-
-                for (int channel = 0; channel < image.Channels; channel++)
+                int dirIndex = frame * (slices * channels) + slice * channels;
+                if (IsRGBA)
                 {
-                    if (image.GetImage(frame, slice, channel) is null)
+                    LoadChannelsRGBA(tif, images, frame, slice, dirIndex);
+                }
+                else
+                {
+                    LoadChannelsGraycale(tif, images, frame, slice, channels, dirIndex);
+                }
+
+                for (int channel = 0; channel < channels; channel++)
+                {
+                    if (images[frame, slice, channel] is null)
                         throw new NullReferenceException($"Frame={frame}, Slice={slice}, Channel={channel}, RGBA={IsRGBA}");
                 }
             }
         }
+
+        return new Image5D(images);
     }
 
-    private void LoadChannelsGraycale(Tiff tif, Image5D image, int frame, int slice)
+    private void LoadChannelsGraycale(Tiff tif, Image[,,] image, int frame, int slice, int channels, int dirIndex)
     {
-        for (int channel = 0; channel < image.Channels; channel++)
+        for (int channel = 0; channel < channels; channel++)
         {
-            int i = frame * (image.Slices * image.Channels) + slice * image.Channels + channel;
+            int i = dirIndex + channel;
             tif.SetDirectory((short)i);
             Image img = ReadSlice(tif);
             if (img is null)
                 throw new NullReferenceException($"Frame={frame}, Slice={slice}, Channel={channel}");
-            image.SetImage(frame, slice, channel, img);
+            image[frame, slice, channel] = img;
         }
     }
 
-    private void LoadChannelsRGBA(Tiff tif, Image5D image, int frame, int slice)
+    private void LoadChannelsRGBA(Tiff tif, Image[,,] image, int frame, int slice, int dirIndex)
     {
-        int i = frame * image.Slices + slice;
-        tif.SetDirectory((short)i);
+        tif.SetDirectory((short)dirIndex);
         Image img = ReadSlice(tif);
-
-        image.SetImage(frame, slice, channel: 0, GetRgbaChannel(img, 0));
-        image.SetImage(frame, slice, channel: 1, GetRgbaChannel(img, 1));
-        image.SetImage(frame, slice, channel: 2, GetRgbaChannel(img, 2));
-        image.SetImage(frame, slice, channel: 3, GetRgbaChannel(img, 3));
+        image[frame, slice, 0] = GetRgbaChannel(img, 0);
+        image[frame, slice, 1] = GetRgbaChannel(img, 1);
+        image[frame, slice, 2] = GetRgbaChannel(img, 2);
+        image[frame, slice, 3] = GetRgbaChannel(img, 3);
     }
 
     private Image GetRgbaChannel(Image img1, int offset)
@@ -76,19 +75,5 @@ internal abstract class ReaderBase : ITifReader
             img2[i] = BitConverter.GetBytes((int)img1[i])[offset];
         }
         return img2;
-    }
-
-    private int GetIntFromDescription(Tiff tif, string key, int defaultValue = 1)
-    {
-        FieldValue[] desc = tif.GetField(TiffTag.IMAGEDESCRIPTION);
-        if (desc is not null)
-        {
-            foreach (string line in desc[0].ToString()!.Split('\n'))
-            {
-                if (line.Contains(key))
-                    return int.Parse(line.Split('=')[1]);
-            }
-        }
-        return defaultValue;
     }
 }

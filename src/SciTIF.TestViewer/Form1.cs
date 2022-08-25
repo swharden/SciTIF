@@ -113,7 +113,9 @@ namespace SciTIF.TestViewer
 
             bool isRgb = CurrentTif.Channels == 4 && cbRGB.Checked;
 
-            sliderChannel.Visible = !isRgb;
+            sliderFrame.Visible = CurrentTif.Frames > 1;
+            sliderSlice.Visible = CurrentTif.Slices > 1;
+            sliderChannel.Visible = CurrentTif.Channels > 1 && !isRgb;
 
             Bitmap newBmp = isRgb
                 ? GetRgbBitmap(CurrentTif, frame, slice, channel)

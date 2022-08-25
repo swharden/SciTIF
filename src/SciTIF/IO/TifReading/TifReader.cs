@@ -62,9 +62,15 @@ public static class TifReader
             if (BitsPerSample != 8)
                 throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel");
 
-            // TODO: if 1 channel use RGB?
-            reader = new ReaderInt8();
-            //reader = new ReaderIndexedRGB();
+            if (IO.TifReading.TifInformation.GetChannels(tif) == 1)
+            {
+                reader = new ReaderIndexedRGB();
+            }
+            else
+            {
+                // note: TiffTag.COLORMAP contains the indexed colors
+                reader = new ReaderInt8();
+            }
         }
         else
         {

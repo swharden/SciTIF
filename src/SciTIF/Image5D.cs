@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
+using System.Collections.Generic;
 
 namespace SciTIF;
 
@@ -35,15 +37,23 @@ public class Image5D
         Description = img.Description;
     }
 
-    [Obsolete("try to construct the array and pass it in")]
-    public Image5D(int frames, int slices, int channels, int width, int height)
+    public Image5D(Image[,,] images)
     {
-        Width = width;
-        Height = height;
-        Channels = channels;
-        Slices = slices;
-        Frames = frames;
-        Images = new Image[frames, slices, channels];
+        Images = images;
+
+        Width = images[0, 0, 0].Width;
+        Height = images[0, 0, 0].Height;
+        Frames = images.GetLength(0);
+        Slices = images.GetLength(1);
+        Channels = images.GetLength(2);
+
+        foreach (Image img in GetAllImages())
+        {
+            if (img.Width != Width || img.Height != Height)
+            {
+                throw new InvalidDataException("all images must have the same dimensions");
+            }
+        }
     }
 
     public Image GetImage(int frame, int slice, int channel)
@@ -51,11 +61,21 @@ public class Image5D
         return Images[frame, slice, channel];
     }
 
-    public void SetImage(int frame, int slice, int channel, Image img)
+    public Image[] GetAllImages()
     {
-        if (img.Width != Width)
-            throw new InvalidOperationException($"Cannot add image with Width {img.Width} into 5D image with Width {Width}");
+        List<Image> images = new();
 
-        Images[frame, slice, channel] = img;
+        for (int frame = 0; frame < Frames; frame++)
+        {
+            for (int slice = 0; slice < Slices; slice++)
+            {
+                for (int channel = 0; channel < Channels; channel++)
+                {
+                    images.Add(GetImage(frame, slice, channel));
+                }
+            }
+        }
+
+        return images.ToArray();
     }
 }

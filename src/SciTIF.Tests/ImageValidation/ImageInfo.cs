@@ -10,6 +10,8 @@ public class ImageInfo
     public int Slices;
     public int Channels;
     public int Depth;
-    public bool Grayscale;
+    public bool IsGrayscale;
+    public bool IsRGB => Channels == 1 && Depth == 24;
+    public bool IsSingleChannelIndexedColor => Depth == 8 && !IsGrayscale && Channels == 1;
     public List<PixelInfo> Pixels = new();
 }

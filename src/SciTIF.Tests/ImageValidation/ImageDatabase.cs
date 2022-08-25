@@ -51,7 +51,7 @@ public class ImageDatabase
         if (line.StartsWith("slices = ")) info.Slices = line.IntAfterEquals();
         if (line.StartsWith("frames = ")) info.Frames = line.IntAfterEquals();
         if (line.StartsWith("depth = ")) info.Depth = line.IntAfterEquals();
-        if (line.StartsWith("grayscale = ")) info.Grayscale = line.IntAfterEquals() > 0;
+        if (line.StartsWith("grayscale = ")) info.IsGrayscale = line.IntAfterEquals() > 0;
 
     }
 }
