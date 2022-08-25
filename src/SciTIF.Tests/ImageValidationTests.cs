@@ -43,8 +43,16 @@ internal class ImageValidationTests
             Assert.That(tif.Frames, Is.EqualTo(known.Frames));
             Assert.That(tif.Slices, Is.EqualTo(known.Slices));
 
-            if (known.Channels > 1)
+            if (known.Channels == 1 && tif.Channels == 4)
+            {
+                // RGB source image with 1 channel
+                // is now represented as a RGBA image with separate channels
+                Assert.That(tif.Channels, Is.EqualTo(4));
+            }
+            else
+            {
                 Assert.That(tif.Channels, Is.EqualTo(known.Channels));
+            }
         }
     }
 
