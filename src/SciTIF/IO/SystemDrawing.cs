@@ -72,21 +72,6 @@ public static class SystemDrawing
         return bmp2;
     }
 
-    private static byte Clamp(double x, byte min = 0, byte max = 255)
-    {
-        if (x < min)
-            return min;
-        else if (x > max)
-            return max;
-        else
-            return (byte)x;
-    }
-
-    public static void SavePNG(string filePath, TifFile tif, bool autoScale = false)
-    {
-        throw new NotImplementedException();
-    }
-
     public static void SavePNG(string filePath, Image img)
     {
         using Bitmap bmp = SystemDrawing.GetBitmapGrayscale(img);

@@ -15,6 +15,8 @@ namespace SciTIF.Tests
 
         public static string[] TifFiles = Directory.GetFiles(DataFolder, "*.tif");
 
+        public static string TifWithFramesSlicesAndChannels => Path.Combine(DataFolder, "C3Z4F5.tif");
+
         private static string GetDataFolder()
         {
             string testDirectory = Path.GetFullPath(TestContext.CurrentContext.TestDirectory);

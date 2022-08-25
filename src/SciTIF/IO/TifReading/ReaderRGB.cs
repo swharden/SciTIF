@@ -1,8 +1,8 @@
 ﻿using BitMiracle.LibTiff.Classic;
 
-namespace SciTIF.IO.TiffReading;
+namespace SciTIF.IO.TifReading;
 
-internal class ReaderRGBA : ReaderBase
+internal class ReaderRGB : ReaderBase
 {
     public override bool IsRGBA => true;
 
@@ -24,8 +24,7 @@ internal class ReaderRGBA : ReaderBase
                 byte r = (byte)Tiff.GetR(raster[offset]);
                 byte g = (byte)Tiff.GetG(raster[offset]);
                 byte b = (byte)Tiff.GetB(raster[offset]);
-                byte a = (byte)Tiff.GetA(raster[offset]);
-                img.SetPixel(x, y, r, g, b, a);
+                img.SetPixel(x, y, r, g, b, 255);
             }
         }
 

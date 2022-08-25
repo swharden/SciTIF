@@ -1,14 +1,37 @@
 ﻿using BitMiracle.LibTiff.Classic;
 using System;
+using System.IO;
 
-namespace SciTIF.IO.TiffReading;
+namespace SciTIF.IO.TifReading;
 
-public static class TifReaderFactory
+public static class TifReader
 {
-    /// <summary>
-    /// Analyze the type of TIF file and return the best reader
-    /// </summary>
-    internal static (ITifReader reader, string imageType) GetBestReader(Tiff tif)
+    public static Image5D LoadTif(string filePath)
+    {
+        bool isTifExtension = filePath.EndsWith(".TIF", StringComparison.OrdinalIgnoreCase) ||
+            filePath.EndsWith(".TIFF", StringComparison.OrdinalIgnoreCase);
+
+        if (!isTifExtension)
+            throw new ArgumentException($"{nameof(filePath)} must end with .tif or .tiff: {filePath}");
+
+        filePath = Path.GetFullPath(filePath);
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException(filePath);
+
+        Tiff.SetErrorHandler(new SilentErrorHandler());
+        using Tiff tif = Tiff.Open(filePath, "r");
+
+        if (tif is null)
+            throw new NullReferenceException($"TIF is null after reading: {filePath}");
+
+        ITifReader reader = GetBestReader(tif);
+        Image5D image = reader.Read(tif);
+        image.FilePath = filePath;
+
+        return image;
+    }
+
+    private static ITifReader GetBestReader(Tiff tif)
     {
         string ColorFormat = tif.GetField(TiffTag.PHOTOMETRIC)[0].ToString();
         int BitsPerSample = tif.FieldValueOrDefault(TiffTag.BITSPERSAMPLE, 8);
@@ -48,16 +71,22 @@ public static class TifReaderFactory
             throw new NotImplementedException($"{ColorFormat} with {SamplesPerPixel} samples per pixel");
         }
 
-        string imageType = $"{BitsPerSample}-bit {ColorFormat} with {SamplesPerPixel} samples/pixel";
-        return (reader, imageType);
+        return reader;
     }
 
-    public static int FieldValueOrDefault(this Tiff tif, TiffTag tag, int defaultValue)
+    private static int FieldValueOrDefault(this Tiff tif, TiffTag tag, int defaultValue)
     {
         var field = tif.GetField(tag);
         if (field is not null)
             return field[0].ToInt();
         else
             return defaultValue;
+    }
+
+    private class SilentErrorHandler : TiffErrorHandler
+    {
+        public SilentErrorHandler() { }
+        public override void ErrorHandler(Tiff tif, string module, string fmt, params object[] ap) { }
+        public override void WarningHandler(Tiff tif, string module, string fmt, params object[] ap) { }
     }
 }

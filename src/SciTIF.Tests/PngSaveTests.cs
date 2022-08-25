@@ -14,8 +14,8 @@ namespace SciTIF.Tests
         {
             foreach (string path in SampleData.TifFiles)
             {
-                TifFile tif = new(path);
-                Image img = tif.Data.GetImage(0, 0, 0);
+                Image5D tif = new(path);
+                Image img = tif.GetImage(0, 0, 0);
                 string filename = System.IO.Path.GetFileNameWithoutExtension(path);
                 string filePath = System.IO.Path.GetFullPath($"test-save-autoscale-{filename}.png");
                 img.SavePng(filePath, true);

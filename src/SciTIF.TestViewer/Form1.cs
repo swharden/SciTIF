@@ -7,7 +7,7 @@ namespace SciTIF.TestViewer
 {
     public partial class Form1 : Form
     {
-        private TifFile? CurrentTif;
+        private Image5D? CurrentTif;
 
         public Form1()
         {
@@ -68,7 +68,7 @@ namespace SciTIF.TestViewer
             btnNext.Enabled = true;
             btnPrev.Enabled = true;
 
-            CurrentTif = new TifFile(imageFilePath);
+            CurrentTif = new Image5D(imageFilePath);
             sliderFrame.SetSize(CurrentTif.Frames);
             sliderSlice.SetSize(CurrentTif.Slices);
             sliderChannel.SetSize(CurrentTif.Channels);
@@ -108,20 +108,20 @@ namespace SciTIF.TestViewer
             oldBmp?.Dispose();
         }
 
-        private static Bitmap GetGrayscaleBitmap(TifFile tif, int frame, int slice, int channel, bool autoScale)
+        private static Bitmap GetGrayscaleBitmap(Image5D tif, int frame, int slice, int channel, bool autoScale)
         {
-            Image img = tif.Data.GetImage(frame, slice, channel);
+            Image img = tif.GetImage(frame, slice, channel);
             if (autoScale)
                 img.AutoScale();
             return img.GetBitmap();
         }
 
-        private static Bitmap GetRgbBitmap(TifFile tif, int frame, int slice, int channel)
+        private static Bitmap GetRgbBitmap(Image5D tif, int frame, int slice, int channel)
         {
-            Image r = tif.Data.GetImage(frame, slice, 0);
-            Image g = tif.Data.GetImage(frame, slice, 1);
-            Image b = tif.Data.GetImage(frame, slice, 2);
-            Image a = tif.Data.GetImage(frame, slice, 3);
+            Image r = tif.GetImage(frame, slice, 0);
+            Image g = tif.GetImage(frame, slice, 1);
+            Image b = tif.GetImage(frame, slice, 2);
+            Image a = tif.GetImage(frame, slice, 3);
             return IO.SystemDrawing.GetBitmapRGB(r, g, b);
         }
 

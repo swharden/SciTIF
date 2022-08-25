@@ -1,6 +1,6 @@
 ﻿using BitMiracle.LibTiff.Classic;
 
-namespace SciTIF.IO.TiffReading;
+namespace SciTIF.IO.TifReading;
 
 internal class ReaderInt16 : ReaderBase
 {

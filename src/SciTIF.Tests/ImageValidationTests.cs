@@ -37,7 +37,7 @@ internal class ImageValidationTests
         foreach (string tifPath in SampleData.TifFiles)
         {
             ImageInfo known = db.Infos[Path.GetFileName(tifPath)];
-            TifFile tif = new(tifPath);
+            Image5D tif = new(tifPath);
             Assert.That(tif.Width, Is.EqualTo(known.Width));
             Assert.That(tif.Height, Is.EqualTo(known.Height));
             Assert.That(tif.Frames, Is.EqualTo(known.Frames));
@@ -65,16 +65,16 @@ internal class ImageValidationTests
         {
             ImageInfo known = db.Infos[Path.GetFileName(tifPath)];
 
-            TifFile tif = new(tifPath);
+            Image5D tif = new(tifPath);
 
             foreach (PixelInfo knownPixel in known.Pixels)
             {
                 if (known.Depth == 24)
                 {
-                    double r = tif.Data.GetImage(0, 0, 0).GetPixel(knownPixel.X, knownPixel.Y);
-                    double g = tif.Data.GetImage(0, 0, 1).GetPixel(knownPixel.X, knownPixel.Y);
-                    double b = tif.Data.GetImage(0, 0, 2).GetPixel(knownPixel.X, knownPixel.Y);
-                    double a = tif.Data.GetImage(0, 0, 3).GetPixel(knownPixel.X, knownPixel.Y);
+                    double r = tif.GetImage(0, 0, 0).GetPixel(knownPixel.X, knownPixel.Y);
+                    double g = tif.GetImage(0, 0, 1).GetPixel(knownPixel.X, knownPixel.Y);
+                    double b = tif.GetImage(0, 0, 2).GetPixel(knownPixel.X, knownPixel.Y);
+                    double a = tif.GetImage(0, 0, 3).GetPixel(knownPixel.X, knownPixel.Y);
 
                     double knownB = BitConverter.GetBytes((int)knownPixel.Value)[0];
                     double knownG = BitConverter.GetBytes((int)knownPixel.Value)[1];
@@ -88,7 +88,7 @@ internal class ImageValidationTests
                 }
                 else
                 {
-                    double pixelValue = tif.Data.GetImage(0, 0, 0).GetPixel(knownPixel.X, knownPixel.Y);
+                    double pixelValue = tif.GetImage(0, 0, 0).GetPixel(knownPixel.X, knownPixel.Y);
                     Assert.That(pixelValue, Is.EqualTo(knownPixel.Value));
                 }
             }
@@ -99,7 +99,7 @@ internal class ImageValidationTests
     public void Test_ExportSlices_5DSourceImage()
     {
         string tifFilePath = Path.Combine(SampleData.DataFolder, "C3Z4F5.tif");
-        TifFile tif = new(tifFilePath);
+        Image5D tif = new(tifFilePath);
         Assert.That(tif.Frames, Is.EqualTo(5));
         Assert.That(tif.Slices, Is.EqualTo(4));
         Assert.That(tif.Channels, Is.EqualTo(3));
@@ -114,7 +114,7 @@ internal class ImageValidationTests
             {
                 for (int channel = 0; channel < tif.Channels; channel++)
                 {
-                    Image img = tif.Data.GetImage(frame, slice, channel);
+                    Image img = tif.GetImage(frame, slice, channel);
                     string saveAs = Path.Combine(outputFolder, $"test5D-F{frame}-S{slice}-C{channel}.png");
                     img.SavePng(saveAs);
                 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace SciTIF;
 
@@ -8,7 +9,7 @@ public class Image5D
     /// Stores individual grayscale images indexed by: frame, slice, channel.
     /// RGB images are stored as grayscale images in 3 channels.
     /// </summary>
-    private readonly Image[,,] Images;
+    public readonly Image[,,] Images;
 
     public readonly int Width;
     public readonly int Height;
@@ -16,6 +17,22 @@ public class Image5D
     public readonly int Slices;
     public readonly int Channels;
 
+    public string FilePath { get; set; } = string.Empty;
+
+    public Image5D(string imageFilePath)
+    {
+        FilePath = Path.GetFullPath(imageFilePath);
+        Image5D img = IO.TifReading.TifReader.LoadTif(imageFilePath);
+
+        Width = img.Width;
+        Height = img.Height;
+        Channels = img.Channels;
+        Slices = img.Slices;
+        Frames = img.Frames;
+        Images = img.Images;
+    }
+
+    [Obsolete("try to construct the array and pass it in")]
     public Image5D(int frames, int slices, int channels, int width, int height)
     {
         Width = width;
