@@ -8,5 +8,5 @@ namespace SciTIF.Tests;
 
 internal static class TestTools
 {
-    
+
 }

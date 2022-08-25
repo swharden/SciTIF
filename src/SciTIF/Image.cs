@@ -85,7 +85,7 @@ public class Image
 
     public void SetPixel(int x, int y, byte r, byte g, byte b, byte a)
     {
-        Values[GetIndex(x, y)] = a << 24 + b << 16 + g << 8 + r;
+        Values[GetIndex(x, y)] = BitConverter.ToInt32(new byte[] { r, g, b, a }, 0);
     }
 
     public double Min() => Values.Min();

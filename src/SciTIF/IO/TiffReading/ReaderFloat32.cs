@@ -29,6 +29,6 @@ internal class ReaderFloat32 : ReaderBase
             }
         }
 
-        return  data;
+        return data;
     }
 }

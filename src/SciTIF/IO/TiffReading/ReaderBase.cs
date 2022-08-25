@@ -62,22 +62,22 @@ internal abstract class ReaderBase : ITifReader
     {
         int i = frame * image.Slices + slice;
         tif.SetDirectory((short)i);
-        Image img = ReadSlice(tif); // TODO: break into colors
+        Image img = ReadSlice(tif);
 
-        image.SetImage(frame, slice, channel: 0, img);
-        image.SetImage(frame, slice, channel: 1, img);
-        image.SetImage(frame, slice, channel: 2, img);
-        image.SetImage(frame, slice, channel: 3, img);
+        image.SetImage(frame, slice, channel: 0, GetRgbaChannel(img, 0));
+        image.SetImage(frame, slice, channel: 1, GetRgbaChannel(img, 1));
+        image.SetImage(frame, slice, channel: 2, GetRgbaChannel(img, 2));
+        image.SetImage(frame, slice, channel: 3, GetRgbaChannel(img, 3));
     }
 
-    private int GetImageWidth(Tiff tif)
+    private Image GetRgbaChannel(Image img1, int offset)
     {
-        return int.Parse(tif.GetFieldDefaulted(TiffTag.IMAGEWIDTH)[0].ToString()!);
-    }
-
-    private int GetImageHeight(Tiff tif)
-    {
-        return int.Parse(tif.GetFieldDefaulted(TiffTag.IMAGELENGTH)[0].ToString()!);
+        Image img2 = new(img1.Width, img1.Height);
+        for (int i = 0; i < img1.Values.Length; i++)
+        {
+            img2.Values[i] = BitConverter.GetBytes((int)img1.Values[i])[offset];
+        }
+        return img2;
     }
 
     private int GetIntFromDescription(Tiff tif, string key, int defaultValue = 1)
