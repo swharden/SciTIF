@@ -83,6 +83,11 @@ public class Image : IEnumerable<double>
         IO.SystemDrawing.SavePNG(filename, this);
     }
 
+    public System.Drawing.Bitmap GetBitmap()
+    {
+        return IO.SystemDrawing.GetBitmapGrayscale(this);
+    }
+
     public void Remember()
     {
         if (RememberedValues is null)
