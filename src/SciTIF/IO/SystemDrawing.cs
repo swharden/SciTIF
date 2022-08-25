@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace SciTIF.IO;
 
@@ -13,14 +11,13 @@ public static class SystemDrawing
     {
         int width = img.Width;
         int height = img.Height;
-        double[] values = img.Values;
 
         int stride = (width % 4 == 0) ? width : width + 4 - width % 4;
 
         byte[] bytes = new byte[stride * height];
         for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++)
-                bytes[y * stride + x] = Clamp(values[width * y + x]);
+                bytes[y * stride + x] = img.GetPixelByte(x, y, true);
 
         PixelFormat formatOutput = PixelFormat.Format8bppIndexed;
 
@@ -54,11 +51,10 @@ public static class SystemDrawing
         {
             for (int x = 0; x < width; x++)
             {
-                int sourceOffset = y * width + x;
                 int destOffset = (y * stride + x) * bytesPerPixel;
-                bytes[destOffset + 0] = Clamp(b.Values[sourceOffset]);
-                bytes[destOffset + 1] = Clamp(g.Values[sourceOffset]);
-                bytes[destOffset + 2] = Clamp(r.Values[sourceOffset]);
+                bytes[destOffset + 0] = b.GetPixelByte(x, y, true);
+                bytes[destOffset + 1] = g.GetPixelByte(x, y, true);
+                bytes[destOffset + 2] = r.GetPixelByte(x, y, true);
             }
         }
 

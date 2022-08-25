@@ -31,8 +31,8 @@ internal class ReaderInt16 : ReaderBase
             {
                 int offset = (y * width + x) * bytesPerPixel;
                 int i = data.GetIndex(x, y);
-                data.Values[i] += bytes[offset + lsbOffset];
-                data.Values[i] += bytes[offset + msbOffset] << 8;
+                data[i] += bytes[offset + lsbOffset];
+                data[i] += bytes[offset + msbOffset] << 8;
             }
         }
 

@@ -25,7 +25,7 @@ internal class ReaderFloat32 : ReaderBase
             {
                 Array.Copy(lineBytes, x * bytesPerPixel, pixelBytes, 0, bytesPerPixel);
                 int i = data.GetIndex(x, y);
-                data.Values[i] = BitConverter.ToSingle(pixelBytes, 0);
+                data[i] = BitConverter.ToSingle(pixelBytes, 0);
             }
         }
 

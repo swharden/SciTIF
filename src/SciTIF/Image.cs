@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SciTIF;
@@ -6,32 +8,50 @@ namespace SciTIF;
 /// <summary>
 /// Floating-point representation of pixel intensity values
 /// </summary>
-public class Image
+public class Image : IEnumerable<double>
 {
-    public readonly double[] Values;
+    private readonly double[] Values;
     private double[]? RememberedValues;
 
     public readonly int Height;
     public readonly int Width;
-    public int Samples => Width * Height;
+    public readonly int Length;
 
     public Image(int width, int height)
     {
         Width = width;
         Height = height;
-        Values = new double[Samples];
+        Length = Width * Height;
+        Values = new double[Length];
     }
 
     public Image(int width, int height, double[] values)
     {
         Width = width;
         Height = height;
+        Length = Width * Height;
 
-        if (values.Length != Samples)
+        if (values.Length != Length)
             throw new ArgumentException("invalid length");
 
         Values = values;
     }
+
+    public double this[int index]
+    {
+        get => Values[index];
+        set => Values[index] = value;
+    }
+
+    public IEnumerator<double> GetEnumerator()
+    {
+        foreach (double value in Values)
+        {
+            yield return value;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public static Image operator +(Image a, Image b)
     {
@@ -82,6 +102,17 @@ public class Image
     public int GetIndex(int x, int y) => y * Width + x;
 
     public double GetPixel(int x, int y) => Values[GetIndex(x, y)];
+
+    public byte GetPixelByte(int x, int y, bool clamp)
+    {
+        double value = Values[GetIndex(x, y)];
+        if (clamp)
+        {
+            value = Math.Max(0, value);
+            value = Math.Min(255, value);
+        }
+        return (byte)value;
+    }
 
     public void SetPixel(int x, int y, byte r, byte g, byte b, byte a)
     {
