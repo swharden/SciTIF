@@ -1,6 +1,5 @@
 ﻿using BitMiracle.LibTiff.Classic;
 using System;
-using System.IO;
 
 namespace SciTIF.IO.TiffReading;
 
@@ -12,14 +11,13 @@ internal abstract class ReaderBase : ITifReader
 
     public Image5D Read(Tiff tif)
     {
+        int width = tif.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
+        int height = tif.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
         int frames = GetIntFromDescription(tif, "frames");
         int slices = GetIntFromDescription(tif, "slices");
         int channels = IsRGBA ? 4 : GetIntFromDescription(tif, "channels");
 
-        Console.WriteLine();
-        Console.WriteLine(Path.GetFileName(tif.FileName()));
-        Console.WriteLine(this);
-        Image5D image = new(slices, frames, channels);
+        Image5D image = new(frames, slices, channels, width, height);
         LoadAllImages(image, tif, IsRGBA);
 
         return image;

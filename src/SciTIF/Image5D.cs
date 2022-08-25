@@ -1,21 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SciTIF;
 
 public class Image5D
 {
+    /// <summary>
+    /// Stores individual grayscale images indexed by: frame, slice, channel.
+    /// RGB images are stored as grayscale images in 3 channels.
+    /// </summary>
     private readonly Image[,,] Images;
-    public int Width => Images[0, 0, 0].Width;
-    public int Height => Images[0, 0, 0].Height;
-    public int Frames => Images.GetLength(0);
-    public int Slices => Images.GetLength(1);
-    public int Channels => Images.GetLength(2);
 
-    public Image5D(int slices, int frames, int channels)
+    public readonly int Width;
+    public readonly int Height;
+    public readonly int Frames;
+    public readonly int Slices;
+    public readonly int Channels;
+
+    public Image5D(int frames, int slices, int channels, int width, int height)
     {
+        Width = width;
+        Height = height;
+        Channels = channels;
+        Slices = slices;
+        Frames = frames;
         Images = new Image[frames, slices, channels];
     }
 
@@ -26,22 +33,9 @@ public class Image5D
 
     public void SetImage(int frame, int slice, int channel, Image img)
     {
+        if (img.Width != Width)
+            throw new InvalidOperationException($"Cannot add image with Width {img.Width} into 5D image with Width {Width}");
+
         Images[frame, slice, channel] = img;
-    }
-
-    public static Image5D FromGrayscale(Image img)
-    {
-        Image5D img5 = new(1, 1, 1);
-        img5.SetImage(0, 0, 0, img);
-        return img5;
-    }
-
-    public static Image5D FromRGB(Image r, Image g, Image b)
-    {
-        Image5D img5 = new(1, 1, 3);
-        img5.SetImage(0, 0, 0, r);
-        img5.SetImage(0, 0, 0, g);
-        img5.SetImage(0, 0, 0, b);
-        return img5;
     }
 }
