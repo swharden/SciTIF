@@ -21,7 +21,7 @@ namespace SciTIF.Tests
         {
             string testDirectory = Path.GetFullPath(TestContext.CurrentContext.TestDirectory);
             string repoDirectory = Path.GetFullPath(Path.Combine(testDirectory, "../../../../../"));
-            string sampleDataFilePath = Path.Combine(repoDirectory, "data/images/Lenna_(test_image).png");
+            string sampleDataFilePath = Path.Combine(repoDirectory, "data/images/baboon.png");
             if (File.Exists(sampleDataFilePath))
                 return Path.GetDirectoryName(sampleDataFilePath)!;
             else

@@ -25,5 +25,4 @@ for (i=0; i<titleList.length; i++) {
 	printPixel(7, 13);
 	printPixel(13, 17);
 	printPixel(37, 42);
-	getImageInfo();
 }

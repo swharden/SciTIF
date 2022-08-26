@@ -21,7 +21,7 @@ namespace SciTIF.TestViewer
             btnPrev.Click += BtnPrev_Click;
             btnNext.Click += BtnNext_Click;
 
-            string initialImage = @"../../../../../data/images/LennaIndexed.tif";
+            string initialImage = @"../../../../../data/images/baboon RGB.tif";
             LoadImage(initialImage);
 
             sliderFrame.ValueChanged += (s, e) => UpdateImage();
