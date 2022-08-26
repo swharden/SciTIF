@@ -254,6 +254,23 @@ value [13, 17] = 99
 pixel [37, 42] = 212
 value [37, 42] = 212
 
+title = baboon 16bit grayscale.tif
+width = 200
+height = 200
+channels = 1
+slices = 1
+frames = 1
+depth = 16
+grayscale = 1
+pixel [0, 0] = 640
+value [0, 0] = 640
+pixel [7, 13] = 888
+value [7, 13] = 888
+pixel [13, 17] = 888
+value [13, 17] = 888
+pixel [37, 42] = 1032
+value [37, 42] = 1032
+
 title = baboon RGB.tif
 width = 200
 height = 200
