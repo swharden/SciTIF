@@ -8,78 +8,32 @@ namespace SciTIF;
 /// <summary>
 /// Floating-point representation of pixel intensity values from a single-channel image.
 /// </summary>
-public class Image : IEnumerable<double>
+public class Image
 {
-    private readonly double[] Values;
+    public double[] Values;
     private double[]? RememberedValues;
 
     public readonly int Height;
     public readonly int Width;
 
-    [Obsolete("dont use direct indexing")]
-    public readonly int Length;
-
     public Image(int width, int height)
     {
         Width = width;
         Height = height;
-        Length = Width * Height;
-        Values = new double[Length];
+        Values = new double[width * height];
     }
 
     public Image(int width, int height, double[] values)
     {
-        Width = width;
-        Height = height;
-        Length = Width * Height;
-
-        if (values.Length != Length)
+        if (values.Length != (width * height))
             throw new ArgumentException("invalid length");
 
+        Width = width;
+        Height = height;
         Values = values;
     }
 
-    [Obsolete("dont use direct indexing")]
-    public double this[int index]
-    {
-        get => Values[index];
-        set => Values[index] = value;
-    }
-
-    [Obsolete("dont use direct indexing")]
-    public IEnumerator<double> GetEnumerator()
-    {
-        foreach (double value in Values)
-        {
-            yield return value;
-        }
-    }
-
-    [Obsolete("dont use direct indexing")]
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    public static Image operator +(Image a, Image b)
-    {
-        if ((a.Width != b.Width) || (a.Height != b.Height) || (a.Values.Length != b.Values.Length))
-            throw new ArgumentException("image operations require identical dimensions");
-
-        double[] values = new double[a.Values.Length];
-
-        for (int i = 0; i < values.Length; i++)
-            values[i] = a.Values[i] + b.Values[i];
-
-        return new Image(a.Width, a.Height, values);
-    }
-
-    public static Image operator /(Image a, double b)
-    {
-        double[] values = new double[a.Values.Length];
-
-        for (int i = 0; i < values.Length; i++)
-            values[i] = a.Values[i] / b;
-
-        return new Image(a.Width, a.Height, values);
-    }
+    #region IMAGE EXPORT
 
     public void SavePng(string filename, bool autoscale = false)
     {
@@ -93,21 +47,9 @@ public class Image : IEnumerable<double>
         return IO.SystemDrawing.GetBitmapGrayscale(this);
     }
 
-    public void Remember()
-    {
-        if (RememberedValues is null)
-            RememberedValues = new double[Values.Length];
+    #endregion
 
-        Array.Copy(Values, RememberedValues, Values.Length);
-    }
-
-    public void Recall()
-    {
-        if (RememberedValues is null)
-            throw new InvalidOperationException("Recall() requires Remember() to have been called previously");
-        else
-            Array.Copy(RememberedValues, Values, Values.Length);
-    }
+    #region GET AND SET PIXEL VALUES
 
     public int GetIndex(int x, int y) => y * Width + x;
 
@@ -126,8 +68,13 @@ public class Image : IEnumerable<double>
 
     public void SetPixel(int x, int y, byte r, byte g, byte b, byte a)
     {
-        Values[GetIndex(x, y)] = BitConverter.ToInt32(new byte[] { r, g, b, a }, 0);
+        double value = BitConverter.ToInt32(new byte[] { r, g, b, a }, 0);
+        Values[GetIndex(x, y)] = value;
     }
+
+    #endregion
+
+    #region PIXEL VALUE ANALYSIS
 
     public double Min() => Values.Min();
 
@@ -146,6 +93,28 @@ public class Image : IEnumerable<double>
         Array.Copy(Values, sorted, Values.Length);
         Array.Sort(sorted);
         return indexes.Select(x => sorted[x]).ToArray();
+    }
+
+    #endregion
+
+    #region PIXEL VALUE MUTATION
+
+    // IDEA: multiple states could be stored in a numbered collection
+
+    public void RememberValues()
+    {
+        if (RememberedValues is null)
+            RememberedValues = new double[Values.Length];
+
+        Array.Copy(Values, RememberedValues, Values.Length);
+    }
+
+    public void RecallValues()
+    {
+        if (RememberedValues is null)
+            throw new InvalidOperationException("Recall() requires Remember() to have been called previously");
+        else
+            Array.Copy(RememberedValues, Values, Values.Length);
     }
 
     public void AutoScale(double percentileLow = 0, double percentileHigh = 100, double newMax = 255)
@@ -171,4 +140,43 @@ public class Image : IEnumerable<double>
         for (int i = 0; i < Values.Length; i++)
             Values[i] = (Values[i] - min) * scale;
     }
+
+    #endregion
+
+    #region OPERATOR OVERLOADS
+
+    private static void AssertSameDimensions(Image a, Image b)
+    {
+        if (a.Width != b.Width)
+            throw new ArgumentException($"both images must have the same width ({a.Width} vs {b.Width})");
+
+        if (a.Height != b.Height)
+            throw new ArgumentException($"both images must have the same height ({a.Height} vs {b.Height})");
+
+        if (a.Values.Length != b.Values.Length)
+            throw new ArgumentException($"both images must have the same data length ({a.Values.Length} vs {b.Values.Length})");
+    }
+
+    public static Image operator +(Image a, Image b)
+    {
+        AssertSameDimensions(a, b);
+        double[] values = new double[a.Values.Length];
+
+        for (int i = 0; i < values.Length; i++)
+            values[i] = a.Values[i] + b.Values[i];
+
+        return new Image(a.Width, a.Height, values);
+    }
+
+    public static Image operator /(Image a, double b)
+    {
+        double[] values = new double[a.Values.Length];
+
+        for (int i = 0; i < values.Length; i++)
+            values[i] = a.Values[i] / b;
+
+        return new Image(a.Width, a.Height, values);
+    }
+
+    #endregion
 }

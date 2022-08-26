@@ -11,8 +11,6 @@ internal abstract class ReaderBase : ITifReader
 
     public Image[,,] Read(Tiff tif)
     {
-        int width = TifInformation.GetWidth(tif);
-        int height = TifInformation.GetHeight(tif);
         int frames = TifInformation.GetFrames(tif);
         int slices = TifInformation.GetSlices(tif);
         int channels = IsRGBA ? 4 : TifInformation.GetChannels(tif);
@@ -71,9 +69,11 @@ internal abstract class ReaderBase : ITifReader
     {
         Image img2 = new(img1.Width, img1.Height);
 
-        for (int i = 0; i < img1.Length; i++)
+        for (int i = 0; i < img1.Values.Length; i++)
         {
-            img2[i] = BitConverter.GetBytes((int)img1[i])[offset];
+            int rgbaInt = (int)img1.Values[i];
+            byte[] rgbaBytes = BitConverter.GetBytes(rgbaInt);
+            img2.Values[i] = rgbaBytes[offset];
         }
 
         return img2;

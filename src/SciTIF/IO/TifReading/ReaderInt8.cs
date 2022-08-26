@@ -27,7 +27,7 @@ internal class ReaderInt8 : ReaderBase
             {
                 int offset = y * width + x;
                 int i = data.GetIndex(x, y);
-                data[i] = bytes[offset];
+                data.Values[i] = bytes[offset];
             }
         }
 
