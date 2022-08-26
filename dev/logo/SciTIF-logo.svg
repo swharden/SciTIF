@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 135.46666 135.46667"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="SciTIF-logo.svg"
+   inkscape:export-filename="C:\Users\scott\Documents\GitHub\SciTIF\dev\logo\scitif-logo-64.png"
+   inkscape:export-xdpi="12.000001"
+   inkscape:export-ydpi="12.000001">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="325.01684"
+     inkscape:cy="207.05147"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     borderlayer="true"
+     inkscape:pagecheckerboard="true"
+     inkscape:window-width="2191"
+     inkscape:window-height="1328"
+     inkscape:window-x="3144"
+     inkscape:window-y="16"
+     inkscape:window-maximized="0"
+     showborder="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid875" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:1;fill:#67217a;stroke:none;stroke-width:10;stroke-linecap:round;paint-order:fill markers stroke;fill-opacity:1"
+       id="rect873"
+       width="135.46666"
+       height="135.46666"
+       x="0"
+       y="0"
+       ry="23.8125" />
+    <rect
+       style="fill:#9a4993;fill-opacity:0.717742;stroke:#bb6eb4;stroke-width:5.22284;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect881-8"
+       width="79.815117"
+       height="41.733387"
+       x="115.24677"
+       y="113.81808"
+       ry="0"
+       transform="matrix(1,0,-0.63130024,0.77553852,0,0)" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:42.6309px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.06578"
+       x="10.684738"
+       y="45.490768"
+       id="text835"><tspan
+         sodipodi:role="line"
+         id="tspan833"
+         x="10.684738"
+         y="45.490768"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';fill:#ffffff;fill-opacity:1;stroke-width:1.06578">Sci<tspan
+   style="font-weight:bold;stroke-width:1.06578"
+   id="tspan990">TIF</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:60.8169px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.52043"
+       x="8.5512142"
+       y="113.57872"
+       id="text835-6"><tspan
+         sodipodi:role="line"
+         id="tspan833-5"
+         x="8.5512142"
+         y="113.57872"
+         style="fill:#ffffff;fill-opacity:1;stroke-width:1.52043" /></text>
+    <rect
+       style="opacity:1;fill:#9a4993;fill-opacity:0.717742;stroke:#bb6eb4;stroke-width:5.22284;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect881"
+       width="79.815117"
+       height="41.733387"
+       x="100.62061"
+       y="92.955002"
+       ry="0"
+       transform="matrix(1,0,-0.63130024,0.77553852,0,0)" />
+    <rect
+       style="fill:#9a4993;fill-opacity:0.717742;stroke:#bb6eb4;stroke-width:5.22284;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect881-0"
+       width="79.815117"
+       height="41.733387"
+       x="85.994446"
+       y="72.091934"
+       ry="0"
+       transform="matrix(1,0,-0.63130024,0.77553852,0,0)" />
+  </g>
+</svg>
