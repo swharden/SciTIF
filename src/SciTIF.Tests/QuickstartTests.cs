@@ -13,8 +13,8 @@ namespace SciTIF.Tests
         public void Test_Quickstart()
         {
             string path = SampleData.TifWithFramesSlicesAndChannels;
-            Image5D img5d = new(path);
-            Image slice = img5d.GetImage(0, 0, 0);
+            TifFile tif = new(path);
+            Image slice = tif.GetImage(0, 0, 0);
             slice.AutoScale();
             slice.SavePng("test");
         }

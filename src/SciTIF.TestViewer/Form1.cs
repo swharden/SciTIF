@@ -7,7 +7,7 @@ namespace SciTIF.TestViewer
 {
     public partial class Form1 : Form
     {
-        private Image5D? CurrentTif;
+        private TifFile? CurrentTif;
 
         public Form1()
         {
@@ -80,7 +80,7 @@ namespace SciTIF.TestViewer
             btnNext.Enabled = true;
             btnPrev.Enabled = true;
 
-            CurrentTif = new Image5D(imageFilePath);
+            CurrentTif = new TifFile(imageFilePath);
             richTextBox1.Text = Path.GetFileName(CurrentTif.FilePath)
                 + Environment.NewLine
                 + CurrentTif.Description;

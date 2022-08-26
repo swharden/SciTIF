@@ -5,48 +5,33 @@ using System.Collections.Generic;
 
 namespace SciTIF;
 
+/// <summary>
+/// Stores individual grayscale images indexed by: frame, slice, channel.
+/// RGB images are stored as grayscale images in 3 channels.
+/// </summary>
 public class Image5D
 {
+    protected Image[,,] Images { get; set; } = new Image[0, 0, 0];
+    private Image FirstImage => Images[0, 0, 0];
+    public int Width => FirstImage.Width;
+    public int Height => FirstImage.Height;
+    public int Frames => Images.GetLength(0);
+    public int Slices => Images.GetLength(1);
+    public int Channels => Images.GetLength(2);
+
     /// <summary>
-    /// Stores individual grayscale images indexed by: frame, slice, channel.
-    /// RGB images are stored as grayscale images in 3 channels.
+    /// Callers must manually assign <see cref="Images"/>
     /// </summary>
-    private readonly Image[,,] Images;
-
-    public readonly int Width;
-    public readonly int Height;
-    public readonly int Frames;
-    public readonly int Slices;
-    public readonly int Channels;
-
-    public string FilePath { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-
-    public Image5D(string imageFilePath)
-    {
-        Image5D img = IO.TifReading.TifReader.LoadTif(imageFilePath);
-
-        Width = img.Width;
-        Height = img.Height;
-        Channels = img.Channels;
-        Slices = img.Slices;
-        Frames = img.Frames;
-        Images = img.Images;
-
-        FilePath = img.FilePath;
-        Description = img.Description;
-    }
+    protected Image5D() { }
 
     public Image5D(Image[,,] images)
     {
         Images = images;
+        AssertAllImagesHaveSameDimensions();
+    }
 
-        Width = images[0, 0, 0].Width;
-        Height = images[0, 0, 0].Height;
-        Frames = images.GetLength(0);
-        Slices = images.GetLength(1);
-        Channels = images.GetLength(2);
-
+    protected void AssertAllImagesHaveSameDimensions()
+    {
         foreach (Image img in GetAllImages())
         {
             if (img.Width != Width || img.Height != Height)
@@ -54,6 +39,11 @@ public class Image5D
                 throw new InvalidDataException("all images must have the same dimensions");
             }
         }
+    }
+
+    protected void ReplaceImages(Image[,,] images)
+    {
+        Images = images;
     }
 
     public Image GetImage(int frame, int slice, int channel)

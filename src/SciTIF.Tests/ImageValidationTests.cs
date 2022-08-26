@@ -37,7 +37,7 @@ internal class ImageValidationTests
         foreach (string tifPath in SampleData.TifFiles)
         {
             ImageInfo known = db.Infos[Path.GetFileName(tifPath)];
-            Image5D tif = new(tifPath);
+            TifFile tif = new(tifPath);
             Assert.That(tif.Width, Is.EqualTo(known.Width));
             Assert.That(tif.Height, Is.EqualTo(known.Height));
             Assert.That(tif.Frames, Is.EqualTo(known.Frames));
@@ -67,7 +67,7 @@ internal class ImageValidationTests
         {
             ImageInfo known = db.Infos[Path.GetFileName(tifPath)];
 
-            Image5D tif = new(tifPath);
+            TifFile tif = new(tifPath);
 
             foreach (PixelInfo knownPixel in known.Pixels)
             {
@@ -108,7 +108,7 @@ internal class ImageValidationTests
     public void Test_ExportSlices_5DSourceImage()
     {
         string tifFilePath = Path.Combine(SampleData.DataFolder, "C3Z4F5.tif");
-        Image5D tif = new(tifFilePath);
+        TifFile tif = new(tifFilePath);
         Assert.That(tif.Frames, Is.EqualTo(5));
         Assert.That(tif.Slices, Is.EqualTo(4));
         Assert.That(tif.Channels, Is.EqualTo(3));

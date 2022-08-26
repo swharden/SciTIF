@@ -9,7 +9,7 @@ internal abstract class ReaderBase : ITifReader
 
     public abstract bool IsRGBA { get; }
 
-    public Image5D Read(Tiff tif)
+    public Image[,,] Read(Tiff tif)
     {
         int width = TifInformation.GetWidth(tif);
         int height = TifInformation.GetHeight(tif);
@@ -41,7 +41,7 @@ internal abstract class ReaderBase : ITifReader
             }
         }
 
-        return new Image5D(images);
+        return images;
     }
 
     private void LoadChannelsGraycale(Tiff tif, Image[,,] image, int frame, int slice, int channels, int dirIndex)
@@ -70,10 +70,12 @@ internal abstract class ReaderBase : ITifReader
     private Image GetRgbaChannel(Image img1, int offset)
     {
         Image img2 = new(img1.Width, img1.Height);
+
         for (int i = 0; i < img1.Length; i++)
         {
             img2[i] = BitConverter.GetBytes((int)img1[i])[offset];
         }
+
         return img2;
     }
 }

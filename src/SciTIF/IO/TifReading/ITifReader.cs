@@ -4,6 +4,6 @@ namespace SciTIF.IO.TifReading;
 
 public interface ITifReader
 {
-    public Image5D Read(Tiff tif);
+    public Image[,,] Read(Tiff tif);
     public bool IsRGBA { get; }
 }

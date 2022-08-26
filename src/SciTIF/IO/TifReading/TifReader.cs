@@ -6,7 +6,7 @@ namespace SciTIF.IO.TifReading;
 
 public static class TifReader
 {
-    public static Image5D LoadTif(string filePath)
+    public static (Image[,,] image, string description) LoadTif(string filePath)
     {
         bool isTifExtension = filePath.EndsWith(".TIF", StringComparison.OrdinalIgnoreCase) ||
             filePath.EndsWith(".TIFF", StringComparison.OrdinalIgnoreCase);
@@ -25,10 +25,9 @@ public static class TifReader
             throw new NullReferenceException($"TIF is null after reading: {filePath}");
 
         ITifReader reader = GetBestReader(tif);
-        Image5D image = reader.Read(tif);
-        image.FilePath = filePath;
-        image.Description += $"TIF read using {reader}" + Environment.NewLine;
-        return image;
+        Image[,,] image = reader.Read(tif);
+        string description = $"TIF read using {reader}" + Environment.NewLine;
+        return (image, description);
     }
 
     private static ITifReader GetBestReader(Tiff tif)

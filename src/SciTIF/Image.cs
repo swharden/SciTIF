@@ -15,6 +15,8 @@ public class Image : IEnumerable<double>
 
     public readonly int Height;
     public readonly int Width;
+
+    [Obsolete("dont use direct indexing")]
     public readonly int Length;
 
     public Image(int width, int height)
@@ -37,12 +39,14 @@ public class Image : IEnumerable<double>
         Values = values;
     }
 
+    [Obsolete("dont use direct indexing")]
     public double this[int index]
     {
         get => Values[index];
         set => Values[index] = value;
     }
 
+    [Obsolete("dont use direct indexing")]
     public IEnumerator<double> GetEnumerator()
     {
         foreach (double value in Values)
@@ -51,6 +55,7 @@ public class Image : IEnumerable<double>
         }
     }
 
+    [Obsolete("dont use direct indexing")]
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public static Image operator +(Image a, Image b)
