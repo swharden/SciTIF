@@ -220,6 +220,23 @@ value [13, 17] = 8
 pixel [37, 42] = 9
 value [37, 42] = 9
 
+title = baboon 8bit grayscale.tif
+width = 200
+height = 200
+channels = 1
+slices = 1
+frames = 1
+depth = 8
+grayscale = 1
+pixel [0, 0] = 80
+value [0, 0] = 80
+pixel [7, 13] = 111
+value [7, 13] = 111
+pixel [13, 17] = 111
+value [13, 17] = 111
+pixel [37, 42] = 129
+value [37, 42] = 129
+
 title = baboon 8bit indexed.tif
 width = 200
 height = 200
