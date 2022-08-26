@@ -78,4 +78,20 @@ internal abstract class ReaderBase : ITifReader
 
         return img2;
     }
+
+    public static double EncodeRGBA(byte r, byte g, byte b, byte a)
+    {
+        return BitConverter.ToInt32(new byte[] { r, g, b, a }, 0);
+    }
+
+    public static (byte r, byte g, byte b, byte a) DecodeRGBA(double value)
+    {
+        int valueInt = (int)value;
+        byte[] bytes = BitConverter.GetBytes(valueInt);
+        byte r = bytes[0];
+        byte g = bytes[1];
+        byte b = bytes[2];
+        byte a = bytes[3];
+        return (r, g, b, a);
+    }
 }

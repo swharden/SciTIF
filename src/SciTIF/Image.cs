@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SciTIF;
@@ -35,10 +33,8 @@ public class Image
 
     #region IMAGE EXPORT
 
-    public void SavePng(string filename, bool autoscale = false)
+    public void SavePng(string filename)
     {
-        if (autoscale)
-            AutoScale();
         IO.SystemDrawing.SavePNG(filename, this);
     }
 
@@ -66,9 +62,8 @@ public class Image
         return (byte)value;
     }
 
-    public void SetPixel(int x, int y, byte r, byte g, byte b, byte a)
+    public void SetPixel(int x, int y, double value)
     {
-        double value = BitConverter.ToInt32(new byte[] { r, g, b, a }, 0);
         Values[GetIndex(x, y)] = value;
     }
 

@@ -25,7 +25,7 @@ internal class ReaderRGBA : ReaderBase
                 byte g = (byte)Tiff.GetG(raster[offset]);
                 byte b = (byte)Tiff.GetB(raster[offset]);
                 byte a = (byte)Tiff.GetA(raster[offset]);
-                img.SetPixel(x, y, r, g, b, a);
+                img.SetPixel(x, y, EncodeRGBA(r, g, b, a));
             }
         }
 
