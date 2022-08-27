@@ -15,7 +15,6 @@
         <PackageReleaseNotes>https://github.com/swharden/SciTIF/releases</PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>icon.png</PackageIcon>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <DebugType>portable</DebugType>
         <IncludeSymbols>true</IncludeSymbols>
