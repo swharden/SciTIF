@@ -7,7 +7,7 @@ namespace SciTIF.TestViewer
 {
     public partial class Form1 : Form
     {
-        private TifFile? CurrentTif;
+        private TifFile? LoadedTif;
 
         public Form1()
         {
@@ -29,6 +29,7 @@ namespace SciTIF.TestViewer
             sliderChannel.ValueChanged += (s, e) => UpdateImage();
             cbAutoScale.CheckedChanged += (s, e) => ReloadImage();
             cbRGB.CheckedChanged += (s, e) => UpdateImage();
+            cbMaxProjection.CheckedChanged += (s, e) => UpdateImage();
         }
 
         private void Form1_KeyDown(object? sender, KeyEventArgs e)
@@ -43,30 +44,30 @@ namespace SciTIF.TestViewer
 
         private void BtnNext_Click(object? sender, EventArgs e)
         {
-            if (CurrentTif is null)
+            if (LoadedTif is null)
                 return;
 
             string[] files = Directory
-                .GetFiles(Path.GetDirectoryName(CurrentTif.FilePath)!)
+                .GetFiles(Path.GetDirectoryName(LoadedTif.FilePath)!)
                 .Where(x => Path.GetExtension(x).Contains(".tif"))
                 .ToArray();
 
-            int i = Array.IndexOf(files, CurrentTif.FilePath);
+            int i = Array.IndexOf(files, LoadedTif.FilePath);
             int next = i < files.Length - 1 ? i + 1 : 0;
             LoadImage(files[next]);
         }
 
         private void BtnPrev_Click(object? sender, EventArgs e)
         {
-            if (CurrentTif is null)
+            if (LoadedTif is null)
                 return;
 
             string[] files = Directory
-                .GetFiles(Path.GetDirectoryName(CurrentTif.FilePath)!)
+                .GetFiles(Path.GetDirectoryName(LoadedTif.FilePath)!)
                 .Where(x => Path.GetExtension(x).Contains(".tif"))
                 .ToArray();
 
-            int i = Array.IndexOf(files, CurrentTif.FilePath);
+            int i = Array.IndexOf(files, LoadedTif.FilePath);
             int previous = i > 0 ? i - 1 : files.Length - 1;
             LoadImage(files[previous]);
         }
@@ -80,49 +81,63 @@ namespace SciTIF.TestViewer
             btnNext.Enabled = true;
             btnPrev.Enabled = true;
 
-            CurrentTif = new TifFile(imageFilePath);
-            richTextBox1.Text = Path.GetFileName(CurrentTif.FilePath)
+            LoadedTif = new TifFile(imageFilePath);
+            richTextBox1.Text = Path.GetFileName(LoadedTif.FilePath)
                 + Environment.NewLine
-                + CurrentTif.Description;
+                + LoadedTif.Description;
 
-            sliderFrame.SetSize(CurrentTif.Frames);
-            sliderSlice.SetSize(CurrentTif.Slices);
-            sliderChannel.SetSize(CurrentTif.Channels);
+            sliderFrame.SetSize(LoadedTif.Frames);
+            sliderSlice.SetSize(LoadedTif.Slices);
+            sliderChannel.SetSize(LoadedTif.Channels);
 
-            cbRGB.Visible = CurrentTif.Channels == 4;
+            cbRGB.Visible = LoadedTif.Channels == 4;
 
             UpdateImage();
         }
 
         private void ReloadImage()
         {
-            if (CurrentTif is null)
+            if (LoadedTif is null)
                 return;
 
-            LoadImage(CurrentTif.FilePath);
+            LoadImage(LoadedTif.FilePath);
         }
 
         private void UpdateImage()
         {
-            if (CurrentTif is null)
+            if (LoadedTif is null)
                 return;
 
             int frame = sliderFrame.GetValue();
             int slice = sliderSlice.GetValue();
             int channel = sliderChannel.GetValue();
 
-            bool isRgb = CurrentTif.Channels == 4 && cbRGB.Checked;
+            bool isRgb = LoadedTif.Channels == 4 && cbRGB.Checked;
 
-            sliderFrame.Visible = CurrentTif.Frames > 1;
-            sliderSlice.Visible = CurrentTif.Slices > 1;
-            sliderChannel.Visible = CurrentTif.Channels > 1 && !isRgb;
-
-            Bitmap newBmp = isRgb
-                ? GetRgbBitmap(CurrentTif, frame, slice, channel)
-                : GetGrayscaleBitmap(CurrentTif, frame, slice, channel, cbAutoScale.Checked);
+            cbMaxProjection.Visible = LoadedTif.Slices > 1;
+            sliderFrame.Visible = LoadedTif.Frames > 1;
+            sliderSlice.Visible = LoadedTif.Slices > 1 && !cbMaxProjection.Checked;
+            sliderChannel.Visible = LoadedTif.Channels > 1 && !isRgb;
 
             var oldBmp = pictureBox1.Image;
-            pictureBox1.Image = newBmp;
+
+            if (isRgb)
+            {
+                pictureBox1.Image = GetRgbBitmap(LoadedTif, frame, slice, channel);
+            }
+            else if (LoadedTif.Slices > 1 && cbMaxProjection.Checked)
+            {
+                ImageStack stack = LoadedTif.GetImageStack();
+                Image img = stack.ProjectMax();
+                if (cbAutoScale.Checked)
+                    img.AutoScale();
+                pictureBox1.Image = img.GetBitmap();
+            }
+            else
+            {
+                pictureBox1.Image = GetGrayscaleBitmap(LoadedTif, frame, slice, channel, cbAutoScale.Checked);
+            }
+
             oldBmp?.Dispose();
         }
 

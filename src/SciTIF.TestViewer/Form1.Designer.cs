@@ -38,6 +38,7 @@
             this.cbAutoScale = new System.Windows.Forms.CheckBox();
             this.cbRGB = new System.Windows.Forms.CheckBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.cbMaxProjection = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -157,12 +158,24 @@
             this.richTextBox1.TabIndex = 12;
             this.richTextBox1.Text = "";
             // 
+            // cbMaxProjection
+            // 
+            this.cbMaxProjection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbMaxProjection.AutoSize = true;
+            this.cbMaxProjection.Location = new System.Drawing.Point(30, 19);
+            this.cbMaxProjection.Name = "cbMaxProjection";
+            this.cbMaxProjection.Size = new System.Drawing.Size(106, 19);
+            this.cbMaxProjection.TabIndex = 13;
+            this.cbMaxProjection.Text = "Max Projection";
+            this.cbMaxProjection.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(513, 724);
             this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.cbMaxProjection);
             this.Controls.Add(this.cbRGB);
             this.Controls.Add(this.cbAutoScale);
             this.Controls.Add(this.cbZoom);
@@ -193,5 +206,6 @@
         private CheckBox cbAutoScale;
         private CheckBox cbRGB;
         private RichTextBox richTextBox1;
+        private CheckBox cbMaxProjection;
     }
 }
