@@ -16,11 +16,21 @@ double[] allValues = slice.Values;
 double pxValue = slice.GetPixel(13, 42);
 slice.SetPixel(13, 42, 123);
 
-// helper methods simplify common operations (e.g., scaling to 0-255)
-slice.AutoScale();
-
-// Data can be exported in various non-TIF file formats
+// Scale the pixel values down to 0-255 and save as a PNG file
+slice.AutoScale(max: 255);
 slice.SavePng("output.png");
+```
+
+## 3D Image Projection
+
+This examples shows how to create a maximum-intensity projection along the Z axis of a 5D TIF image. This can be used to create all-in-focus maximum projection of a collection of single optical sections.
+
+```cs
+TifFile tif = new("16bit stack.tif");
+ImageStack stack = tif.GetImageStack();
+Image projection = stack.ProjectMax();
+projection.AutoScale(max: 255);
+projection.SavePng("maximum-projection.png");
 ```
 
 ## Notes
