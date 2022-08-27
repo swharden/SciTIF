@@ -492,6 +492,23 @@ value [13, 17] = 95
 pixel [37, 42] = 112
 value [37, 42] = 112
 
+title = stack 16-bit 2014-09-12.tif
+width = 402
+height = 512
+channels = 1
+slices = 32
+frames = 1
+depth = 16
+grayscale = 1
+pixel [0, 0] = 45
+value [0, 0] = 45
+pixel [7, 13] = 288
+value [7, 13] = 288
+pixel [13, 17] = 278
+value [13, 17] = 278
+pixel [37, 42] = 267
+value [37, 42] = 267
+
 title = Substack (1-81-4)0012.tif
 width = 1818
 height = 1362
