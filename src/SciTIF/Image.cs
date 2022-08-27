@@ -114,28 +114,29 @@ public class Image
             Array.Copy(RememberedValues, Values, Values.Length);
     }
 
-    public void AutoScale(double percentileLow = 0, double percentileHigh = 100, double newMax = 255)
+    // TODO: disable mutation
+    public void AutoScale(double percentileLow = 0, double percentileHigh = 100, double max = 255)
     {
-        double min;
-        double max;
+        double minValue;
+        double maxValue;
 
         if (percentileLow == 0 && percentileHigh == 100)
         {
-            min = Min();
-            max = Max();
+            minValue = Min();
+            maxValue = Max();
         }
         else
         {
             double[] percents = { percentileLow, percentileHigh };
             double[] percentiles = Percentile(percents);
-            min = percentiles[0];
-            max = percentiles[1];
+            minValue = percentiles[0];
+            maxValue = percentiles[1];
         }
 
-        double scale = newMax / (max - min);
+        double scale = max / (maxValue - minValue);
 
         for (int i = 0; i < Values.Length; i++)
-            Values[i] = (Values[i] - min) * scale;
+            Values[i] = (Values[i] - minValue) * scale;
     }
 
     #endregion

@@ -16,11 +16,8 @@ namespace SciTIF.Tests
             TifFile tif = new(tifFilePath);
             ImageStack stack = tif.GetImageStack();
 
-            Assert.That(stack.Images.Length, Is.EqualTo(32));
-
-            int x = 13;
-            int y = 17;
-            double[] values = stack.Images.Select(img => img.GetPixel(x, y)).ToArray();
+            // measured at a known point
+            double[] pixelValues = stack.Images.Select(img => img.GetPixel(13, 17)).ToArray();
 
             // obtained using ImageJ script
             double[] knownValues = {
@@ -28,10 +25,29 @@ namespace SciTIF.Tests
                 276, 317, 249, 227, 273, 273, 254, 281, 244, 279, 280, 286, 363, 328, 315, 359
             };
 
-            // note: max is 363
-            // note: mean is 286
+            Assert.AreEqual(knownValues, pixelValues);
+        }
 
-            Assert.AreEqual(knownValues, values);
+        [Test]
+        public void Test_Stack_ProjectMax()
+        {
+            string tifFilePath = SampleData.Tif16bitStack;
+            TifFile tif = new(tifFilePath);
+            ImageStack stack = tif.GetImageStack();
+            Image projection = stack.ProjectMax();
+
+            Assert.That(projection.GetPixel(13, 17), Is.EqualTo(363));
+        }
+
+        [Test]
+        public void Test_Stack_ProjectMean()
+        {
+            string tifFilePath = SampleData.Tif16bitStack;
+            TifFile tif = new(tifFilePath);
+            ImageStack stack = tif.GetImageStack();
+            Image projection = stack.ProjectMean();
+
+            Assert.That(projection.GetPixel(13, 17), Is.EqualTo(286).Within(1));
         }
     }
 }
