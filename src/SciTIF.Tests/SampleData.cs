@@ -17,6 +17,8 @@ namespace SciTIF.Tests
 
         public static string TifWithFramesSlicesAndChannels => Path.Combine(DataFolder, "C3Z4F5.tif");
 
+        public static string Tif16bitStack => Path.Combine(DataFolder, "stack 16-bit 2014-09-12.tif");
+
         public static Image GetBaboonImage() => new TifFile(SampleData.BaboonGrayscale).GetImage(0, 0, 0);
 
         public static string BaboonGrayscale => Path.Combine(DataFolder, "baboon 8bit grayscale.tif");

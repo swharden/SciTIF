@@ -51,6 +51,12 @@ public class Image5D
         return Images[frame, slice, channel];
     }
 
+    public ImageStack GetImageStack(int frame = 0, int channel = 0)
+    {
+        var images = Enumerable.Range(0, Slices).Select(slice => GetImage(frame, slice, channel));
+        return new ImageStack(images);
+    }
+
     public Image[] GetAllImages()
     {
         List<Image> images = new();

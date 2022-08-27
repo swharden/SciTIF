@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace SciTIF;
 
+// TODO: should frames and slices be 0-indexed?
+
 /// <summary>
 /// Floating-point representation of pixel intensity values from a single-channel image.
 /// </summary>
