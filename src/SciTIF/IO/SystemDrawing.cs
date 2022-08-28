@@ -27,16 +27,18 @@ public static class SystemDrawing
 
     private static Bitmap GetBitmap(Image img)
     {
-        return GetBitmapGrayscale(img);
+        return CreateBitmap(img);
     }
 
     private static Bitmap GetBitmap(Image r, Image g, Image b)
     {
-        return GetBitmapRGB(r, g, b);
+        return CreateBitmap(r, g, b);
     }
 
-    private static Bitmap GetBitmapGrayscale(Image img)
+    private static Bitmap CreateBitmap(Image img)
     {
+        // this overload creates a grayscale image then updates the color palette
+
         int width = img.Width;
         int height = img.Height;
 
@@ -57,7 +59,10 @@ public static class SystemDrawing
 
         ColorPalette pal = bmp.Palette;
         for (int i = 0; i < 256; i++)
-            pal.Entries[i] = Color.FromArgb(255, i, i, i);
+        {
+            var color = img.LUT.GetColor((byte)i);
+            pal.Entries[i] = Color.FromArgb(255, color.R, color.G, color.B);
+        }
         bmp.Palette = pal;
 
         Bitmap bmp2 = new(width, height, PixelFormat.Format32bppPArgb);
@@ -67,7 +72,7 @@ public static class SystemDrawing
         return bmp2;
     }
 
-    private static Bitmap GetBitmapRGB(Image r, Image g, Image b)
+    private static Bitmap CreateBitmap(Image r, Image g, Image b)
     {
         int width = r.Width;
         int height = r.Height;
@@ -134,25 +139,25 @@ public static class SystemDrawing
 
     private static void SavePNG(string filePath, Image img)
     {
-        using Bitmap bmp = GetBitmapGrayscale(img);
+        using Bitmap bmp = CreateBitmap(img);
         bmp.SavePNG(filePath);
     }
 
     private static void SavePNG(string filePath, Image r, Image g, Image b)
     {
-        using Bitmap bmp = GetBitmapRGB(r, g, b);
+        using Bitmap bmp = CreateBitmap(r, g, b);
         bmp.SavePNG(filePath);
     }
 
     private static void SaveJPG(string filePath, Image img, int quality)
     {
-        using Bitmap bmp = GetBitmapGrayscale(img);
+        using Bitmap bmp = CreateBitmap(img);
         bmp.SaveJPG(filePath, quality);
     }
 
     private static void SaveJPG(string filePath, Image r, Image g, Image b, int quality)
     {
-        using Bitmap bmp = GetBitmapRGB(r, g, b);
+        using Bitmap bmp = CreateBitmap(r, g, b);
         bmp.SaveJPG(filePath, quality);
     }
 

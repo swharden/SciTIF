@@ -21,6 +21,8 @@ namespace SciTIF.Tests
 
         public static string Tif3Channel => Path.Combine(DataFolder, "fluo-3ch-8bit-composite.tif");
 
+        public static string Tif16bitGrayscale => Path.Combine(DataFolder, "baboon 16bit grayscale.tif");
+
         public static Image GetBaboonImage() => new TifFile(SampleData.BaboonGrayscale).GetImage(0, 0, 0);
 
         public static string BaboonGrayscale => Path.Combine(DataFolder, "baboon 8bit grayscale.tif");

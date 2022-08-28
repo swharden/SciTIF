@@ -14,11 +14,11 @@ namespace SciTIF.Tests
         [Test]
         public void Test_Quickstart()
         {
-            string path = System.IO.Path.Combine(SampleData.DataFolder, "baboon 16bit grayscale.tif");
+            string path = SampleData.Tif16bitGrayscale;
             TifFile tif = new(path); // 16-bit images with pixel values that exceed 255
             Image slice = tif.GetImage(frame: 0, slice: 0, channel: 0); // 5D images are supported
             slice.AutoScale(); // scale pixel values down to 0-255
-            slice.Save("baboon-16.png");
+            slice.Save_TEST("scaled.png");
         }
 
         [Test]
@@ -62,6 +62,17 @@ namespace SciTIF.Tests
             // megenta is red + blue
             ImageRGB rgb = new(ch1, ch2, ch1);
             rgb.Save_TEST("rgb-2ch-merge.png");
+        }
+
+        [Test]
+        public void Test_SingleChannelLut()
+        {
+            string path = SampleData.Tif16bitGrayscale;
+            TifFile tif = new(path);
+            Image slice = tif.GetImage(frame: 0, slice: 0, channel: 0);
+            slice.AutoScale();
+            slice.LUT = new LUTs.Viridis();
+            slice.Save_TEST("viridis.png");
         }
     }
 }
