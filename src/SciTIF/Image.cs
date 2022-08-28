@@ -35,14 +35,14 @@ public class Image
 
     #region IMAGE EXPORT
 
-    public void Save(string filename)
+    public void Save(string filename, int quality = 90)
     {
-        IO.SystemDrawing.SavePNG(filename, this);
+        IO.SystemDrawing.Save(filename, this, quality);
     }
 
     public System.Drawing.Bitmap GetBitmap()
     {
-        return IO.SystemDrawing.GetBitmapGrayscale(this);
+        return IO.SystemDrawing.GetBitmap(this);
     }
 
     #endregion

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SciTIF.Tests;
 
-internal static class TestTools
+internal static class TestExtensions
 {
     private static string GetOutputFolder()
     {
@@ -18,6 +18,13 @@ internal static class TestTools
     }
 
     public static void Save_TEST(this ImageRGB image, string fileName)
+    {
+        string saveAs = Path.Combine(GetOutputFolder(), fileName);
+        image.Save(saveAs);
+        Console.WriteLine(saveAs);
+    }
+
+    public static void Save_TEST(this Image image, string fileName)
     {
         string saveAs = Path.Combine(GetOutputFolder(), fileName);
         image.Save(saveAs);

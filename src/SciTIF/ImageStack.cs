@@ -9,9 +9,21 @@ namespace SciTIF;
 /// </summary>
 public class ImageStack
 {
-    public readonly Image[] Images;
-    public int SliceCount => Images.Length;
+    private readonly Image[] Images;
+
+    /// <summary>
+    /// Number of slices in the stack
+    /// </summary>
+    public int Slices => Images.Length;
+
+    /// <summary>
+    /// Width of every image in the stack
+    /// </summary>
     public int Width => Images[0].Width;
+
+    /// <summary>
+    /// Height of every image in the stack
+    /// </summary>
     public int Height => Images[0].Height;
 
     public ImageStack(IEnumerable<Image> images)
@@ -22,16 +34,52 @@ public class ImageStack
         Images = images.ToArray();
     }
 
+    /// <summary>
+    /// Return the <see cref="Image"/> for the given slice (starting at 0)
+    /// </summary>
+    public Image GetSlice(int slice)
+    {
+        return Images[slice];
+    }
+
+    /// <summary>
+    /// Return all slices as an array of <see cref="Image"/> objects
+    /// </summary>
+    public Image[] GetSlices()
+    {
+        return Images.ToArray();
+    }
+
+    /// <summary>
+    /// Return the maximum projection of the stack.
+    /// Each pixel is the maximum of all pixel values at that position across all slices.
+    /// </summary>
     public Image ProjectMax()
     {
         return Project((pixelValues) => pixelValues.Max());
     }
 
+    /// <summary>
+    /// Return the additive projection of the stack.
+    /// Each pixel is the sum of all pixel values at that position across all slices.
+    /// </summary>
+    public Image ProjectSum()
+    {
+        return Project((pixelValues) => pixelValues.Sum());
+    }
+
+    /// <summary>
+    /// Return the mean projection of the stack.
+    /// Each pixel is the mean of all pixel values at that position across all slices.
+    /// </summary>
     public Image ProjectMean()
     {
         return Project((pixelValues) => pixelValues.Sum() / pixelValues.Length);
     }
 
+    /// <summary>
+    /// Return the mean projection of the stack using a custom function.
+    /// </summary>
     public Image Project(Func<double[], double> func)
     {
         Image img = new(Width, Height);

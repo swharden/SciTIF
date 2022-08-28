@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace SciTIF;
 
 /// <summary>
-/// Stores individual grayscale images indexed by: frame, slice, channel.
-/// RGB images are stored as grayscale images in 3 channels.
+/// Stores individual grayscale images indexed by frame, slice, and channel.
+/// RGB images are split apart into 3 grayscale channels.
 /// </summary>
 public class Image5D
 {

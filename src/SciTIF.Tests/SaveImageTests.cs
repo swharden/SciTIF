@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace SciTIF.Tests
 {
-    internal class PngSaveTests
+    internal class SaveImageTests
     {
         [Test]
-        public void Test_SavePng_FirstFrames()
+        public void Test_Save_FirstFrames()
         {
             foreach (string path in SampleData.TifFiles)
             {
                 TifFile tif = new(path);
                 Image img = tif.GetImage(0, 0, 0);
-                string filename = System.IO.Path.GetFileNameWithoutExtension(path);
-                string filePath = System.IO.Path.GetFullPath($"test-save-autoscale-{filename}.png");
                 img.AutoScale();
-                img.Save(filePath);
-                Console.WriteLine(filePath);
+
+                string name = System.IO.Path.GetFileNameWithoutExtension(path);
+                img.Save_TEST($"autoscale-{name}.png");
+                img.Save_TEST($"autoscale-{name}.jpg");
             }
         }
     }

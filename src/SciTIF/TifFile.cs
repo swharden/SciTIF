@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿namespace SciTIF;
 
-namespace SciTIF;
-
+/// <summary>
+/// 5D image loaded from a TIF file
+/// </summary>
 public class TifFile : Image5D
 {
-    public string FilePath { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public readonly string FilePath;
+    public readonly string Description;
 
     public TifFile(string imageFilePath) : base()
     {
-        FilePath = Path.GetFullPath(imageFilePath);
+        FilePath = System.IO.Path.GetFullPath(imageFilePath);
         (Images, Description) = IO.TifReading.TifReader.LoadTif(FilePath);
         AssertAllImagesHaveSameDimensions();
     }

@@ -17,7 +17,7 @@ namespace SciTIF.Tests
             ImageStack stack = tif.GetImageStack();
 
             // measured at a known point
-            double[] pixelValues = stack.Images.Select(img => img.GetPixel(13, 17)).ToArray();
+            double[] pixelValues = stack.GetSlices().Select(img => img.GetPixel(13, 17)).ToArray();
 
             // obtained using ImageJ script
             double[] knownValues = {

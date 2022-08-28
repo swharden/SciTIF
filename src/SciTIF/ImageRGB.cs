@@ -6,9 +6,9 @@ namespace SciTIF;
 
 public class ImageRGB
 {
-    readonly Image Red;
-    readonly Image Green;
-    readonly Image Blue;
+    public readonly Image Red;
+    public readonly Image Green;
+    public readonly Image Blue;
 
     public ImageRGB(Image red, Image green, Image blue)
     {
@@ -17,8 +17,13 @@ public class ImageRGB
         Blue = blue;
     }
 
-    public void Save(string path)
+    public void Save(string path, int quality = 90)
     {
-        IO.SystemDrawing.SavePNG(path, Red, Green, Blue);
+        IO.SystemDrawing.Save(path, Red, Green, Blue, quality);
+    }
+
+    public System.Drawing.Bitmap GetBitmap()
+    {
+        return IO.SystemDrawing.GetBitmap(Red, Green, Blue);
     }
 }

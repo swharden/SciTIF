@@ -155,7 +155,7 @@ namespace SciTIF.TestViewer
             Image g = tif.GetImage(frame, slice, 1);
             Image b = tif.GetImage(frame, slice, 2);
             Image a = tif.GetImage(frame, slice, 3);
-            return IO.SystemDrawing.GetBitmapRGB(r, g, b);
+            return IO.SystemDrawing.GetBitmap(r, g, b);
         }
 
         private void cbStretch_CheckedChanged(object sender, EventArgs e)
