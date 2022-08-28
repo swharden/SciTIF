@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/swharden/SciTIF/actions/workflows/ci.yaml/badge.svg)](https://github.com/swharden/SciTIF/actions/workflows/ci.yaml)
 
-**SciTIF is a .NET Standard library for working with scientific imaging data in TIFF files.** Many libraries that read TIF files struggle to interpret 16-bit, 32-bit, and 8-bit indexed color TIFF files used for scientific imaging. If you've ever tried to open a scientific TIF file and been presented with an all-black or all-white image, you've experienced this problem too! SciTIF supports 5D TIF files with separate axes for X, Y, C (channel), Z (slice), and T (frame).
+**SciTIF is a .NET Standard library for working with scientific imaging data TIFF files.** Many libraries that read TIF files struggle to interpret 16-bit, 32-bit, and 8-bit indexed color TIFF files used for scientific imaging. If you've ever tried to open a scientific TIF file and been presented with an all-black or all-white image, you've experienced this problem too! SciTIF supports 5D TIF files with separate axes for X, Y, C (channel), Z (slice), and T (frame).
 
 ## Quickstart
 
@@ -30,7 +30,6 @@ slice.Save("output.png");
 This examples shows how to create a maximum-intensity projection along the Z axis of a 5D TIF image. This can be used to create all-in-focus maximum projection of a collection of single optical sections.
 
 ```cs
-// load a 16-bit Z-stack and scaled 8-bit maximum Z projection
 TifFile tif = new("16bit stack.tif");
 ImageStack stack = tif.GetImageStack();
 Image projection = stack.ProjectMax();
@@ -38,20 +37,54 @@ projection.AutoScale(max: 255);
 projection.Save("projection.png");
 ```
 
-## Multi-Channel Merge
+## Lookup Table (LUT)
+
+This example takes a grayscale image and applies a lookup table (LUT) to represent pixel values as colors.
+
 ```cs
+TifFile tif = new("graycale.tif");
+Image slice = tif.GetImage(frame: 0, slice: 0, channel: 0);
+slice.AutoScale();
+slice.LUT = new LUTs.Viridis();
+slice.Save_TEST("viridis.png");
+```
 
-// load a 3-channel TIF and merge channels as an RGB image
+## RGB Merge
 
-string path = System.IO.Path.Combine(SampleData.Tif3Channel);
-TifFile tif = new(path);
+If you have 3 grayscale images representing red, green, and blue, you can easily merge them into a color image.
 
+```cs
+TifFile tif = new("multichannel.tif");
 Image red = tif.GetImage(channel: 0);
 Image green = tif.GetImage(channel: 1);
 Image blue = tif.GetImage(channel: 2);
-
 ImageRGB rgb = new(red, green, blue);
 rgb.Save("merge.png");
+```
+
+## Multi-Channel Merge
+
+This example shows how to merge two grayscale channels into a color image using custom colors (Magenta and Green).
+
+```cs
+TifFile tif = new("multichannel.tif");
+
+// scale each channel (0-255) and set the color lookup table (LUT)
+Image ch1 = tif.GetImage(channel: 0);
+ch1.AutoScale();
+ch1.LUT = new LUTs.Magenta();
+
+Image ch2 = tif.GetImage(channel: 1);
+ch2.AutoScale();
+ch2.LUT = new LUTs.Green();
+
+// create a new stack containing just the channels to merge
+Image[] images = { ch1, ch2 };
+ImageStack stack = new(images);
+
+// project the stack by merging colors
+ImageRGB merged = stack.Merge();
+merged.Save_TEST("merge.png");
 ```
 
 ## Notes
