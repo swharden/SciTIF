@@ -57,6 +57,18 @@ public class Image5D
         return new ImageStack(images);
     }
 
+    public ImageRGB Merge(int frame = 0, int slice = 0)
+    {
+        Image[] images = new Image[Channels];
+        for (int i = 0; i < Channels; i++)
+        {
+            images[i] = GetImage(frame, slice, i);
+        }
+        ImageStack stack = new(images);
+        ImageRGB merged = stack.Merge();
+        return merged;
+    }
+
     public Image[] GetAllImages()
     {
         List<Image> images = new();
