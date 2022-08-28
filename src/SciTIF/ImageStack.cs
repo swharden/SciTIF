@@ -115,6 +115,42 @@ public class ImageStack
     }
 
     /// <summary>
+    /// Create a color-coded projection that spans the range of colors in the given LUT
+    /// </summary>
+    public ImageRGB Project(ILUT lut)
+    {
+        if (Slices < 2)
+            throw new InvalidOperationException("Projection requires at least 2 slices");
+
+        Image r = new(Width, Height);
+        Image g = new(Width, Height);
+        Image b = new(Width, Height);
+
+        PixelColor[] sliceColors = Enumerable.Range(0, Slices)
+            .Select(z => (byte)(255 * z / (Slices - 1)))
+            .Select(x => lut.GetColor(x))
+            .ToArray();
+
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                for (int z = 0; z < Slices; z++)
+                {
+                    double value = GetPixel(x, y, z);
+
+                    r.SetPixelMax(x, y, value * sliceColors[z].R / 255);
+                    g.SetPixelMax(x, y, value * sliceColors[z].G / 255);
+                    b.SetPixelMax(x, y, value * sliceColors[z].B / 255);
+                }
+            }
+        }
+
+        ImageRGB rgb = new(r, g, b);
+        return rgb;
+    }
+
+    /// <summary>
     /// Project the stack into a single RGB image, adding colors from each image according to its LUT
     /// </summary>
     public ImageRGB Merge()

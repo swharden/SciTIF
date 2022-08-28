@@ -23,14 +23,27 @@ namespace SciTIF.Tests
         }
 
         [Test]
-        public void Test_StackProject()
+        public void Test_StackProjectMax()
         {
             string path = System.IO.Path.Combine(SampleData.Tif16bitStack);
             TifFile tif = new(path);
             ImageStack stack = tif.GetImageStack();
             Image projection = stack.ProjectMax();
-            projection.AutoScale(max: 255);
+            projection.AutoScale(); // required to scale 16-bit pixel values to 8-bit (0-255)
             projection.Save_TEST("maximum-projection.png");
+        }
+
+        [Test]
+        public void Test_StackProjectRainbow()
+        {
+            string path = System.IO.Path.Combine(SampleData.Tif16bitStack);
+            TifFile tif = new(path);
+            ImageStack stack = tif.GetImageStack();
+            stack.AutoScale(); // required to scale 16-bit pixel values to 8-bit (0-255)
+
+            ILUT lut = new LUTs.Jet();
+            ImageRGB projection = stack.Project(lut);
+            projection.Save_TEST("rainbow-projection.png");
         }
 
         [Test]
