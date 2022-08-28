@@ -70,6 +70,15 @@ public class Image : IBitmap
         Values[GetIndex(x, y)] = value;
     }
 
+    /// <summary>
+    /// Apply the given value to the specified pixel only if it is brighter than its current value
+    /// </summary>
+    public void SetPixelMax(int x, int y, double value)
+    {
+        int i = GetIndex(x, y);
+        Values[i] = Math.Max(value, Values[i]);
+    }
+
     #endregion
 
     #region PIXEL VALUE ANALYSIS
