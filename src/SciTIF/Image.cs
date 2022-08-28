@@ -127,26 +127,34 @@ public class Image : IBitmap
     // TODO: disable mutation
     public void AutoScale(double percentileLow = 0, double percentileHigh = 100, double max = 255)
     {
-        double minValue;
-        double maxValue;
 
         if (percentileLow == 0 && percentileHigh == 100)
         {
-            minValue = Min();
-            maxValue = Max();
+            double minPixel = Values.Min();
+            double maxPixel = Values.Max();
+            ScaleBy(minPixel, max / (maxPixel - minPixel));
         }
         else
         {
             double[] percents = { percentileLow, percentileHigh };
             double[] percentiles = Percentile(percents);
-            minValue = percentiles[0];
-            maxValue = percentiles[1];
+            double minPixel = percentiles[0];
+            double maxPixel = percentiles[1];
+            ScaleBy(minPixel, max / (maxPixel - minPixel));
         }
+    }
 
-        double scale = max / (maxValue - minValue);
+    public void Scale(double min, double max)
+    {
+        double subtract = min;
+        double multiply = max / (max - min);
+        ScaleBy(subtract, multiply);
+    }
 
+    public void ScaleBy(double subtract, double multiply)
+    {
         for (int i = 0; i < Values.Length; i++)
-            Values[i] = (Values[i] - minValue) * scale;
+            Values[i] = (Values[i] - subtract) * multiply;
     }
 
     #endregion
