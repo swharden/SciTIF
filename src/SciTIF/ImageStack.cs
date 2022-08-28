@@ -93,6 +93,38 @@ public class ImageStack
                 img.SetPixel(x, y, result);
             }
         }
+
         return img;
+    }
+
+    /// <summary>
+    /// Project the stack into a single RGB image, adding colors from each image according to its LUT
+    /// </summary>
+    public ImageRGB Merge()
+    {
+        Image red = new(Width, Height);
+        Image green = new(Width, Height);
+        Image blue = new(Width, Height);
+
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                PixelColor color = new();
+
+                for (int i = 0; i < Slices; i++)
+                {
+                    Image slice = GetSlice(i);
+                    double value = slice.GetPixel(x, y);
+                    color += slice.LUT.GetColor((byte)value);
+                }
+
+                red.SetPixel(x, y, color.R);
+                green.SetPixel(x, y, color.G);
+                blue.SetPixel(x, y, color.B);
+            }
+        }
+
+        return new ImageRGB(red, green, blue);
     }
 }
