@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SciTIF;
 
-public class ImageRGB
+public class ImageRGB : IBitmap
 {
     public readonly Image Red;
     public readonly Image Green;
@@ -22,8 +22,8 @@ public class ImageRGB
         IO.SystemDrawing.Save(path, Red, Green, Blue, quality);
     }
 
-    public System.Drawing.Bitmap GetBitmap()
+    public byte[] GetBitmapBytes()
     {
-        return IO.SystemDrawing.GetBitmap(Red, Green, Blue);
+        return IO.SystemDrawing.GetBitmapBytes(Red, Green, Blue);
     }
 }

@@ -129,9 +129,14 @@ namespace SciTIF.TestViewer
             {
                 ImageStack stack = LoadedTif.GetImageStack();
                 Image img = stack.ProjectMax();
+
                 if (cbAutoScale.Checked)
                     img.AutoScale();
-                pictureBox1.Image = img.GetBitmap();
+
+                using var ms = new MemoryStream(img.GetBitmapBytes());
+                Bitmap bmp = new(ms);
+
+                pictureBox1.Image = bmp;
             }
             else
             {
@@ -146,7 +151,11 @@ namespace SciTIF.TestViewer
             Image img = tif.GetImage(frame, slice, channel);
             if (autoScale)
                 img.AutoScale();
-            return img.GetBitmap();
+
+            using var ms = new MemoryStream(img.GetBitmapBytes());
+            Bitmap bmp = new(ms);
+
+            return bmp;
         }
 
         private static Bitmap GetRgbBitmap(Image5D tif, int frame, int slice, int channel)
@@ -154,8 +163,14 @@ namespace SciTIF.TestViewer
             Image r = tif.GetImage(frame, slice, 0);
             Image g = tif.GetImage(frame, slice, 1);
             Image b = tif.GetImage(frame, slice, 2);
-            Image a = tif.GetImage(frame, slice, 3);
-            return IO.SystemDrawing.GetBitmap(r, g, b);
+            //Image a = tif.GetImage(frame, slice, 3);
+
+            ImageRGB rgb = new(r, g, b);
+
+            using var ms = new MemoryStream(rgb.GetBitmapBytes());
+            Bitmap bmp = new(ms);
+
+            return bmp;
         }
 
         private void cbStretch_CheckedChanged(object sender, EventArgs e)

@@ -8,7 +8,7 @@ namespace SciTIF;
 /// <summary>
 /// Floating-point representation of pixel intensity values from a single-channel image.
 /// </summary>
-public class Image
+public class Image : IBitmap
 {
     public double[] Values;
     private double[]? RememberedValues;
@@ -40,9 +40,9 @@ public class Image
         IO.SystemDrawing.Save(filename, this, quality);
     }
 
-    public System.Drawing.Bitmap GetBitmap()
+    public byte[] GetBitmapBytes()
     {
-        return IO.SystemDrawing.GetBitmap(this);
+        return IO.SystemDrawing.GetBitmapBytes(this);
     }
 
     #endregion

@@ -9,12 +9,28 @@ namespace SciTIF.IO;
 
 public static class SystemDrawing
 {
-    public static Bitmap GetBitmap(Image img)
+    public static byte[] GetBitmapBytes(Image img)
+    {
+        Bitmap bmp = GetBitmap(img);
+        using var stream = new MemoryStream();
+        bmp.Save(stream, ImageFormat.Bmp);
+        return stream.ToArray();
+    }
+
+    public static byte[] GetBitmapBytes(Image r, Image g, Image b)
+    {
+        Bitmap bmp = GetBitmap(r, g, b);
+        using var stream = new MemoryStream();
+        bmp.Save(stream, ImageFormat.Bmp);
+        return stream.ToArray();
+    }
+
+    private static Bitmap GetBitmap(Image img)
     {
         return GetBitmapGrayscale(img);
     }
 
-    public static Bitmap GetBitmap(Image r, Image g, Image b)
+    private static Bitmap GetBitmap(Image r, Image g, Image b)
     {
         return GetBitmapRGB(r, g, b);
     }
