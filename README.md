@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/swharden/SciTIF/actions/workflows/ci.yaml/badge.svg)](https://github.com/swharden/SciTIF/actions/workflows/ci.yaml)
 
-**SciTIF is a .NET Standard library for working with scientific imaging data.** Many libraries that read TIF files struggle to interpret 16-bit, 32-bit, and 8-bit indexed color TIFF files used for scientific imaging. If you've ever tried to open a scientific TIF file and been presented with an all-black or all-white image, you've experienced this problem too! SciTIF supports 5D TIF files with separate axes for X, Y, C (channel), Z (slice), and T (frame).
+**SciTIF is a .NET Standard library for working with scientific imaging data in TIFF files.** Many libraries that read TIF files struggle to interpret 16-bit, 32-bit, and 8-bit indexed color TIFF files used for scientific imaging. If you've ever tried to open a scientific TIF file and been presented with an all-black or all-white image, you've experienced this problem too! SciTIF supports 5D TIF files with separate axes for X, Y, C (channel), Z (slice), and T (frame).
 
 ## Quickstart
 
