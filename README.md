@@ -25,18 +25,6 @@ slice.AutoScale(max: 255);
 slice.Save("output.png");
 ```
 
-## 3D Image Projection
-
-This examples shows how to create a maximum-intensity projection along the Z axis of a 5D TIF image. This can be used to create all-in-focus maximum projection of a collection of single optical sections.
-
-```cs
-TifFile tif = new("16bit stack.tif");
-ImageStack stack = tif.GetImageStack();
-Image projection = stack.ProjectMax();
-projection.AutoScale(max: 255);
-projection.Save("projection.png");
-```
-
 ## Lookup Table (LUT)
 
 This example takes a grayscale image and applies a lookup table (LUT) to represent pixel values as colors.
@@ -85,6 +73,31 @@ ImageStack stack = new(images);
 // project the stack by merging colors
 ImageRGB merged = stack.Merge();
 merged.Save_TEST("merge.png");
+```
+
+## 3D Image Projection
+
+This examples shows how to create a maximum-intensity projection along the Z axis of a 5D TIF image. This can be used to create all-in-focus maximum projection of a collection of single optical sections.
+
+```cs
+TifFile tif = new("16bit stack.tif");
+ImageStack stack = tif.GetImageStack();
+Image projection = stack.ProjectMax();
+projection.AutoScale(); // required to scale 16-bit pixel values to 8-bit (0-255)
+projection.Save("projection.png");
+```
+
+## 3D Image Projection with LUT
+
+A stack of grayscale images can be projected such that each slice is given a different color according to a lookup table (LUT). This achieves a depth-coded effect where color indicates the Z position of the structures visible in the final image.
+
+```cs
+TifFile tif = new("16bit stack.tif");
+ImageStack stack = tif.GetImageStack();
+stack.AutoScale(); // required to scale 16-bit pixel values to 8-bit (0-255)
+ILUT lut = new LUTs.Jet();
+ImageRGB projection = stack.Project(lut);
+projection.Save("rainbow.png");
 ```
 
 ## Notes
