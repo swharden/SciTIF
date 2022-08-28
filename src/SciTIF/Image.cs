@@ -35,7 +35,7 @@ public class Image
 
     #region IMAGE EXPORT
 
-    public void SavePng(string filename)
+    public void Save(string filename)
     {
         IO.SystemDrawing.SavePNG(filename, this);
     }

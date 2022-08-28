@@ -125,7 +125,7 @@ internal class ImageValidationTests
                 {
                     Image img = tif.GetImage(frame, slice, channel);
                     string saveAs = Path.Combine(outputFolder, $"test5D-F{frame}-S{slice}-C{channel}.png");
-                    img.SavePng(saveAs);
+                    img.Save(saveAs);
                 }
             }
         }

@@ -18,7 +18,7 @@ slice.SetPixel(13, 42, 123);
 
 // Scale the pixel values down to 0-255 and save as a PNG file
 slice.AutoScale(max: 255);
-slice.SavePng("output.png");
+slice.Save("output.png");
 ```
 
 ## 3D Image Projection
@@ -30,7 +30,23 @@ TifFile tif = new("16bit stack.tif");
 ImageStack stack = tif.GetImageStack();
 Image projection = stack.ProjectMax();
 projection.AutoScale(max: 255);
-projection.SavePng("maximum-projection.png");
+projection.Save("projection.png");
+```
+
+## Multi-Channel Merge
+```cs
+
+// load a 3-channel TIF and merge channels as an RGB image
+
+string path = System.IO.Path.Combine(SampleData.Tif3Channel);
+TifFile tif = new(path);
+
+Image red = tif.GetImage(channel: 0);
+Image green = tif.GetImage(channel: 1);
+Image blue = tif.GetImage(channel: 2);
+
+ImageRGB rgb = new(red, green, blue);
+rgb.Save("merge.png");
 ```
 
 ## Notes

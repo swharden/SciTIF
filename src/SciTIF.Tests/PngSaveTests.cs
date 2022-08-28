@@ -19,7 +19,7 @@ namespace SciTIF.Tests
                 string filename = System.IO.Path.GetFileNameWithoutExtension(path);
                 string filePath = System.IO.Path.GetFullPath($"test-save-autoscale-{filename}.png");
                 img.AutoScale();
-                img.SavePng(filePath);
+                img.Save(filePath);
                 Console.WriteLine(filePath);
             }
         }

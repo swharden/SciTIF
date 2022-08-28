@@ -46,7 +46,7 @@ public class Image5D
         Images = images;
     }
 
-    public Image GetImage(int frame, int slice, int channel)
+    public Image GetImage(int frame = 0, int slice = 0, int channel = 0)
     {
         return Images[frame, slice, channel];
     }
