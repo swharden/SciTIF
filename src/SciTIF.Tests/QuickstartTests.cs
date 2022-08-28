@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -73,6 +74,31 @@ namespace SciTIF.Tests
             slice.AutoScale();
             slice.LUT = new LUTs.Viridis();
             slice.Save_TEST("viridis.png");
+        }
+
+        [Test]
+        public void Test_MergeTwoGrayscaleImages()
+        {
+            // load a multi-channel image
+            string path = SampleData.Tif3Channel;
+            TifFile tif = new(path);
+
+            // scale each channel (0-255) and set the color lookup table (LUT)
+            Image ch1 = tif.GetImage(channel: 0);
+            ch1.AutoScale();
+            ch1.LUT = new LUTs.Magenta();
+
+            Image ch2 = tif.GetImage(channel: 1);
+            ch2.AutoScale();
+            ch2.LUT = new LUTs.Green();
+
+            // create a new stack containing just the channels to merge
+            Image[] images = { ch1, ch2 };
+            ImageStack stack = new(images);
+
+            // project the stack by merging colors
+            ImageRGB merged = stack.Merge();
+            merged.Save_TEST("merge.png");
         }
     }
 }
