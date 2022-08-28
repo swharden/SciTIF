@@ -35,6 +35,23 @@ public class ImageStack
     }
 
     /// <summary>
+    /// Uniformly scale values across all images so the brighest pixel equals the given value
+    /// </summary>
+    public void AutoScale()
+    {
+        double maxVale = Images.Select(x => x.Max()).Max();
+        Images.ToList().ForEach(x => x.ScaleBy(0, 255.0 / maxVale));
+    }
+
+    /// <summary>
+    /// Return the pixel value for a specified slice
+    /// </summary>
+    public double GetPixel(int x, int y, int slice)
+    {
+        return Images[slice].GetPixel(x, y);
+    }
+
+    /// <summary>
     /// Return the <see cref="Image"/> for the given slice (starting at 0)
     /// </summary>
     public Image GetSlice(int slice)
