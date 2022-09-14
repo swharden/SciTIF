@@ -19,6 +19,8 @@ namespace SciTIF.Tests
 
         public static string Tif16bitStack => Path.Combine(DataFolder, "stack 16-bit 2014-09-12.tif");
 
+        public static string[] Tif16bitStackImages => Directory.GetFiles(DataFolder, "stack-slice-*.tif");
+
         public static string Tif3Channel => Path.Combine(DataFolder, "fluo-3ch-8bit-composite.tif");
 
         public static string Tif16bitGrayscale => Path.Combine(DataFolder, "baboon 16bit grayscale.tif");
@@ -54,6 +56,12 @@ namespace SciTIF.Tests
         public void Test_SampleImageInfoFile_Exists()
         {
             Assert.IsTrue(File.Exists(DataInfoFile));
+        }
+
+        [Test]
+        public void Test_StackImages()
+        {
+            Assert.That(Tif16bitStackImages.Length, Is.EqualTo(3));
         }
     }
 }
