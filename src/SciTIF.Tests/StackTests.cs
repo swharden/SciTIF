@@ -49,5 +49,16 @@ namespace SciTIF.Tests
 
             Assert.That(projection.GetPixel(13, 17), Is.EqualTo(286).Within(1));
         }
+
+
+        [Test]
+        public void Test_Stack_ProjectMaxFromFilenames()
+        {
+            string[] imagePaths = SampleData.Tif16bitStackImages;
+            ImageStack stack = new(imagePaths);
+            Image projection = stack.ProjectMax();
+
+            Assert.That(projection.GetPixel(13, 17), Is.EqualTo(276));
+        }
     }
 }

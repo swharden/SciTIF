@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO.Compression;
 
 namespace SciTIF;
 
@@ -26,12 +27,55 @@ public class ImageStack
     /// </summary>
     public int Height => Images[0].Height;
 
+    /// <summary>
+    /// Create a stack from a collection of single-channel images
+    /// </summary>
     public ImageStack(IEnumerable<Image> images)
     {
         if (!images.Any())
             throw new ArgumentException("a stack must have at least one image");
 
+        foreach (Image image in images)
+        {
+            if (image.Width != images.First().Width)
+                throw new InvalidOperationException("all images must be the same width");
+
+            if (image.Height != images.First().Height)
+                throw new InvalidOperationException("all images must be the same height");
+        }
+
         Images = images.ToArray();
+    }
+
+    /// <summary>
+    /// Create a stack from a collection of single-channel tif files
+    /// </summary>
+    public ImageStack(IEnumerable<string> imagePaths)
+    {
+        if (!imagePaths.Any())
+            throw new ArgumentException("a stack must have at least one image");
+
+        IEnumerable<TifFile> tifFiles = imagePaths.Select(x => new TifFile(x));
+
+        foreach (TifFile tifFile in tifFiles)
+        {
+            if (tifFile.Width != tifFiles.First().Width)
+                throw new InvalidOperationException("all images must be the same width");
+
+            if (tifFile.Height != tifFiles.First().Height)
+                throw new InvalidOperationException("all images must be the same height");
+
+            if (tifFile.Channels != 1)
+                throw new InvalidOperationException("stacks cannot be created from multi-channel images");
+
+            if (tifFile.Slices != 1)
+                throw new InvalidOperationException("stacks cannot be created from multi-slice images");
+
+            if (tifFile.Frames != 1)
+                throw new InvalidOperationException("stacks cannot be created from multi-frame images");
+        }
+
+        Images = tifFiles.Select(x => x.GetImage(0, 0, 0)).ToArray();
     }
 
     /// <summary>
