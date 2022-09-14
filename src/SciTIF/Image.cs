@@ -13,9 +13,8 @@ public class Image : IBitmap
     public double[] Values;
     private double[]? RememberedValues;
     public ILUT LUT { get; set; } = new LUTs.Gray();
-
-    public readonly int Height;
-    public readonly int Width;
+    public int Height { get; private set; }
+    public int Width { get; private set; }
 
     public Image(int width, int height)
     {

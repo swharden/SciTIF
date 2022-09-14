@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SciTIF;
+﻿namespace SciTIF;
 
 public class ImageRGB : IBitmap
 {
     public readonly Image Red;
     public readonly Image Green;
     public readonly Image Blue;
+    public int Height => Red.Height;
+    public int Width => Red.Width;
 
     public ImageRGB(Image red, Image green, Image blue)
     {
