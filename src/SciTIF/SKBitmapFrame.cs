@@ -22,7 +22,7 @@ internal class SKBitmapFrame : IVideoFrame, IDisposable
         Source = bmp;
     }
 
-    public void Dispose() => 
+    public void Dispose() =>
         Source.Dispose();
 
     public void Serialize(Stream pipe) =>
